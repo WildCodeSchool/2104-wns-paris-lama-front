@@ -82,14 +82,12 @@ const LogoContent = styled.div`
 `;
 
 const Menu = styled.div<INav>`
-  transform: ${(props) =>
-    props.activAnim ? `transform: rotate(0deg)` : `transform: rotate(-180deg)`};
+  ${(props) => props.activAnim && `transform: rotate(-180deg)`};
   transition: all 0.3s ease-out;
   width: 25px;
   height: 25px;
   background-color: #fbffcd;
   clip-path: polygon(50% 0%, 0 100%, 100% 100%);
-  ${(props) => props.activAnim && `transform: rotate(-180deg)`};
   @media (min-width: 1000px) {
     display: none;
   }

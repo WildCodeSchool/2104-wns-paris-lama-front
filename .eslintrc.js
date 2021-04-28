@@ -25,12 +25,12 @@ module.exports = {
     sourceType: "module",
     project: ["./tsconfig.json"],
   },
-  settings: {
+  "settings": {
     "import/resolver": {
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
-      },
-    },
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   },
   rules: {
     "linebreak-style": "off",
