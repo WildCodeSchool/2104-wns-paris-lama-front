@@ -1,6 +1,25 @@
+@font-face {
+  font-family: "Belleza Regular";
+  src: url("./assets/fonts/Belleza-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Manjari Thin";
+  src: url("./assets/fonts/Manjari-Thin.ttf") format("truetype");
+}
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background-color: #FBFFCD;
+}
+
+section {
+  position: relative;
+}
+
+@media (max-width: 1000px) {
+  section {
+    margin-top: 78px;
+  }
 }

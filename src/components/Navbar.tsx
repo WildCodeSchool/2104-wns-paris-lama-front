@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import logo from "../assets/logo.svg";
+import logo from "../assets/images/logo.svg";
+import logoMenu from "../assets/images/Logo-Menu.svg";
 
 export const Navbar = (): JSX.Element => {
   const [onClickAnim, setOnClickAnim] = useState(false);
-
-  const handleToggle = () => {
-    setOnClickAnim(!onClickAnim);
-  };
 
   return (
     <>
       <Nav activAnim={onClickAnim}>
         <LogoContent>
           <img src={logo} alt="logo" width="50px" height="50px" />
-          <Menu onClick={handleToggle} />
+          <Menu
+            activAnim={onClickAnim}
+            onClick={() => setOnClickAnim(!onClickAnim)}
+          />
         </LogoContent>
         <MenuContent>
           <ul>
@@ -35,6 +35,7 @@ export const Navbar = (): JSX.Element => {
               <a href="#">Muche</a>
             </li>
           </ul>
+          <img src={logoMenu} alt="logo" width="100%" height="80%" />
         </MenuContent>
       </Nav>
     </>
@@ -50,30 +51,51 @@ const Nav = styled.nav<INav>`
   color: black;
   background-color: #cbddd1;
   overflow: hidden;
-  z-index: 2;
-  position: relative;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  width: 100%;
   transition: height 300ms ease-in-out;
   box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.5);
-  padding: 0 0 5px 5px;
+  padding: 0 0 5px 0;
+  font-family: "Belleza Regular", sans-serif;
+  @media (min-width: 1000px) {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    position: initial;
+  }
 `;
 
 const LogoContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 10px 0 0;
+  margin: 0 10px;
+  @media (min-width: 1000px) {
+    align-items: center;
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
 `;
 
-const Menu = styled.div`
+const Menu = styled.div<INav>`
+  transform: ${(props) =>
+    props.activAnim ? `transform: rotate(0deg)` : `transform: rotate(-180deg)`};
+  transition: all 0.3s ease-out;
   width: 25px;
   height: 25px;
-  background-color: black;
+  background-color: #fbffcd;
   clip-path: polygon(50% 0%, 0 100%, 100% 100%);
+  ${(props) => props.activAnim && `transform: rotate(-180deg)`};
+  @media (min-width: 1000px) {
+    display: none;
+  }
 `;
 
 const MenuContent = styled.div`
-  display: flex;
-  flex-direction: column;
   font-size: 24px;
   font-weight: 800;
   color: #555;
@@ -96,5 +118,18 @@ const MenuContent = styled.div`
   }
   ul a:hover {
     color: red;
+  }
+  img {
+    margin-top: 10%;
+  }
+  @media (min-width: 1000px) {
+    position: initial;
+    ul {
+      display: flex;
+      justify-content: flex-end;
+    }
+    img {
+      display: none;
+    }
   }
 `;
