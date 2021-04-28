@@ -27,7 +27,9 @@ module.exports = {
   },
   rules: {
     'linebreak-style': 'off',
-    "@typescript-eslint/camelcase": "off",
+    'import/prefer-default-export': 'off',
+    '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
     'prettier/prettier': [
       'error',
       {
