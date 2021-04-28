@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import ReactStars from "react-rating-stars-component";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
 
@@ -71,7 +74,17 @@ const Courses = () => {
         <h2>Commentaires</h2>
         <hr />
         <Inputs>
-          <InputNote />
+          <InputNote>
+            <ReactStars
+              count={5}
+              size={30}
+              isHalf
+              emptyIcon={<i className="far fa-star" />}
+              halfIcon={<i className="fa fa-star-half-alt" />}
+              fullIcon={<i className="fa fa-star" />}
+              activeColor="#ffd700"
+            />{" "}
+          </InputNote>
           <InputName />
           <InputCommentary autofocus="false" />
         </Inputs>
@@ -207,7 +220,10 @@ const Inputs = styled.div`
   flex-direction: column;
   margin: 10px 30px;
 `;
-const InputNote = styled.input``;
+const InputNote = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 const InputName = styled.input`
   border: none;
   border-bottom: black solid 2px;
