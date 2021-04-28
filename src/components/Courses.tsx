@@ -37,15 +37,30 @@ const Courses = () => {
         <h2>Description</h2>
         <hr />
         <Text>
-          <p>lorem ipsum</p>
+          <p>
+            lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem
+            ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem
+            ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem
+            ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum
+          </p>
         </Text>
       </Description>
       <Documentation>
         <h2>Documentation</h2>
         <hr />
         <Doc>
-          <Timer src={timer} />
-          <h4>Timer</h4>
+          <Card>
+            <TimerInfo>
+              <Timer src={timer} />
+              <h4>Timer</h4>
+            </TimerInfo>
+          </Card>
+          <Card>
+            <TimerInfo>
+              <Timer src={timer} />
+              <h4>Timer</h4>
+            </TimerInfo>
+          </Card>
         </Doc>
       </Documentation>
       <Commentary>
@@ -61,9 +76,14 @@ const Courses = () => {
   );
 };
 
-const Course = styled.div``;
+const Course = styled.div`
+  background: #cbddd1;
+  margin: 0;
+`;
 const Title = styled.h1`
   text-align: center;
+  margin-top: 0;
+  padding-top: 10px;
 `;
 const HeaderCourse = styled.div`
   display: flex;
@@ -89,30 +109,99 @@ const NextCourse = styled.div`
 const RightArrow = styled.img`
   width: 24px;
 `;
-const Video = styled.iframe``;
+const Video = styled.iframe`
+  width: 100%;
+  height: 100%;
+  margin: 20px 0;
+`;
 const Description = styled.div`
+  background-color: #474747;
+  padding: 5px 0 20px;
+  margin-bottom: 40px;
   h2 {
     text-align: center;
+    color: #fbffcd;
   }
   hr {
-    width: 10%;
+    width: 20%;
+    color: #fbffcd;
+  }
+  p {
+    text-align: center;
   }
 `;
-const Text = styled.div``;
-const Documentation = styled.div``;
-const Timer = styled.img``;
+const Text = styled.div`
+  background-color: #fbffcd;
+  padding: 20px 0;
+  margin: 0 20px;
+`;
+const Documentation = styled.div`
+  h2 {
+    text-align: center;
+    color: #fbffcd;
+  }
+  hr {
+    width: 20%;
+    color: #fbffcd;
+  }
+  background-color: #474747;
+  padding: 5px 0 20px;
+  margin-bottom: 40px;
+`;
+const Timer = styled.img`
+  width: 20px;
+  height: 20px;
+`;
 const Doc = styled.div`
   display: flex;
-  background: url("https://amana-ecoleenligne.com/wp-content/uploads/2019/02/soutien.png");
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
-const Commentary = styled.div``;
+const Card = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 200px;
+  background-color: blue;
+  margin: 10px;
+  width: 200px;
+`;
+
+const TimerInfo = styled.div`
+  display: flex;
+  align-items: flex-end;
+  padding: 10px;
+  h4 {
+    padding: 0;
+    margin: 0;
+  }
+`;
+
+const Commentary = styled.div`
+  padding: 5px 0 20px;
+  background-color: #474747;
+  h2 {
+    text-align: center;
+    color: #fbffcd;
+  }
+  hr {
+    width: 20%;
+    color: #fbffcd;
+  }
+`;
 const Inputs = styled.div`
   display: flex;
   flex-direction: column;
+  margin: 10px;
 `;
 const InputNote = styled.input``;
-const InputName = styled.input``;
+const InputName = styled.input`
+  border: none;
+  border-bottom: black solid 2px;
+  background-color: #fbffcd;
+  height: 50px;
+`;
 const InputCommentary = styled.input``;
 
 export default Courses;
