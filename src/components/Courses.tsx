@@ -6,14 +6,29 @@ import ReactStars from "react-rating-stars-component";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
 
-interface test {
+const firstExample = {
+  size: 30,
+  value: 2.5,
+  edit: false,
+  isHalf: true,
+};
+
+interface TextArea {
   autofocus: string;
+}
+
+interface NameUserInput {
+  placeholder: string;
 }
 
 const Courses = () => {
   return (
     <Course>
       <Title>Titre du cours</Title>
+      <Hr />
+      <Notes>
+        <ReactStars {...firstExample} />
+      </Notes>
       <HeaderCourse>
         <PreviousCourse>
           <h3>
@@ -23,7 +38,6 @@ const Courses = () => {
           </h3>
           <LeftArrow src={img} />
         </PreviousCourse>
-        <Notes />
         <NextCourse>
           <h3>
             Cours
@@ -79,14 +93,16 @@ const Courses = () => {
               count={5}
               size={30}
               isHalf
+              a11y
               emptyIcon={<i className="far fa-star" />}
               halfIcon={<i className="fa fa-star-half-alt" />}
               fullIcon={<i className="fa fa-star" />}
-              activeColor="#ffd700"
+              color="#cbddd1"
+              activeColor="gold"
             />{" "}
           </InputNote>
-          <InputName />
-          <InputCommentary autofocus="false" />
+          <InputName placeholder="Nom" />
+          <InputCommentary autofocus="false" placeholder="Commentaire..." />
         </Inputs>
       </Commentary>
     </Course>
@@ -94,13 +110,17 @@ const Courses = () => {
 };
 
 const Course = styled.div`
-  background: #cbddd1;
+  background: #fbffcd;
   margin: 0;
 `;
 const Title = styled.h1`
   text-align: center;
-  margin-top: 0;
+  margin-top: 80px;
   padding-top: 10px;
+`;
+const Hr = styled.hr`
+  width: 20%;
+  color: #cbddd1;
 `;
 const HeaderCourse = styled.div`
   display: flex;
@@ -120,7 +140,11 @@ const PreviousCourse = styled.div`
 const LeftArrow = styled.img`
   transform: rotate(-180deg);
 `;
-const Notes = styled.div``;
+const Notes = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+`;
 const NextCourse = styled.div`
   display: flex;
   justify-content: center;
@@ -145,29 +169,29 @@ const Description = styled.div`
   margin-bottom: 40px;
   h2 {
     text-align: center;
-    color: #fbffcd;
+    color: #cbddd1;
   }
   hr {
     width: 20%;
-    color: #fbffcd;
+    color: #cbddd1;
   }
   p {
     text-align: center;
   }
 `;
 const Text = styled.div`
-  background-color: #fbffcd;
+  background-color: #cbddd1;
   padding: 20px 0;
   margin: 10px 20px;
 `;
 const Documentation = styled.div`
   h2 {
     text-align: center;
-    color: #fbffcd;
+    color: #cbddd1;
   }
   hr {
     width: 20%;
-    color: #fbffcd;
+    color: #cbddd1;
   }
   background-color: #474747;
   padding: 5px 0 20px;
@@ -208,11 +232,11 @@ const Commentary = styled.div`
   background-color: #474747;
   h2 {
     text-align: center;
-    color: #fbffcd;
+    color: #cbddd1;
   }
   hr {
     width: 20%;
-    color: #fbffcd;
+    color: #cbddd1;
   }
 `;
 const Inputs = styled.div`
@@ -224,10 +248,10 @@ const InputNote = styled.div`
   display: flex;
   justify-content: center;
 `;
-const InputName = styled.input`
+const InputName = styled.input<NameUserInput>`
   border: none;
   border-bottom: black solid 2px;
-  background-color: #fbffcd;
+  background-color: #cbddd1;
   height: 50px;
   margin: 10px 0;
   font-size: 20px;
@@ -235,10 +259,10 @@ const InputName = styled.input`
     outline: none;
   }
 `;
-const InputCommentary = styled.textarea<test>`
+const InputCommentary = styled.textarea<TextArea>`
   border: none;
   border-bottom: black solid 2px;
-  background-color: #fbffcd;
+  background-color: #cbddd1;
   height: 200px;
   margin: 10px 0;
   font-size: 20px;

@@ -30,6 +30,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'prettier/prettier': [
       'error',
       {
