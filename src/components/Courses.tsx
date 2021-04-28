@@ -6,7 +6,7 @@ import ReactStars from "react-rating-stars-component";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
 
-const firstExample = {
+const MoyenneStar = {
   size: 30,
   value: 2.5,
   edit: false,
@@ -27,7 +27,7 @@ const Courses = () => {
       <Title>Titre du cours</Title>
       <Hr />
       <Notes>
-        <ReactStars {...firstExample} />
+        <ReactStars {...MoyenneStar} />
       </Notes>
       <HeaderCourse>
         <PreviousCourse>
