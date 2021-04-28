@@ -3,6 +3,10 @@ import styled from "styled-components";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
 
+interface test {
+  autofocus: string;
+}
+
 const Courses = () => {
   return (
     <Course>
@@ -10,18 +14,18 @@ const Courses = () => {
       <HeaderCourse>
         <PreviousCourse>
           <h3>
-            Previous
+            Cours
             <br />
-            Course
+            Précedent
           </h3>
           <LeftArrow src={img} />
         </PreviousCourse>
         <Notes />
         <NextCourse>
           <h3>
-            Next
+            Cours
             <br />
-            Course
+            Suivant
           </h3>
           <RightArrow src={img} />
         </NextCourse>
@@ -69,7 +73,7 @@ const Courses = () => {
         <Inputs>
           <InputNote />
           <InputName />
-          <InputCommentary />
+          <InputCommentary autofocus="false" />
         </Inputs>
       </Commentary>
     </Course>
@@ -88,10 +92,16 @@ const Title = styled.h1`
 const HeaderCourse = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: 0 10px;
 `;
 const PreviousCourse = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   h3 {
     text-align: center;
+    margin: 0;
   }
 `;
 const LeftArrow = styled.img`
@@ -100,10 +110,12 @@ const LeftArrow = styled.img`
 const Notes = styled.div``;
 const NextCourse = styled.div`
   display: flex;
+  justify-content: center;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   h3 {
     text-align: center;
+    margin: 0;
   }
 `;
 const RightArrow = styled.img`
@@ -133,7 +145,7 @@ const Description = styled.div`
 const Text = styled.div`
   background-color: #fbffcd;
   padding: 20px 0;
-  margin: 0 20px;
+  margin: 10px 20px;
 `;
 const Documentation = styled.div`
   h2 {
@@ -193,7 +205,7 @@ const Commentary = styled.div`
 const Inputs = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  margin: 10px 30px;
 `;
 const InputNote = styled.input``;
 const InputName = styled.input`
@@ -201,7 +213,23 @@ const InputName = styled.input`
   border-bottom: black solid 2px;
   background-color: #fbffcd;
   height: 50px;
+  margin: 10px 0;
+  font-size: 20px;
+  :focus {
+    outline: none;
+  }
 `;
-const InputCommentary = styled.input``;
+const InputCommentary = styled.textarea<test>`
+  border: none;
+  border-bottom: black solid 2px;
+  background-color: #fbffcd;
+  height: 200px;
+  margin: 10px 0;
+  font-size: 20px;
+  resize: none;
+  :focus {
+    outline: none;
+  }
+`;
 
 export default Courses;
