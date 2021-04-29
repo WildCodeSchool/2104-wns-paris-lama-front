@@ -11,7 +11,7 @@ function App(): JSX.Element {
         <Navbar />
         <section>
           <Switch>
-            <Route path="/test">
+            <Route path="/cours">
               <AllCoursesPage />
             </Route>
             <Route path="/:categories/:id">
