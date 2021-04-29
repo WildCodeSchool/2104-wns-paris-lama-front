@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -31,10 +31,11 @@ export const CommentaryType = (): JSX.Element => {
   let rate: any;
   const course = "608a6b89a774f6cde63f8912";
 
-  const [isMount, setIsMount] = useState(false);
-  const [createComment] = useMutation(COMMENTARY_CREATE);
-
-  useEffect(() => {}, [isMount]);
+  const [createComment] = useMutation(COMMENTARY_CREATE, {
+    onCompleted: () => {
+      window.location.reload();
+    },
+  });
 
   return (
     <Inputs>
@@ -52,7 +53,7 @@ export const CommentaryType = (): JSX.Element => {
             },
           });
           name.value = "";
-          setIsMount(true);
+          content.value = "";
         }}
       >
         <InputNote>
