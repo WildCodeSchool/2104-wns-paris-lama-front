@@ -1,10 +1,24 @@
 import React from "react";
+import { gql } from "@apollo/client/core";
+import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
+
+const GET_ONE_COURSE_BY_ID = gql`
+  {
+    getOneCourse {
+      id
+      title
+      categories
+      video
+      link(title, url)
+    }
+  }
+`;
 
 const MoyenneStar = {
   size: 30,
@@ -21,7 +35,20 @@ interface NameUserInput {
   placeholder: string;
 }
 
-const Courses = () => {
+export const Courses = (): JSX.Element => {
+  const { loading, error, data } = useQuery(GET_ONE_COURSE_BY_ID);
+
+  type Course = {
+    id: string;
+    title: string;
+    categories: string;
+    video: string;
+    link: string;
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
     <Course>
       <Title>Titre du cours</Title>
@@ -132,6 +159,7 @@ const PreviousCourse = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+
   h3 {
     text-align: center;
     margin: 0;
@@ -150,6 +178,7 @@ const NextCourse = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+
   h3 {
     text-align: center;
     margin: 0;
@@ -167,14 +196,17 @@ const Description = styled.div`
   background-color: #474747;
   padding: 5px 0 20px;
   margin-bottom: 40px;
+
   h2 {
     text-align: center;
     color: #cbddd1;
   }
+
   hr {
     width: 20%;
     color: #cbddd1;
   }
+
   p {
     text-align: center;
   }
@@ -189,10 +221,12 @@ const Documentation = styled.div`
     text-align: center;
     color: #cbddd1;
   }
+
   hr {
     width: 20%;
     color: #cbddd1;
   }
+
   background-color: #474747;
   padding: 5px 0 20px;
   margin-bottom: 40px;
@@ -221,6 +255,7 @@ const TimerInfo = styled.div`
   display: flex;
   align-items: flex-end;
   padding: 10px;
+
   h4 {
     padding: 0;
     margin: 0;
@@ -230,10 +265,12 @@ const TimerInfo = styled.div`
 const Commentary = styled.div`
   padding: 5px 0 20px;
   background-color: #474747;
+
   h2 {
     text-align: center;
     color: #cbddd1;
   }
+
   hr {
     width: 20%;
     color: #cbddd1;
@@ -255,6 +292,7 @@ const InputName = styled.input<NameUserInput>`
   height: 50px;
   margin: 10px 0;
   font-size: 20px;
+
   :focus {
     outline: none;
   }
@@ -267,6 +305,7 @@ const InputCommentary = styled.textarea<TextArea>`
   margin: 10px 0;
   font-size: 20px;
   resize: none;
+
   :focus {
     outline: none;
   }
