@@ -1,49 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@apollo/client";
+// import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
+import { CommentaryType } from "./CommentaryType";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
 
 const GET_ONE_COURSE_BY_ID = gql`
-  {
-    getOneCourse {
+  query getOneCourse($id: String!) {
+    getOneCourse(id: $id) {
       id
       title
       categories
       video
-      link(title, url)
+      link {
+        title
+        url
+      }
+      rating
     }
   }
 `;
 
-const MoyenneStar = {
-  size: 30,
-  value: 2.5,
-  edit: false,
-  isHalf: true,
-};
-
-interface TextArea {
-  autofocus: string;
-}
-
-interface NameUserInput {
-  placeholder: string;
-}
-
 export const Courses = (): JSX.Element => {
-  const { loading, error, data } = useQuery(GET_ONE_COURSE_BY_ID);
+  const { loading, error, data } = useQuery(GET_ONE_COURSE_BY_ID, {
+    variables: { id: "608a6b89a774f6cde63f8912" },
+  });
+
+  const MoyenneStar = {
+    size: 30,
+    value: data?.getOneCourse?.rating,
+    edit: false,
+    isHalf: true,
+  };
 
   type Course = {
     id: string;
     title: string;
     categories: string;
     video: string;
-    link: string;
+    link: { title: string; url: string };
   };
 
   if (loading) return <p>Loading...</p>;
@@ -51,7 +51,7 @@ export const Courses = (): JSX.Element => {
 
   return (
     <Course>
-      <Title>Titre du cours</Title>
+      <Title>{data.getOneCourse.title}</Title>
       <Hr />
       <Notes>
         <ReactStars {...MoyenneStar} />
@@ -75,7 +75,7 @@ export const Courses = (): JSX.Element => {
         </NextCourse>
       </HeaderCourse>
       <Video
-        src="https://www.youtube.com/embed/Ij7C2mjstt0"
+        src={data.getOneCourse.video.replace("watch?v=", "embed/")}
         title="Youtube video Player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -85,56 +85,37 @@ export const Courses = (): JSX.Element => {
         <h2>Description</h2>
         <hr />
         <Text>
-          <p>
-            lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem
-            ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem
-            ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem
-            ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum
-          </p>
+          <p>{data.getOneCourse.description}</p>
         </Text>
       </Description>
       <Documentation>
         <h2>Documentation</h2>
         <hr />
         <Doc>
-          <Card>
-            <TimerInfo>
-              <Timer src={timer} />
-              <h4>Timer</h4>
-            </TimerInfo>
-          </Card>
-          <Card>
-            <TimerInfo>
-              <Timer src={timer} />
-              <h4>Timer</h4>
-            </TimerInfo>
-          </Card>
+          {data.getOneCourse.link.map((li: any) => (
+            <a href={li.url}>
+              <Card img="https://img-19.ccm2.net/8vUCl8TXZfwTt7zAOkBkuDRHiT8=/1240x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg">
+                <TimerInfo>
+                  <Timer src={timer} />
+                  <h4>{li.title}</h4>
+                </TimerInfo>
+              </Card>
+            </a>
+          ))}
         </Doc>
       </Documentation>
       <Commentary>
         <h2>Commentaires</h2>
         <hr />
-        <Inputs>
-          <InputNote>
-            <ReactStars
-              count={5}
-              size={30}
-              isHalf
-              a11y
-              emptyIcon={<i className="far fa-star" />}
-              halfIcon={<i className="fa fa-star-half-alt" />}
-              fullIcon={<i className="fa fa-star" />}
-              color="#cbddd1"
-              activeColor="gold"
-            />{" "}
-          </InputNote>
-          <InputName placeholder="Nom" />
-          <InputCommentary autofocus="false" placeholder="Commentaire..." />
-        </Inputs>
+        <CommentaryType />
       </Commentary>
     </Course>
   );
 };
+
+interface IImg {
+  img: string;
+}
 
 const Course = styled.div`
   background: #fbffcd;
@@ -242,11 +223,12 @@ const Doc = styled.div`
   align-items: center;
 `;
 
-const Card = styled.div`
+const Card = styled.div<IImg>`
   display: flex;
   justify-content: center;
   height: 200px;
-  background-color: blue;
+  background-image: url(${(props) => props.img});
+  background-size: cover;
   margin: 10px;
   width: 200px;
 `;
@@ -276,39 +258,3 @@ const Commentary = styled.div`
     color: #cbddd1;
   }
 `;
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 10px 30px;
-`;
-const InputNote = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-const InputName = styled.input<NameUserInput>`
-  border: none;
-  border-bottom: black solid 2px;
-  background-color: #cbddd1;
-  height: 50px;
-  margin: 10px 0;
-  font-size: 20px;
-
-  :focus {
-    outline: none;
-  }
-`;
-const InputCommentary = styled.textarea<TextArea>`
-  border: none;
-  border-bottom: black solid 2px;
-  background-color: #cbddd1;
-  height: 200px;
-  margin: 10px 0;
-  font-size: 20px;
-  resize: none;
-
-  :focus {
-    outline: none;
-  }
-`;
-
-export default Courses;
