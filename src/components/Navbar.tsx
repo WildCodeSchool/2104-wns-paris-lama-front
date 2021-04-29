@@ -10,7 +10,9 @@ export const Navbar = (): JSX.Element => {
     <>
       <Nav activAnim={onClickAnim}>
         <LogoContent>
-          <img src={logo} alt="logo" width="50px" height="50px" />
+          <a href="/">
+            <img src={logo} alt="logo" width="50px" height="50px" />
+          </a>
           <Menu
             activAnim={onClickAnim}
             onClick={() => setOnClickAnim(!onClickAnim)}
@@ -20,19 +22,15 @@ export const Navbar = (): JSX.Element => {
           <ul>
             <li>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#">Home</a>
+              <a href="/">Accueil</a>
             </li>
             <li>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#">About</a>
+              <a href="/cours">Cours</a>
             </li>
             <li>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#">Truc</a>
-            </li>
-            <li>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#">Muche</a>
+              <a href="#">Ajouter un cour</a>
             </li>
           </ul>
           <img src={logoMenu} alt="logo" width="100%" height="80%" />
@@ -59,7 +57,7 @@ const Nav = styled.nav<INav>`
   box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.5);
   padding: 0 0 5px 0;
   font-family: "Belleza Regular", sans-serif;
-  @media (min-width: 1000px) {
+  @media (min-width: 700px) {
     display: flex;
     align-items: center;
     height: 100px;
@@ -72,7 +70,7 @@ const LogoContent = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 10px;
-  @media (min-width: 1000px) {
+  @media (min-width: 700px) {
     align-items: center;
     img {
       width: 100px;
@@ -82,15 +80,13 @@ const LogoContent = styled.div`
 `;
 
 const Menu = styled.div<INav>`
-  transform: ${(props) =>
-    props.activAnim ? `transform: rotate(0deg)` : `transform: rotate(-180deg)`};
+  ${(props) => props.activAnim && `transform: rotate(-180deg)`};
   transition: all 0.3s ease-out;
   width: 25px;
   height: 25px;
   background-color: #fbffcd;
   clip-path: polygon(50% 0%, 0 100%, 100% 100%);
-  ${(props) => props.activAnim && `transform: rotate(-180deg)`};
-  @media (min-width: 1000px) {
+  @media (min-width: 700px) {
     display: none;
   }
 `;
@@ -122,7 +118,7 @@ const MenuContent = styled.div`
   img {
     margin-top: 10%;
   }
-  @media (min-width: 1000px) {
+  @media (min-width: 700px) {
     position: initial;
     ul {
       display: flex;
