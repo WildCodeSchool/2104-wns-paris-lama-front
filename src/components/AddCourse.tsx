@@ -40,30 +40,42 @@ const AddCourse = () => {
           // description.value = "";
         }}
       >
-        <input
-          ref={(node) => {
-            title = node;
-          }}
-          id="title"
-        />
-        <input
-          ref={(node) => {
-            video = node;
-          }}
-          id="video"
-        />
-        <input
-          ref={(node) => {
-            categories = node;
-          }}
-          id="categories"
-        />
-        <input
-          ref={(node) => {
-            description = node;
-          }}
-          id="description"
-        />
+        <label htmlFor="title">
+          Titre :
+          <input
+            ref={(node) => {
+              title = node;
+            }}
+            id="title"
+          />
+        </label>
+        <label htmlFor="video">
+          Lien vidéo :
+          <input
+            ref={(node) => {
+              video = node;
+            }}
+            id="video"
+          />
+        </label>
+        <label htmlFor="categories">
+          Catégorie :
+          <input
+            ref={(node) => {
+              categories = node;
+            }}
+            id="categories"
+          />
+        </label>
+        <label htmlFor="description">
+          Description :
+          <input
+            ref={(node) => {
+              description = node;
+            }}
+            id="description"
+          />
+        </label>
         <button type="submit">Create course</button>
       </form>
     </div>
