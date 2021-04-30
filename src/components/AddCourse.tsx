@@ -18,11 +18,17 @@ const ADD_NEW_COURSE = gql`
 `;
 
 const AddCourse = (): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let title: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let video: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let categories: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let description: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let link_title: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let link_url: any;
   const [createCourse] = useMutation(ADD_NEW_COURSE);
 
