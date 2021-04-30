@@ -23,13 +23,14 @@ interface TextArea {
 
 interface NameUserInput {
   placeholder: string;
+  autofocus: string;
 }
 
-export const CommentaryType = (): JSX.Element => {
+export const CommentaryType = ({ id }: { id: string }): JSX.Element => {
   let name: any;
   let content: any;
   let rate: any;
-  const course = "608a6b89a774f6cde63f8912";
+  const course = id;
 
   const [createComment] = useMutation(COMMENTARY_CREATE, {
     onCompleted: () => {
@@ -78,6 +79,7 @@ export const CommentaryType = (): JSX.Element => {
           ref={(node) => {
             name = node;
           }}
+          autofocus="false"
         />
         <InputCommentary
           ref={(node) => {
