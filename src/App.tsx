@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
+import AddCourse from "./components/AddCourse";
 import { Navbar } from "./components/Navbar";
 import { AllCoursesPage } from "./components/AllCoursesPage";
 import { Courses } from "./components/Courses";
@@ -16,9 +17,15 @@ function App(): JSX.Element {
             <Route path="/course">
               <AllCoursesPage />
             </Route>
+            <Route path="/new-courses">
+              <AddCourse />
+            </Route>
             <Route path="/:categories/:id">
               <ScrollTop />
               <Courses />
+            </Route>
+            <Route path="/new-courses">
+              <AddCourse />
             </Route>
           </Switch>
         </section>
