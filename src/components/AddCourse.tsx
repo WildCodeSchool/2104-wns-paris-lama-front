@@ -17,7 +17,7 @@ const ADD_NEW_COURSE = gql`
   }
 `;
 
-const AddCourse = () => {
+const AddCourse = (): JSX.Element => {
   let title: any;
   let video: any;
   let categories: any;
