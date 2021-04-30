@@ -1,5 +1,6 @@
 import React from "react";
 import { gql, useMutation } from "@apollo/client";
+import styled from "styled-components";
 
 const ADD_NEW_COURSE = gql`
   mutation createCourse($data: CourseInput!) {
@@ -8,6 +9,10 @@ const ADD_NEW_COURSE = gql`
       video
       categories
       description
+      link {
+        title
+        url
+      }
     }
   }
 `;
@@ -17,10 +22,12 @@ const AddCourse = () => {
   let video: any;
   let categories: any;
   let description: any;
+  let link_title: any;
+  let link_url: any;
   const [createCourse] = useMutation(ADD_NEW_COURSE);
 
   return (
-    <div>
+    <NewCourse>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -31,69 +38,122 @@ const AddCourse = () => {
                 video: video.value,
                 categories: categories.value,
                 description: description.value,
+                link: [{ title: link_title.value, url: link_url.value }],
               },
             },
           });
-          // title.value = "";
-          // video.value = "";
-          // categories.value = "";
-          // description.value = "";
+          title.value = "";
+          video.value = "";
+          categories.value = "";
+          description.value = "";
+          link_title.value = "";
+          link_url.value = "";
         }}
       >
-        <label htmlFor="title">
-          Titre :
-          <input
-            ref={(node) => {
-              title = node;
-            }}
-            id="title"
-          />
-        </label>
-        <label htmlFor="video">
-          Lien vidéo :
-          <input
-            ref={(node) => {
-              video = node;
-            }}
-            id="video"
-          />
-        </label>
-        <label htmlFor="categories">
-          Catégorie :
-          <input
-            ref={(node) => {
-              categories = node;
-            }}
-            id="categories"
-          />
-        </label>
-        <label htmlFor="description">
-          Description :
-          <input
-            ref={(node) => {
-              description = node;
-            }}
-            id="description"
-          />
-        </label>
-        <button type="submit">Create course</button>
+        <NewCourseForm>
+          <Input>
+            <label htmlFor="title">
+              Titre :
+              <input
+                ref={(node) => {
+                  title = node;
+                }}
+                id="title"
+              />
+            </label>
+          </Input>
+          <Input>
+            <label htmlFor="video">
+              Lien vidéo :
+              <input
+                ref={(node) => {
+                  video = node;
+                }}
+                id="video"
+              />
+            </label>
+          </Input>
+          <Input>
+            <label htmlFor="title-documentation">
+              Titre documentation :
+              <input
+                ref={(node) => {
+                  link_title = node;
+                }}
+                id="title-documentation"
+              />
+            </label>
+          </Input>
+          <Input>
+            <label htmlFor="link-documentation">
+              Lien documentation :
+              <input
+                ref={(node) => {
+                  link_url = node;
+                }}
+                id="link-documentation"
+              />
+            </label>
+          </Input>
+          <Input>
+            <label htmlFor="categories">
+              Catégorie :
+              <input
+                ref={(node) => {
+                  categories = node;
+                }}
+                id="categories"
+              />
+            </label>
+          </Input>
+          <Input>
+            <label htmlFor="description">
+              Description :
+              <input
+                ref={(node) => {
+                  description = node;
+                }}
+                id="description"
+              />
+            </label>
+          </Input>
+          <button type="submit">Create course</button>
+        </NewCourseForm>
       </form>
-    </div>
+    </NewCourse>
   );
 };
+const NewCourse = styled.div`
+  padding: 5px 0 20px;
+  background-color: #474747;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 
-/* <label htmlFor="title">
-  Titre
-  <input type="text" />
-</label>
-<label htmlFor="video">
-  Lien Vidéo
-  <input type="text" />
-</label>
-<label htmlFor="description">
-  description
-  <textarea />
-</label>
-<input type="submit" value="Send" /> */
+  h2 {
+    text-align: center;
+    color: #cbddd1;
+  }
+
+  hr {
+    width: 20%;
+    color: #cbddd1;
+  }
+`;
+
+const NewCourseForm = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Input = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`;
 
 export default AddCourse;
