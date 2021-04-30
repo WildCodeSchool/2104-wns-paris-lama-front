@@ -17,7 +17,7 @@ function App(): JSX.Element {
             <Route path="/course">
               <AllCoursesPage />
             </Route>
-            <Route path="/add-courses">
+            <Route path="/new-courses">
               <AddCourse />
             </Route>
             <Route path="/:categories/:id">
