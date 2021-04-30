@@ -74,12 +74,18 @@ const TitleContent = styled.div`
   align-items: flex-start;
   justify-content: space-evenly;
   h1 {
-    font-size: 50px;
-  }
-  p {
     font-size: 30px;
   }
+  p {
+    font-size: 20px;
+  }
   @media (min-width: 700px) {
+    h1 {
+      font-size: 50px;
+    }
+    p {
+      font-size: 30px;
+    }
     grid-column: span 2;
   }
 `;

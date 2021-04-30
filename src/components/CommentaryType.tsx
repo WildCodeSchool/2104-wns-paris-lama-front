@@ -23,13 +23,17 @@ interface TextArea {
 
 interface NameUserInput {
   placeholder: string;
+  autofocus: string;
 }
 
-export const CommentaryType = (): JSX.Element => {
+export const CommentaryType = ({ id }: { id: string }): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let name: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let content: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rate: any;
-  const course = "608a6b89a774f6cde63f8912";
+  const course = id;
 
   const [createComment] = useMutation(COMMENTARY_CREATE, {
     onCompleted: () => {
@@ -67,6 +71,7 @@ export const CommentaryType = (): JSX.Element => {
             fullIcon={<i className="fa fa-star" />}
             color="#cbddd1"
             activeColor="gold"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(newValue: any) => {
               rate = newValue.toString();
             }}
@@ -78,6 +83,7 @@ export const CommentaryType = (): JSX.Element => {
           ref={(node) => {
             name = node;
           }}
+          autofocus="false"
         />
         <InputCommentary
           ref={(node) => {

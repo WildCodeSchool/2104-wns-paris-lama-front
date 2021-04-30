@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
 import logoMenu from "../assets/images/Logo-Menu.svg";
 
@@ -21,16 +22,22 @@ export const Navbar = (): JSX.Element => {
         <MenuContent>
           <ul>
             <li>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="/">Accueil</a>
+              <Link to="/" onClick={() => setOnClickAnim(!onClickAnim)}>
+                Accueil
+              </Link>
             </li>
             <li>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="/cours">Cours</a>
+              <Link to="/course" onClick={() => setOnClickAnim(!onClickAnim)}>
+                Cours
+              </Link>
             </li>
             <li>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#">Ajouter un cour</a>
+              <Link
+                to="/new-courses"
+                onClick={() => setOnClickAnim(!onClickAnim)}
+              >
+                Ajouter un cours
+              </Link>
             </li>
           </ul>
           <img src={logoMenu} alt="logo" width="100%" height="80%" />

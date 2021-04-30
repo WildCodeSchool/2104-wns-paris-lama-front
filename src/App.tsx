@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { Navbar } from "./components/Navbar";
 import { AllCoursesPage } from "./components/AllCoursesPage";
+import { Courses } from "./components/Courses";
+import ScrollTop from "./components/ScrollTop";
 
 function App(): JSX.Element {
   return (
@@ -11,11 +13,12 @@ function App(): JSX.Element {
         <Navbar />
         <section>
           <Switch>
-            <Route path="/cours">
+            <Route path="/course">
               <AllCoursesPage />
             </Route>
             <Route path="/:categories/:id">
-              <h1>Hello World!</h1>
+              <ScrollTop />
+              <Courses />
             </Route>
           </Switch>
         </section>

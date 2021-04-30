@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@apollo/client";
-// import { RouteComponentProps } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -17,6 +17,7 @@ const GET_ONE_COURSE_BY_ID = gql`
       title
       categories
       video
+      description
       link {
         title
         url
@@ -26,9 +27,18 @@ const GET_ONE_COURSE_BY_ID = gql`
   }
 `;
 
+interface IId {
+  categories: string;
+  id: string;
+}
+
 export const Courses = (): JSX.Element => {
+  const params = useParams<IId>();
+
+  const { id } = params;
   const { loading, error, data } = useQuery(GET_ONE_COURSE_BY_ID, {
-    variables: { id: "608a6b89a774f6cde63f8912" },
+    // eslint-disable-next-line react/destructuring-assignment
+    variables: { id },
   });
 
   const MoyenneStar = {
@@ -42,6 +52,7 @@ export const Courses = (): JSX.Element => {
     id: string;
     title: string;
     categories: string;
+    description: string;
     video: string;
     link: { title: string; url: string };
   };
@@ -92,6 +103,7 @@ export const Courses = (): JSX.Element => {
         <h2>Documentation</h2>
         <hr />
         <Doc>
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {data.getOneCourse.link.map((li: any) => (
             <a href={li.url}>
               <Card img="https://img-19.ccm2.net/8vUCl8TXZfwTt7zAOkBkuDRHiT8=/1240x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg">
@@ -107,7 +119,7 @@ export const Courses = (): JSX.Element => {
       <Commentary>
         <h2>Commentaires</h2>
         <hr />
-        <CommentaryType />
+        <CommentaryType id={id} />
       </Commentary>
     </Course>
   );
