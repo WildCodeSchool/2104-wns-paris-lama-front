@@ -1,7 +1,7 @@
 import React from "react";
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@apollo/client";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -103,6 +103,7 @@ export const Courses = (): JSX.Element => {
         <h2>Documentation</h2>
         <hr />
         <Doc>
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {data.getOneCourse.link.map((li: any) => (
             <a href={li.url}>
               <Card img="https://img-19.ccm2.net/8vUCl8TXZfwTt7zAOkBkuDRHiT8=/1240x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg">

@@ -27,8 +27,11 @@ interface NameUserInput {
 }
 
 export const CommentaryType = ({ id }: { id: string }): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let name: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let content: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rate: any;
   const course = id;
 
@@ -68,6 +71,7 @@ export const CommentaryType = ({ id }: { id: string }): JSX.Element => {
             fullIcon={<i className="fa fa-star" />}
             color="#cbddd1"
             activeColor="gold"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(newValue: any) => {
               rate = newValue.toString();
             }}
