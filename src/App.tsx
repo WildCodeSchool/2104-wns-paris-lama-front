@@ -24,6 +24,9 @@ function App(): JSX.Element {
               <ScrollTop />
               <Courses />
             </Route>
+            <Route path="/new-courses">
+              <AddCourse />
+            </Route>
           </Switch>
         </section>
       </div>
