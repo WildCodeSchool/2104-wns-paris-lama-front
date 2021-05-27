@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { gql } from "@apollo/client/core";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
@@ -10,7 +10,7 @@ import { CommentaryType } from "./CommentaryType";
 import img from "../assets/arrow.svg";
 import timer from "../assets/timer.svg";
 
-const GET_ONE_COURSE_BY_ID = gql`
+export const GET_ONE_COURSE_BY_ID = gql`
   query getOneCourse($id: String!) {
     getOneCourse(id: $id) {
       id
@@ -62,7 +62,7 @@ export const Courses = (): JSX.Element => {
 
   return (
     <Course>
-      <Title>{data.getOneCourse.title}</Title>
+      <Title data-testid="titleCourse">{data.getOneCourse.title}</Title>
       <Hr />
       <Notes>
         <ReactStars {...MoyenneStar} />
