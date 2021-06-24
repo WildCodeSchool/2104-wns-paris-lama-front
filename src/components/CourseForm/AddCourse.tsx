@@ -44,16 +44,12 @@ const AddCourse = (): JSX.Element => {
       // eslint-disable-next-line no-console
       console.error(error);
     }
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     setInputFields({
       type: "reset",
     });
   };
 
   const handleAddField = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     setInputFields({
       type: "addField",
       doc: {
@@ -82,7 +78,7 @@ const AddCourse = (): JSX.Element => {
     setInputFields({
       type: "addDoc",
       index,
-      [event?.target?.name]: event?.target?.value,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -115,7 +111,7 @@ const AddCourse = (): JSX.Element => {
             </label>
           </Input>
           {Object.values(inputFields?.doc || {}).map(
-            (el: any, index: number): JSX.Element => (
+            (el, index: number): JSX.Element => (
               <>
                 <Input>
                   <label htmlFor="title-documentation">
