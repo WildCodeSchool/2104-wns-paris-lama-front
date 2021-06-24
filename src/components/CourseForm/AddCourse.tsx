@@ -38,8 +38,10 @@ const AddCourse = (): JSX.Element => {
             link: Object.values(inputFields.doc),
           },
         },
+        // eslint-disable-next-line no-console
       }).then(() => console.log("Envoyer"));
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
     }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -113,7 +115,7 @@ const AddCourse = (): JSX.Element => {
             </label>
           </Input>
           {Object.values(inputFields?.doc || {}).map(
-            (el: any, index: number) => (
+            (el: any, index: number): JSX.Element => (
               <>
                 <Input>
                   <label htmlFor="title-documentation">

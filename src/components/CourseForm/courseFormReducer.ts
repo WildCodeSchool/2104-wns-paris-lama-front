@@ -12,7 +12,7 @@ export const initialState = {
   },
 };
 
-export const courseFormReducer = (state, action) => {
+export const courseFormReducer = (state: any, action: any): any => {
   switch (action.type) {
     case "addField":
       return addField(state, action);
@@ -25,13 +25,12 @@ export const courseFormReducer = (state, action) => {
       const copiedState = { ...state };
       copiedState.length = 0;
       return { ...copiedState };
-
     default:
       throw Error("Problème d'Ajout");
   }
 };
 
-const addField = (state, action) => {
+const addField = (state: any, action: any) => {
   const lastElement = Object.keys(state.doc || {}).length;
   const newState = {
     ...state,
@@ -45,7 +44,7 @@ const addField = (state, action) => {
   return { ...newState };
 };
 
-const addContent = (state, action) => {
+const addContent = (state: any, action: any) => {
   const newState = {
     ...state,
     ...(Object.keys(action).includes("title") && { title: action?.title }),
@@ -60,7 +59,7 @@ const addContent = (state, action) => {
   return { ...newState };
 };
 
-const addDoc = (state, action) => {
+const addDoc = (state: any, action: any) => {
   const newState = {
     ...state,
     doc: {
