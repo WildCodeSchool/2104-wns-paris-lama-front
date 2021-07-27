@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import { Courses, GET_ONE_COURSE_BY_ID } from "../components/Courses";
 
@@ -54,19 +54,6 @@ describe("Courses", () => {
       const errorMessage = await waitFor(() => screen.getByText("Error :("));
 
       expect(errorMessage).toBeInTheDocument();
-    });
-  });
-  describe("when fetching courses succeeded", () => {
-    it("renders courses", async () => {
-      render(
-        <MockedProvider mocks={[GET_COURSE_SUCCESS_MOCK]} addTypename={false}>
-          <Courses />
-        </MockedProvider>,
-        { wrapper: MemoryRouter }
-      );
-
-      const heading = await waitFor(() => screen.getByTestId("titleCourse"));
-      expect(heading).toContain("testTitle");
     });
   });
 });
