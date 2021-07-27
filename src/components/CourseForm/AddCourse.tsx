@@ -25,10 +25,10 @@ const AddCourse = (): JSX.Element => {
     initialState
   );
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createCourse({
+      await createCourse({
         variables: {
           data: {
             title: inputFields.title,
@@ -38,15 +38,14 @@ const AddCourse = (): JSX.Element => {
             link: Object.values(inputFields.doc),
           },
         },
-        // eslint-disable-next-line no-console
-      }).then(() => console.log("Envoyer"));
+      });
+      setInputFields({
+        type: "reset",
+      });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
     }
-    setInputFields({
-      type: "reset",
-    });
   };
 
   const handleAddField = () => {
@@ -84,8 +83,12 @@ const AddCourse = (): JSX.Element => {
 
   return (
     <NewCourse>
-      {/* eslint-disable-next-line react/button-has-type */}
-      <button onClick={handleAddField}>AddField</button>
+      {Object.values(inputFields?.doc || {})?.length <= 3 && (
+        // eslint-disable-next-line react/button-has-type
+        <button onClick={handleAddField} aria-hidden="true">
+          AddField
+        </button>
+      )}
       <form onSubmit={handleSubmit}>
         <NewCourseForm>
           <Input>
@@ -110,7 +113,7 @@ const AddCourse = (): JSX.Element => {
               />
             </label>
           </Input>
-          {Object.values(inputFields?.doc || {}).map(
+          {Object.values(inputFields?.doc || {})?.map(
             (el, index: number): JSX.Element => (
               <>
                 <Input>
