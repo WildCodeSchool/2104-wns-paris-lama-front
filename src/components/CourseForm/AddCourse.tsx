@@ -25,7 +25,7 @@ const AddCourse = (): JSX.Element => {
     initialState
   );
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createCourse({
@@ -52,9 +52,9 @@ const AddCourse = (): JSX.Element => {
     setInputFields({
       type: "addField",
       doc: {
-        linkTitle: "",
-        linkUrl: "",
-        imgUrl: "",
+        title: "",
+        url: "",
+        img: "",
       },
     });
   };
@@ -121,8 +121,8 @@ const AddCourse = (): JSX.Element => {
                     Titre documentation {`${index + 1}`} :
                     <input
                       id="title-documentation"
-                      name="linkTitle"
-                      value={el?.linkTitle}
+                      name="title"
+                      value={el?.title}
                       onChange={(event) => handleAddDoc(event, index)}
                     />
                   </label>
@@ -132,8 +132,8 @@ const AddCourse = (): JSX.Element => {
                     Lien documentation {`${index + 1}`}:
                     <input
                       id="link-documentation"
-                      name="linkUrl"
-                      value={el?.linkUrl}
+                      name="url"
+                      value={el?.url}
                       onChange={(event) => handleAddDoc(event, index)}
                     />
                   </label>
@@ -143,8 +143,8 @@ const AddCourse = (): JSX.Element => {
                     Lien Image de la documentation {`${index + 1}`}:
                     <input
                       id="link-documentation"
-                      name="imgUrl"
-                      value={el?.imgUrl}
+                      name="img"
+                      value={el?.img}
                       onChange={(event) => handleAddDoc(event, index)}
                     />
                   </label>
@@ -174,7 +174,9 @@ const AddCourse = (): JSX.Element => {
               />
             </label>
           </Input>
-          <button type="submit">Create course</button>
+          <div onClick={(e) => handleSubmit(e)} aria-hidden="true">
+            Create course
+          </div>
         </NewCourseForm>
       </form>
     </NewCourse>

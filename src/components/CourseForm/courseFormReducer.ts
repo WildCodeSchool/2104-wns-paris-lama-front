@@ -5,9 +5,9 @@ export const initialState = {
   description: "",
   doc: {
     0: {
-      linkTitle: "",
-      linkUrl: "",
-      imgUrl: "",
+      title: "",
+      url: "",
+      img: "",
     },
   },
 };
@@ -16,9 +16,9 @@ type ACTIONTYPE =
   | {
       type: "addField";
       doc: {
-        linkTitle: string;
-        linkUrl: string;
-        imgUrl: string;
+        title: string;
+        url: string;
+        img: string;
       };
     }
   | {
@@ -32,9 +32,9 @@ type ACTIONTYPE =
   | {
       type: "addDoc";
       index: number;
-      linkUrl: string;
-      linkTitle: string;
-      imgUrl: string;
+      url: string;
+      title: string;
+      img: string;
     }
   | {
       type: "reset";
@@ -79,14 +79,14 @@ export const courseFormReducer = (
           ...state?.doc,
           [action.index]: {
             ...state?.doc[action.index],
-            ...(Object.keys(action).includes("linkTitle") && {
-              linkTitle: action?.linkTitle,
+            ...(Object.keys(action).includes("title") && {
+              title: action?.title,
             }),
-            ...(Object.keys(action).includes("linkUrl") && {
-              linkUrl: action?.linkUrl,
+            ...(Object.keys(action).includes("url") && {
+              url: action?.url,
             }),
-            ...(Object.keys(action).includes("imgUrl") && {
-              imgUrl: action?.imgUrl,
+            ...(Object.keys(action).includes("img") && {
+              img: action?.img,
             }),
           },
         },
