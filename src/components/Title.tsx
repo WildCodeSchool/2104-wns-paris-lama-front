@@ -12,21 +12,19 @@ export const Title = ({ text }: TitleProps): JSX.Element => (
   </TitleContent>
 );
 
-const TitleContent = styled.div`
+const TitleContent = styled.span`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   width: 80px;
   text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  @media (min-width: 480px) {
-    width: 200px;
-  }
 `;
 
 const Underline = styled.div`
-  width: 100%;
+  width: 80px;
   height: 3px;
   background-color: #e04f4f;
   border-radius: 30px;
+  margin-top: 5px;
 `;

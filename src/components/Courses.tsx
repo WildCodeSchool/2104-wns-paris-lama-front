@@ -7,8 +7,8 @@ import styled from "styled-components";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
 import { CommentaryType } from "./CommentaryType";
-import img from "../assets/arrow.svg";
-import timer from "../assets/timer.svg";
+import img from "../assets/svg/arrow.svg";
+import timer from "../assets/svg/timer.svg";
 
 export const GET_ONE_COURSE_BY_ID = gql`
   query getOneCourse($id: String!) {
