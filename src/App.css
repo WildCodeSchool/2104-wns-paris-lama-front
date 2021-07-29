@@ -1,38 +1,16 @@
 @font-face {
-  font-family: "Belleza Regular";
-  src: url("./assets/fonts/Belleza-Regular.ttf") format("truetype");
+  font-family: "PTSansCaption Bold";
+  src: url("./assets/fonts/PTSansCaption-Bold.ttf") format("truetype");
 }
 @font-face {
-  font-family: "Manjari Thin";
-  src: url("./assets/fonts/Manjari-Thin.ttf") format("truetype");
+  font-family: "PTSansCaption Regular";
+  src: url("./assets/fonts/PTSansCaption-Regular.ttf") format("truetype");
 }
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #FBFFCD;
+  font-family: "PTSansCaption Regular", sans-serif;
 }
 
-section {
-  position: relative;
-  margin-top: 30px;
-}
-
-@media (min-width: 700px) {
-  section {
-    margin-top: 30px;
-  }
-}
-
-@media (max-width: 700px) {
-  section {
-    margin-top: 78px;
-  }
-}
-
-@media (min-width: 1000px) {
-  section {
-    margin-top: 50px;
-  }
-}
