@@ -6,13 +6,15 @@ import { AllCoursesPage } from "./components/AllCoursesPage";
 import { Courses } from "./components/Courses";
 import ScrollTop from "./components/ScrollTop";
 import { Title } from "./components/Title";
+import { NavBar } from "./components/NavMenu/NavBar";
 
 function App(): JSX.Element {
   return (
-    <Router>
+    <>
       <div className="App">
-        <Title text="Home" />
-        <section>
+        <NavBar />
+        <Router>
+          {/* <section>
           <Switch>
             <Route path="/course">
               <AllCoursesPage />
@@ -28,9 +30,10 @@ function App(): JSX.Element {
               <AddCourse />
             </Route>
           </Switch>
-        </section>
+        </section> */}
+        </Router>
       </div>
-    </Router>
+    </>
   );
 }
 
