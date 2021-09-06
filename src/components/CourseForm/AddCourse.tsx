@@ -1,29 +1,16 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-console */
 import React, { useReducer } from "react";
-import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
+import { useCreateCourseMutation } from "../../graphql/generated/graphql";
 import { courseFormReducer, initialState } from "./courseFormReducer";
 
-const ADD_NEW_COURSE = gql`
-  mutation createCourse($data: CourseInput!) {
-    createCourse(data: $data) {
-      title
-      video
-      categories
-      description
-      link {
-        title
-        url
-      }
-    }
-  }
-`;
-
 const AddCourse = (): JSX.Element => {
-  const [createCourse] = useMutation(ADD_NEW_COURSE);
   const [inputFields, setInputFields] = useReducer(
     courseFormReducer,
     initialState
   );
+  const [createCourse] = useCreateCourseMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,10 +25,8 @@ const AddCourse = (): JSX.Element => {
             link: Object.values(inputFields.doc),
           },
         },
-        // eslint-disable-next-line no-console
       }).then(() => console.log("Envoyer"));
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
     setInputFields({
@@ -53,9 +38,9 @@ const AddCourse = (): JSX.Element => {
     setInputFields({
       type: "addField",
       doc: {
-        linkTitle: "",
-        linkUrl: "",
-        imgUrl: "",
+        title: "",
+        url: "",
+        img: "",
       },
     });
   };
@@ -112,14 +97,14 @@ const AddCourse = (): JSX.Element => {
           </Input>
           {Object.values(inputFields?.doc || {}).map(
             (el, index: number): JSX.Element => (
-              <>
+              <div key={index}>
                 <Input>
                   <label htmlFor="title-documentation">
                     Titre documentation {`${index + 1}`} :
                     <input
                       id="title-documentation"
-                      name="linkTitle"
-                      value={el?.linkTitle}
+                      name="title"
+                      value={el?.title}
                       onChange={(event) => handleAddDoc(event, index)}
                     />
                   </label>
@@ -129,8 +114,8 @@ const AddCourse = (): JSX.Element => {
                     Lien documentation {`${index + 1}`}:
                     <input
                       id="link-documentation"
-                      name="linkUrl"
-                      value={el?.linkUrl}
+                      name="url"
+                      value={el?.url}
                       onChange={(event) => handleAddDoc(event, index)}
                     />
                   </label>
@@ -140,13 +125,13 @@ const AddCourse = (): JSX.Element => {
                     Lien Image de la documentation {`${index + 1}`}:
                     <input
                       id="link-documentation"
-                      name="imgUrl"
-                      value={el?.imgUrl}
+                      name="img"
+                      value={el?.img}
                       onChange={(event) => handleAddDoc(event, index)}
                     />
                   </label>
                 </Input>
-              </>
+              </div>
             )
           )}
           <Input>
