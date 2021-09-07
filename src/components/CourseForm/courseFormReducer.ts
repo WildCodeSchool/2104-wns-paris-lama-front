@@ -93,11 +93,11 @@ export const courseFormReducer = (
       };
       return { ...newState };
     }
-    case "reset":
-      // eslint-disable-next-line no-case-declarations
+    case "reset": {
       const copiedState = { ...state };
       Object.values(copiedState).length = 0;
       return { ...copiedState };
+    }
     default:
       throw Error("Problème d'Ajout");
   }

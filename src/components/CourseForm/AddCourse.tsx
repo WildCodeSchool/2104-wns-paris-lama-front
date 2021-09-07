@@ -12,10 +12,10 @@ const AddCourse = (): JSX.Element => {
   );
   const [createCourse] = useCreateCourseMutation();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      createCourse({
+      await createCourse({
         variables: {
           data: {
             title: inputFields.title,
@@ -25,13 +25,13 @@ const AddCourse = (): JSX.Element => {
             link: Object.values(inputFields.doc),
           },
         },
-      }).then(() => console.log("Envoyer"));
+      });
+      setInputFields({
+        type: "reset",
+      });
     } catch (error) {
       console.error(error);
     }
-    setInputFields({
-      type: "reset",
-    });
   };
 
   const handleAddField = () => {
@@ -69,8 +69,12 @@ const AddCourse = (): JSX.Element => {
 
   return (
     <NewCourse>
-      {/* eslint-disable-next-line react/button-has-type */}
-      <button onClick={handleAddField}>AddField</button>
+      {Object.values(inputFields?.doc || {})?.length <= 3 && (
+        // eslint-disable-next-line react/button-has-type
+        <button onClick={handleAddField} aria-hidden="true">
+          AddField
+        </button>
+      )}
       <form onSubmit={handleSubmit}>
         <NewCourseForm>
           <Input>
@@ -95,7 +99,7 @@ const AddCourse = (): JSX.Element => {
               />
             </label>
           </Input>
-          {Object.values(inputFields?.doc || {}).map(
+          {Object.values(inputFields?.doc || {})?.map(
             (el, index: number): JSX.Element => (
               <div key={index}>
                 <Input>
@@ -156,7 +160,9 @@ const AddCourse = (): JSX.Element => {
               />
             </label>
           </Input>
-          <button type="submit">Create course</button>
+          <div onClick={(e) => handleSubmit(e)} aria-hidden="true">
+            Create course
+          </div>
         </NewCourseForm>
       </form>
     </NewCourse>

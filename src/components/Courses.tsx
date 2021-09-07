@@ -3,9 +3,11 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ReactStars from "react-rating-stars-component";
 import { CommentaryType } from "./CommentaryType";
-import img from "../assets/arrow.svg";
-import timer from "../assets/timer.svg";
+
 import { useGetOneCourseQuery } from "../graphql/generated/graphql";
+
+import img from "../assets/svg/arrow.svg";
+import timer from "../assets/svg/timer.svg";
 
 interface IId {
   categories: string;
