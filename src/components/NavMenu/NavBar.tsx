@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+/* eslint-disable import/named */
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { ReactComponent as LogoSvg } from "../../assets/svg/logo.svg";
 import { ToggleButton } from "./Buttons/ToggleButton";
 import { Title } from "../Title";
 import { useScreenDimensions } from "../../hooks/useScreenDimensions";
+import userContext from "../../store/userContext";
 
 type TypeProps = {
   open: boolean;
@@ -13,11 +15,12 @@ type TypeProps = {
 export const NavBar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const { mobile } = useScreenDimensions();
+  const { user, updateUser } = useContext(userContext);
 
   const contentList = [
-    { text: "Home", link: "/" },
-    { text: "Login", link: "/" },
-    { text: "SignUp", link: "/" },
+    { text: "Home", link: "/", loggedIn: false },
+    { text: "Login", link: "/", loggedIn: !!user.accessToken },
+    { text: "SignUp", link: "/", loggedIn: !!user.accessToken },
   ];
 
   return (
@@ -27,20 +30,24 @@ export const NavBar = (): JSX.Element => {
           <LogoSvg />
           <H1>LAMA</H1>
         </LogoWrapper>
+        {user.accessToken ? `hello ${user.name}` : null}
         {!mobile && <NavTitle>LAMA</NavTitle>}
         {!mobile && (
           <>
             <NavDesktop>
               <ListWrapper>
-                {contentList.map(({ text, link }) => (
-                  <Link
-                    to={link}
-                    key={Date.now() + Math.random() * 100}
-                    className="link"
-                  >
-                    <Title text={text} />
-                  </Link>
-                ))}
+                {contentList.map(
+                  ({ text, link, loggedIn }) =>
+                    !loggedIn && (
+                      <Link
+                        to={link}
+                        key={Date.now() + Math.random() * 100}
+                        className="link"
+                      >
+                        <Title text={text} />
+                      </Link>
+                    )
+                )}
               </ListWrapper>
             </NavDesktop>
           </>

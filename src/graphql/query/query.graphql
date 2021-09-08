@@ -56,3 +56,18 @@ mutation createComment($data: CommentInput!) {
     course
   }
 }
+
+mutation register($data: UserInput!) {
+  Register(data: $data) {
+    accessToken
+    Ok
+    message
+  }
+}
+mutation login($data: UserLoginInput!) {
+  Login(data: $data) {
+    accessToken
+    Ok
+    message
+  }
+}
