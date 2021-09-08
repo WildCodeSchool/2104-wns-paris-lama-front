@@ -21,7 +21,7 @@ export const Input = ({
   const uid = v4();
   return (
     <>
-      <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+      <div className="w-full ">
         <label
           className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor={`form-${label}--${uid}`}
@@ -29,7 +29,7 @@ export const Input = ({
           {label}
         </label>
         <input
-          className="appearance-none block w-full bg-gray-200 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none rounded   focus:bg-gray-100 is-invalid"
+          className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
           id={`form-${label}--${uid}`}
           type={type}
           {...register}

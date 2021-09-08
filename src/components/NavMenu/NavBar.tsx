@@ -15,12 +15,12 @@ type TypeProps = {
 export const NavBar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const { mobile } = useScreenDimensions();
-  const { user, updateUser } = useContext(userContext);
+  const { user } = useContext(userContext);
 
   const contentList = [
-    { text: "Home", link: "/", loggedIn: false },
-    { text: "Login", link: "/", loggedIn: !!user.accessToken },
-    { text: "SignUp", link: "/", loggedIn: !!user.accessToken },
+    { text: "Home", link: "/" },
+    { text: "Login", link: "/login", loggedIn: !!user.accessToken },
+    { text: "SignUp", link: "/register", loggedIn: !!user.accessToken },
   ];
 
   return (
@@ -30,7 +30,6 @@ export const NavBar = (): JSX.Element => {
           <LogoSvg />
           <H1>LAMA</H1>
         </LogoWrapper>
-        {user.accessToken ? `hello ${user.name}` : null}
         {!mobile && <NavTitle>LAMA</NavTitle>}
         {!mobile && (
           <>
@@ -56,15 +55,21 @@ export const NavBar = (): JSX.Element => {
       </MenuWrapper>
       {mobile && (
         <MenuContent open={open}>
-          {contentList.map(({ text, link }) => (
-            <Link
-              to={link}
-              key={Date.now() + Math.random() * 100}
-              className="link"
-            >
-              <Title text={text} />
-            </Link>
-          ))}
+          {contentList.map(
+            ({ text, link, loggedIn }) =>
+              !loggedIn && (
+                <Link
+                  to={link}
+                  key={Date.now() + Math.random() * 100}
+                  className="link"
+                  onClick={() => {
+                    setOpen(!open);
+                  }}
+                >
+                  <Title text={text} />
+                </Link>
+              )
+          )}
         </MenuContent>
       )}
     </>

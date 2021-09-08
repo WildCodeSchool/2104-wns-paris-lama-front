@@ -62,8 +62,11 @@ export const Login = (): JSX.Element => {
     localStorage.setItem("user", userObj);
   };
   return (
-    <>
-      <form onSubmit={onSubmit}>
+    <div className="w-full max-w-xs mx-auto mt-5">
+      <form
+        onSubmit={onSubmit}
+        className="mx-auto flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      >
         <Input
           label="E-mail"
           inputName="email"
@@ -94,8 +97,13 @@ export const Login = (): JSX.Element => {
             },
           })}
         />
-        <button type="submit">submit</button>
+        <button
+          type="submit"
+          className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
+        >
+          submit
+        </button>
       </form>
-    </>
+    </div>
   );
 };
