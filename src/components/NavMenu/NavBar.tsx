@@ -15,22 +15,19 @@ type TypeProps = {
 export const NavBar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const { mobile } = useScreenDimensions();
-  const { user } = useContext(userContext);
+  const { user, updateUser } = useContext(userContext);
 
   const contentList = [
     { text: "Home", link: "/" },
-    { text: "Login", link: "/login", loggedIn: !!user.accessToken },
-    { text: "SignUp", link: "/register", loggedIn: !!user.accessToken },
+    { text: "Login", link: "/login", loggedIn: user && !!user.accessToken },
+    { text: "SignUp", link: "/register", loggedIn: user && !!user.accessToken },
+    // { text: "LogOut", link: "/", loggedIn: user.accessToken },
   ];
 
   return (
     <>
       <MenuWrapper>
-        <LogoWrapper>
-          <LogoSvg />
-          <H1>LAMA</H1>
-        </LogoWrapper>
-        {!mobile && <NavTitle>LAMA</NavTitle>}
+        <NavTitle>LAMA</NavTitle>
         {!mobile && (
           <>
             <NavDesktop>
@@ -46,6 +43,19 @@ export const NavBar = (): JSX.Element => {
                         <Title text={text} />
                       </Link>
                     )
+                )}
+                {user && user.accessToken && (
+                  <Link
+                    to="/"
+                    key={Date.now() + Math.random() * 100}
+                    className="link"
+                    onClick={() => {
+                      localStorage.removeItem("user");
+                      updateUser(null);
+                    }}
+                  >
+                    <Title text="LogOut" />
+                  </Link>
                 )}
               </ListWrapper>
             </NavDesktop>
@@ -97,7 +107,7 @@ const ListWrapper = styled.div`
 
 const NavTitle = styled.h1`
   font-family: "Racing Sans One", sans-serif;
-  font-size: 64px;
+  font-size: 3em;
   margin: 0;
   // position: absolute;
   // inset: 0;

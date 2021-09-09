@@ -12,11 +12,12 @@ import { Register } from "./views/Register";
 import { getCurrentUser } from "./utils/auth";
 import { UserContextProvider, UserState } from "./store/userContext";
 import { Login } from "./views/Login";
+import { Landing } from "./views/Landing";
 
 function App(): JSX.Element {
   // const [user, userSet] = useGlobalValue();
-  const [user, userSet] = useState<UserState>({} as UserState);
-  const updateUser = (_user: UserState) => userSet(_user);
+  const [user, userSet] = useState<UserState | null>(null);
+  const updateUser = (_user: UserState | null) => userSet(_user);
   useEffect(() => {
     const d = getCurrentUser();
     if (d) {
@@ -39,6 +40,9 @@ function App(): JSX.Element {
             <Switch>
               <Route path="/course">
                 <AllCoursesPage />
+              </Route>
+              <Route path="/">
+                <Landing />
               </Route>
               <Route path="/register">
                 <Register />

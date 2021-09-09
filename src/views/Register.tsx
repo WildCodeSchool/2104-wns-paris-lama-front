@@ -4,6 +4,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { Redirect } from "react-router-dom";
 import { Input } from "../components/Input";
 import { useRegisterMutation } from "../graphql/generated/graphql";
 import userContext from "../store/userContext";
@@ -54,18 +55,23 @@ export const Register = (): JSX.Element => {
         email,
         name,
       });
-      console.log(user);
-      token(JSON.stringify(user));
+      console.log(JSON.stringify(user));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          accessToken: respondeRegister.data?.Register.accessToken as string,
+          email,
+          name,
+        })
+      );
     } catch (error) {
       console.log(error);
     }
   });
 
-  const token = (userObj: string) => {
-    localStorage.setItem("user", userObj);
-  };
   return (
     <div className="w-full max-w-xs mx-auto mt-5">
+      {user && user.accessToken && <Redirect to="/" />}
       <form
         onSubmit={onSubmit}
         className="mx-auto flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
