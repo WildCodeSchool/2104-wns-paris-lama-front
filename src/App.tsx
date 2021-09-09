@@ -44,7 +44,7 @@ function App(): JSX.Element {
 
             <section>
               <Switch>
-                <Route path="/course" exact>
+                <Route path="/courses" exact>
                   <AllCoursesPage />
                 </Route>
                 <Route
@@ -52,7 +52,7 @@ function App(): JSX.Element {
                   exact
                   render={() => {
                     return user ? (
-                      <Redirect to="/course" />
+                      <Redirect to="/courses" />
                     ) : (
                       <Redirect to="/landing" />
                     );
@@ -61,12 +61,11 @@ function App(): JSX.Element {
                 <Route path="/register" exact component={Register} />
                 <Route path="/login" exact component={Login} />
                 <Route path="/landing" exact component={Landing} />
-                <Route path="/new-courses" exact component={AddCourse} />
+                <Route path="/new-course" exact component={AddCourse} />
                 <Route path="/:categories/:id" exact>
                   <ScrollTop />
                   <Courses />
                 </Route>
-                <Route path="/new-courses" exact component={AddCourse} />
               </Switch>
             </section>
           </div>

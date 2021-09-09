@@ -37,6 +37,14 @@ export const NavBar = (): JSX.Element => {
                     loggedIn && (
                       <Link
                         to={link}
+                        onClick={
+                          text === "LogOut"
+                            ? () => {
+                                localStorage.removeItem("user");
+                                updateUser(null);
+                              }
+                            : () => console.log("redirect")
+                        }
                         key={Date.now() + Math.random() * 100}
                         className="link"
                       >
