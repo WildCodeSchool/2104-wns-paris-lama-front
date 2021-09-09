@@ -1,29 +1,16 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-console */
 import React, { useReducer } from "react";
-import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
+import { useCreateCourseMutation } from "../../graphql/generated/graphql";
 import { courseFormReducer, initialState } from "./courseFormReducer";
 
-const ADD_NEW_COURSE = gql`
-  mutation createCourse($data: CourseInput!) {
-    createCourse(data: $data) {
-      title
-      video
-      categories
-      description
-      link {
-        title
-        url
-      }
-    }
-  }
-`;
-
 const AddCourse = (): JSX.Element => {
-  const [createCourse] = useMutation(ADD_NEW_COURSE);
   const [inputFields, setInputFields] = useReducer(
     courseFormReducer,
     initialState
   );
+  const [createCourse] = useCreateCourseMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +30,6 @@ const AddCourse = (): JSX.Element => {
         type: "reset",
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error);
     }
   };
@@ -115,7 +101,7 @@ const AddCourse = (): JSX.Element => {
           </Input>
           {Object.values(inputFields?.doc || {})?.map(
             (el, index: number): JSX.Element => (
-              <>
+              <div key={index}>
                 <Input>
                   <label htmlFor="title-documentation">
                     Titre documentation {`${index + 1}`} :
@@ -149,7 +135,7 @@ const AddCourse = (): JSX.Element => {
                     />
                   </label>
                 </Input>
-              </>
+              </div>
             )
           )}
           <Input>

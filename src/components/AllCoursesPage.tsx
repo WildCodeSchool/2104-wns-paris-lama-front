@@ -1,33 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { gql } from "@apollo/client/core";
-import { useQuery } from "@apollo/client";
 import styled from "styled-components";
-
-const GET_ALL_COURSES = gql`
-  {
-    getCourses {
-      id
-      title
-      categories
-      description
-      createdAt
-    }
-  }
-`;
+import { useGetCoursesQuery } from "../graphql/generated/graphql";
 
 export const AllCoursesPage = (): JSX.Element => {
-  const { loading, error, data } = useQuery(GET_ALL_COURSES);
+  const { loading, error, data } = useGetCoursesQuery();
 
-  type Courses = {
-    id: string;
-    title: string;
-    description: string;
-    categories: string;
-    createdAt: string;
-  };
-
-  if (loading) return <p>Loading...</p>;
+  if (loading || !data) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   return (
@@ -43,10 +22,10 @@ export const AllCoursesPage = (): JSX.Element => {
         </TitleContent>
         {data.getCourses.map(
           (
-            { id, title, categories, description, createdAt }: Courses,
+            { _id, title, categories, description, createdAt },
             index: number
           ) => (
-            <Link key={id} to={`/${categories}/${id}`}>
+            <Link key={_id} to={`/${categories}/${_id}`}>
               <Card index={index}>
                 <h1>{title}</h1>
                 <Description>{description}</Description>

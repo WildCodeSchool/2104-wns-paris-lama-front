@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+/* eslint-disable import/named */
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { ReactComponent as LogoSvg } from "../../assets/svg/logo.svg";
 import { ToggleButton } from "./Buttons/ToggleButton";
 import { Title } from "../Title";
 import { useScreenDimensions } from "../../hooks/useScreenDimensions";
+import userContext from "../../store/userContext";
 
 type TypeProps = {
   open: boolean;
@@ -12,30 +15,48 @@ type TypeProps = {
 export const NavBar = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const { mobile } = useScreenDimensions();
+  const { user, updateUser } = useContext(userContext);
 
   const contentList = [
     { text: "Home", link: "/" },
-    { text: "Login", link: "/" },
-    { text: "SignUp", link: "/" },
+    { text: "Login", link: "/login", loggedIn: user && !!user.accessToken },
+    { text: "SignUp", link: "/register", loggedIn: user && !!user.accessToken },
+    // { text: "LogOut", link: "/", loggedIn: user.accessToken },
   ];
 
   return (
     <>
-      {!mobile && <NavTitle>LAMA</NavTitle>}
       <MenuWrapper>
-        <LogoWrapper>
-          <LogoSvg />
-          <H1>LAMA</H1>
-        </LogoWrapper>
+        <NavTitle>LAMA</NavTitle>
         {!mobile && (
           <>
             <NavDesktop>
               <ListWrapper>
-                {contentList.map(({ text, link }) => (
-                  <Link href={link} key={Date.now() + Math.random() * 100}>
-                    <Title text={text} />
+                {contentList.map(
+                  ({ text, link, loggedIn }) =>
+                    !loggedIn && (
+                      <Link
+                        to={link}
+                        key={Date.now() + Math.random() * 100}
+                        className="link"
+                      >
+                        <Title text={text} />
+                      </Link>
+                    )
+                )}
+                {user && user.accessToken && (
+                  <Link
+                    to="/"
+                    key={Date.now() + Math.random() * 100}
+                    className="link"
+                    onClick={() => {
+                      localStorage.removeItem("user");
+                      updateUser(null);
+                    }}
+                  >
+                    <Title text="LogOut" />
                   </Link>
-                ))}
+                )}
               </ListWrapper>
             </NavDesktop>
           </>
@@ -44,11 +65,21 @@ export const NavBar = (): JSX.Element => {
       </MenuWrapper>
       {mobile && (
         <MenuContent open={open}>
-          {contentList.map(({ text, link }) => (
-            <Link href={link} key={Date.now() + Math.random() * 100}>
-              <Title text={text} />
-            </Link>
-          ))}
+          {contentList.map(
+            ({ text, link, loggedIn }) =>
+              !loggedIn && (
+                <Link
+                  to={link}
+                  key={Date.now() + Math.random() * 100}
+                  className="link"
+                  onClick={() => {
+                    setOpen(!open);
+                  }}
+                >
+                  <Title text={text} />
+                </Link>
+              )
+          )}
         </MenuContent>
       )}
     </>
@@ -58,7 +89,7 @@ export const NavBar = (): JSX.Element => {
 const MenuWrapper = styled.nav`
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
   padding: 20px 20px;
 `;
 
@@ -71,16 +102,17 @@ const ListWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 `;
 
 const NavTitle = styled.h1`
   font-family: "Racing Sans One", sans-serif;
-  font-size: 64px;
+  font-size: 3em;
   margin: 0;
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
+  // position: absolute;
+  // inset: 0;
+  // display: flex;
+  // justify-content: center;
 `;
 
 const MenuContent = styled.div<TypeProps>`
@@ -104,17 +136,17 @@ const LogoWrapper = styled.div`
   flex-direction: column;
 `;
 
-const Link = styled.a`
-  color: inherit;
-  text-decoration: none;
-  margin-bottom: 20px;
-  @media (min-width: 800px) {
-    margin-right: 50px;
-    :last-child {
-      margin-right: 0;
-    }
-  }
-`;
+// const Link = styled.a`
+//   color: inherit;
+//   text-decoration: none;
+//   margin-bottom: 20px;
+//   @media (min-width: 800px) {
+//     margin-right: 50px;
+//     :last-child {
+//       margin-right: 0;
+//     }
+//   }
+// `;
 
 const H1 = styled.h1`
   font-family: "Racing Sans One", sans-serif;
