@@ -18,10 +18,10 @@ export const NavBar = (): JSX.Element => {
   const { user, updateUser } = useContext(userContext);
 
   const contentList = [
-    { text: "Home", link: "/" },
-    { text: "Login", link: "/login", loggedIn: user && !!user.accessToken },
-    { text: "SignUp", link: "/register", loggedIn: user && !!user.accessToken },
-    // { text: "LogOut", link: "/", loggedIn: user.accessToken },
+    { text: "Courses", link: "/course", loggedIn: !!user?.accessToken },
+    { text: "Login", link: "/login", loggedIn: !user?.accessToken },
+    { text: "SignUp", link: "/register", loggedIn: !user?.accessToken },
+    { text: "LogOut", link: "/", loggedIn: !!user?.accessToken },
   ];
 
   return (
@@ -34,7 +34,7 @@ export const NavBar = (): JSX.Element => {
               <ListWrapper>
                 {contentList.map(
                   ({ text, link, loggedIn }) =>
-                    !loggedIn && (
+                    loggedIn && (
                       <Link
                         to={link}
                         key={Date.now() + Math.random() * 100}
@@ -43,19 +43,6 @@ export const NavBar = (): JSX.Element => {
                         <Title text={text} />
                       </Link>
                     )
-                )}
-                {user && user.accessToken && (
-                  <Link
-                    to="/"
-                    key={Date.now() + Math.random() * 100}
-                    className="link"
-                    onClick={() => {
-                      localStorage.removeItem("user");
-                      updateUser(null);
-                    }}
-                  >
-                    <Title text="LogOut" />
-                  </Link>
                 )}
               </ListWrapper>
             </NavDesktop>
