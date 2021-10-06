@@ -14,6 +14,7 @@ export const Landing = (): JSX.Element => {
     <div className="w-4/12 mx-auto mt-5 grid grid-rows-4 gap-4">
       <div className="row-span-2 col-span-2">
         <h1 className=" text-4xl ">
+          HIIIIIIIIIIII
           Way to communicate Resources to{" "}
           <span style={{ color: "#e04f4f" }}> Students</span>
         </h1>
