@@ -1,21 +1,9 @@
 import React from "react";
-import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
-
-const COMMENTARY_CREATE = gql`
-  mutation createComment($data: CommentInput!) {
-    createComment(data: $data) {
-      id
-      name
-      content
-      rate
-      course
-    }
-  }
-`;
+import { useCreateCommentMutation } from "../graphql/generated/graphql";
 
 interface TextArea {
   autofocus: string;
@@ -35,11 +23,7 @@ export const CommentaryType = ({ id }: { id: string }): JSX.Element => {
   let rate: any;
   const course = id;
 
-  const [createComment] = useMutation(COMMENTARY_CREATE, {
-    onCompleted: () => {
-      window.location.reload();
-    },
-  });
+  const [createComment] = useCreateCommentMutation();
 
   return (
     <Inputs>
