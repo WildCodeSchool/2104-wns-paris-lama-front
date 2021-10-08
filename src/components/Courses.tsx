@@ -1,13 +1,31 @@
 import React from "react";
+import { gql } from "@apollo/client/core";
+import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ReactStars from "react-rating-stars-component";
 import { CommentaryType } from "./CommentaryType";
+import img from "../assets/arrow.svg";
+import timer from "../assets/timer.svg";
 
-import { useGetOneCourseQuery } from "../graphql/generated/graphql";
-
-import img from "../assets/svg/arrow.svg";
-import timer from "../assets/svg/timer.svg";
+const GET_ONE_COURSE_BY_ID = gql`
+  query getOneCourse($id: String!) {
+    getOneCourse(id: $id) {
+      id
+      title
+      categories
+      video
+      description
+      link {
+        title
+        url
+      }
+      rating
+    }
+  }
+`;
 
 interface IId {
   categories: string;
@@ -18,7 +36,10 @@ export const Courses = (): JSX.Element => {
   const params = useParams<IId>();
 
   const { id } = params;
-  const { loading, error, data } = useGetOneCourseQuery({ variables: { id } });
+  const { loading, error, data } = useQuery(GET_ONE_COURSE_BY_ID, {
+    // eslint-disable-next-line react/destructuring-assignment
+    variables: { id },
+  });
 
   const MoyenneStar = {
     size: 30,
@@ -36,12 +57,12 @@ export const Courses = (): JSX.Element => {
     link: { title: string; url: string };
   };
 
-  if (loading || !data) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   return (
     <Course>
-      <Title data-testid="titleCourse">{data.getOneCourse.title}</Title>
+      <Title>{data.getOneCourse.title}</Title>
       <Hr />
       <Notes>
         <ReactStars {...MoyenneStar} />
