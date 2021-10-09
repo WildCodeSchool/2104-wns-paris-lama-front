@@ -70,11 +70,12 @@ export const Register = (): JSX.Element => {
   });
 
   return (
-    <div className="w-full max-w-xs mx-auto mt-5">
+    <div className="w-11/12 mx-auto max-w-xs mt-5">
+      {" "}
       {user && user.accessToken && <Redirect to="/" />}
       <form
         onSubmit={onSubmit}
-        className="mx-auto flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="mx-auto flex flex-col justify-center items-center bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className=" w-auto">
           <Input
@@ -130,7 +131,7 @@ export const Register = (): JSX.Element => {
           />
           <div className="w-full mx-auto mt-5">
             <button
-              className=" bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+              className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
               type="submit"
             >
               submit

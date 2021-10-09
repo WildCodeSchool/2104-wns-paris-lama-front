@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
@@ -6,10 +7,12 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -26,7 +29,11 @@ export type ClassRoom = {
   __typename?: "ClassRoom";
   _id: Scalars["ID"];
   name: Scalars["String"];
+  tags: Array<Scalars["String"]>;
+  desc: Scalars["String"];
+  image: Scalars["String"];
   inviteSecret: Scalars["String"];
+  inviteSecretTmp: Scalars["Float"];
   owner: User;
   rate: Scalars["Float"];
   state: Scalars["String"];
@@ -39,6 +46,9 @@ export type ClassRoom = {
 export type ClassRoomInput = {
   name: Scalars["String"];
   course?: Maybe<Array<Scalars["String"]>>;
+  tags?: Maybe<Array<Scalars["String"]>>;
+  desc: Scalars["String"];
+  image: Scalars["String"];
   members?: Maybe<Array<Scalars["String"]>>;
   state?: Maybe<Scalars["String"]>;
 };
@@ -46,6 +56,9 @@ export type ClassRoomInput = {
 export type ClassRoomUpdateInput = {
   _id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
+  tags?: Maybe<Array<Scalars["String"]>>;
+  desc: Scalars["String"];
+  image: Scalars["String"];
   rate?: Maybe<Scalars["Float"]>;
   state?: Maybe<Scalars["String"]>;
   course?: Maybe<Array<Scalars["String"]>>;
@@ -80,31 +93,24 @@ export type Course = {
   __typename?: "Course";
   _id: Scalars["ID"];
   title: Scalars["String"];
-  categories: Scalars["String"];
-  description: Scalars["String"];
-  video: Scalars["String"];
-  link: Array<Link>;
+  steps: Array<Steps>;
   rating: Scalars["Float"];
   localRate: Scalars["Float"];
+  classRoom: ClassRoom;
   createdAt: Scalars["DateTime"];
   updatedAt: Scalars["DateTime"];
 };
 
 export type CourseInput = {
   title: Scalars["String"];
-  categories: Scalars["String"];
-  video: Scalars["String"];
-  description?: Maybe<Scalars["String"]>;
-  link?: Maybe<Array<LinkInput>>;
+  steps: Array<StepsInput>;
+  classRoom: Scalars["String"];
 };
 
 export type CourseUpdateInput = {
   _id: Scalars["ID"];
-  title?: Maybe<Scalars["String"]>;
-  categories?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
-  video?: Maybe<Scalars["String"]>;
-  link?: Maybe<Array<LinkInput>>;
+  title: Scalars["String"];
+  steps: Array<StepsInput>;
 };
 
 export type Ilama_Response = {
@@ -121,19 +127,6 @@ export type IdeleteResponse = {
   deletedCount: Scalars["Float"];
 };
 
-export type Link = {
-  __typename?: "Link";
-  title: Scalars["String"];
-  url: Scalars["String"];
-  img: Scalars["String"];
-};
-
-export type LinkInput = {
-  title: Scalars["String"];
-  url: Scalars["String"];
-  img: Scalars["String"];
-};
-
 export type Mutation = {
   __typename?: "Mutation";
   createCourse: Course;
@@ -147,6 +140,7 @@ export type Mutation = {
   Login: RigesterResponse;
   createClass: ClassRoom;
   updateClass: ClassRoom;
+  joinClass: ClassRoom;
   deleteClass: IdeleteResponse;
 };
 
@@ -195,6 +189,12 @@ export type MutationUpdateClassArgs = {
   data: ClassRoomUpdateInput;
 };
 
+export type MutationJoinClassArgs = {
+  memberId: Scalars["String"];
+  invite: Scalars["String"];
+  data: ClassRoomUpdateInput;
+};
+
 export type MutationDeleteClassArgs = {
   id: Scalars["String"];
 };
@@ -234,6 +234,25 @@ export type RigesterResponse = {
   message: Scalars["String"];
 };
 
+export type Steps = {
+  __typename?: "Steps";
+  title: Scalars["String"];
+  next?: Maybe<Scalars["Float"]>;
+  step: Scalars["Float"];
+  prev?: Maybe<Scalars["Float"]>;
+  contentMd: Scalars["String"];
+  contentHtml: Scalars["String"];
+};
+
+export type StepsInput = {
+  title: Scalars["String"];
+  next?: Maybe<Scalars["Float"]>;
+  step: Scalars["Float"];
+  prev?: Maybe<Scalars["Float"]>;
+  contentMd: Scalars["String"];
+  contentHtml: Scalars["String"];
+};
+
 export type User = {
   __typename?: "User";
   _id: Scalars["ID"];
@@ -266,8 +285,16 @@ export type GetCoursesQuery = { __typename?: "Query" } & {
   getCourses: Array<
     { __typename?: "Course" } & Pick<
       Course,
-      "_id" | "title" | "createdAt" | "categories" | "description" | "video"
-    > & { link: Array<{ __typename?: "Link" } & Pick<Link, "title" | "url">> }
+      "title" | "createdAt" | "updatedAt" | "rating" | "localRate"
+    > & {
+        steps: Array<
+          { __typename?: "Steps" } & Pick<
+            Steps,
+            "title" | "next" | "step" | "prev" | "contentMd" | "contentHtml"
+          >
+        >;
+        classRoom: { __typename?: "ClassRoom" } & Pick<ClassRoom, "name">;
+      }
   >;
 };
 
@@ -278,8 +305,16 @@ export type GetOneCourseQueryVariables = Exact<{
 export type GetOneCourseQuery = { __typename?: "Query" } & {
   getOneCourse: { __typename?: "Course" } & Pick<
     Course,
-    "_id" | "title" | "categories" | "video" | "description" | "rating"
-  > & { link: Array<{ __typename?: "Link" } & Pick<Link, "title" | "url">> };
+    "title" | "createdAt" | "updatedAt" | "rating" | "localRate"
+  > & {
+      steps: Array<
+        { __typename?: "Steps" } & Pick<
+          Steps,
+          "title" | "next" | "step" | "prev" | "contentMd" | "contentHtml"
+        >
+      >;
+      classRoom: { __typename?: "ClassRoom" } & Pick<ClassRoom, "name">;
+    };
 };
 
 export type CreateCourseMutationVariables = Exact<{
@@ -289,19 +324,10 @@ export type CreateCourseMutationVariables = Exact<{
 export type CreateCourseMutation = { __typename?: "Mutation" } & {
   createCourse: { __typename?: "Course" } & Pick<
     Course,
-    "title" | "video" | "categories" | "description"
-  > & { link: Array<{ __typename?: "Link" } & Pick<Link, "title" | "url">> };
-};
-
-export type CreateCommentMutationVariables = Exact<{
-  data: CommentInput;
-}>;
-
-export type CreateCommentMutation = { __typename?: "Mutation" } & {
-  createComment: { __typename?: "Comment" } & Pick<
-    Comment,
-    "_id" | "name" | "content" | "rate" | "course"
-  >;
+    "title" | "createdAt" | "updatedAt" | "rating" | "localRate"
+  > & {
+      steps: Array<{ __typename?: "Steps" } & Pick<Steps, "title" | "step">>;
+    };
 };
 
 export type RegisterMutationVariables = Exact<{
@@ -324,6 +350,81 @@ export type LoginMutation = { __typename?: "Mutation" } & {
     RigesterResponse,
     "accessToken" | "Ok" | "message"
   >;
+};
+
+export type CreateClassMutationVariables = Exact<{
+  data: ClassRoomInput;
+}>;
+
+export type CreateClassMutation = { __typename?: "Mutation" } & {
+  createClass: { __typename?: "ClassRoom" } & Pick<
+    ClassRoom,
+    "_id" | "inviteSecret" | "name" | "state"
+  >;
+};
+
+export type GetMyClassesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetMyClassesQuery = { __typename?: "Query" } & {
+  getMyClasses: Array<
+    { __typename?: "ClassRoom" } & Pick<
+      ClassRoom,
+      | "_id"
+      | "name"
+      | "inviteSecret"
+      | "inviteSecretTmp"
+      | "rate"
+      | "state"
+      | "createdAt"
+      | "updatedAt"
+      | "tags"
+      | "image"
+      | "desc"
+    > & {
+        owner: { __typename?: "User" } & Pick<User, "_id" | "name">;
+        course: Array<
+          { __typename?: "Course" } & Pick<
+            Course,
+            "_id" | "title" | "updatedAt" | "rating"
+          >
+        >;
+        members: Array<{ __typename?: "User" } & Pick<User, "_id">>;
+      }
+  >;
+};
+
+export type GetOneClassRoomQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type GetOneClassRoomQuery = { __typename?: "Query" } & {
+  getOneClassRoom: { __typename?: "ClassRoom" } & Pick<
+    ClassRoom,
+    | "_id"
+    | "name"
+    | "inviteSecret"
+    | "inviteSecretTmp"
+    | "rate"
+    | "state"
+    | "createdAt"
+    | "updatedAt"
+    | "tags"
+    | "image"
+    | "desc"
+  > & {
+      owner: { __typename?: "User" } & Pick<User, "_id">;
+      course: Array<
+        { __typename?: "Course" } & Pick<
+          Course,
+          "_id" | "title" | "updatedAt" | "rating"
+        > & {
+            steps: Array<
+              { __typename?: "Steps" } & Pick<Steps, "title" | "step">
+            >;
+          }
+      >;
+      members: Array<{ __typename?: "User" } & Pick<User, "_id">>;
+    };
 };
 
 export const GetUserDocument = gql`
@@ -377,16 +478,22 @@ export type GetUserQueryResult = Apollo.QueryResult<
 export const GetCoursesDocument = gql`
   query getCourses {
     getCourses {
-      _id
-      link {
-        title
-        url
-      }
       title
+      steps {
+        title
+        next
+        step
+        prev
+        contentMd
+        contentHtml
+      }
+      classRoom {
+        name
+      }
       createdAt
-      categories
-      description
-      video
+      updatedAt
+      rating
+      localRate
     }
   }
 `;
@@ -441,16 +548,22 @@ export type GetCoursesQueryResult = Apollo.QueryResult<
 export const GetOneCourseDocument = gql`
   query getOneCourse($id: String!) {
     getOneCourse(id: $id) {
-      _id
       title
-      categories
-      video
-      description
-      link {
+      steps {
         title
-        url
+        next
+        step
+        prev
+        contentMd
+        contentHtml
       }
+      classRoom {
+        name
+      }
+      createdAt
+      updatedAt
       rating
+      localRate
     }
   }
 `;
@@ -509,13 +622,14 @@ export const CreateCourseDocument = gql`
   mutation createCourse($data: CourseInput!) {
     createCourse(data: $data) {
       title
-      video
-      categories
-      description
-      link {
+      steps {
         title
-        url
+        step
       }
+      createdAt
+      updatedAt
+      rating
+      localRate
     }
   }
 `;
@@ -556,63 +670,11 @@ export function useCreateCourseMutation(
 export type CreateCourseMutationHookResult = ReturnType<
   typeof useCreateCourseMutation
 >;
-export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>;
+export type CreateCourseMutationResult =
+  Apollo.MutationResult<CreateCourseMutation>;
 export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
->;
-export const CreateCommentDocument = gql`
-  mutation createComment($data: CommentInput!) {
-    createComment(data: $data) {
-      _id
-      name
-      content
-      rate
-      course
-    }
-  }
-`;
-export type CreateCommentMutationFn = Apollo.MutationFunction<
-  CreateCommentMutation,
-  CreateCommentMutationVariables
->;
-
-/**
- * __useCreateCommentMutation__
- *
- * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useCreateCommentMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateCommentMutation,
-    CreateCommentMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateCommentMutation,
-    CreateCommentMutationVariables
-  >(CreateCommentDocument, options);
-}
-export type CreateCommentMutationHookResult = ReturnType<
-  typeof useCreateCommentMutation
->;
-export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
-export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<
-  CreateCommentMutation,
-  CreateCommentMutationVariables
 >;
 export const RegisterDocument = gql`
   mutation register($data: UserInput!) {
@@ -711,4 +773,221 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<
   LoginMutation,
   LoginMutationVariables
+>;
+export const CreateClassDocument = gql`
+  mutation createClass($data: ClassRoomInput!) {
+    createClass(data: $data) {
+      _id
+      inviteSecret
+      name
+      state
+    }
+  }
+`;
+export type CreateClassMutationFn = Apollo.MutationFunction<
+  CreateClassMutation,
+  CreateClassMutationVariables
+>;
+
+/**
+ * __useCreateClassMutation__
+ *
+ * To run a mutation, you first call `useCreateClassMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClassMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClassMutation, { data, loading, error }] = useCreateClassMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateClassMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateClassMutation,
+    CreateClassMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateClassMutation, CreateClassMutationVariables>(
+    CreateClassDocument,
+    options
+  );
+}
+export type CreateClassMutationHookResult = ReturnType<
+  typeof useCreateClassMutation
+>;
+export type CreateClassMutationResult =
+  Apollo.MutationResult<CreateClassMutation>;
+export type CreateClassMutationOptions = Apollo.BaseMutationOptions<
+  CreateClassMutation,
+  CreateClassMutationVariables
+>;
+export const GetMyClassesDocument = gql`
+  query getMyClasses {
+    getMyClasses {
+      _id
+      name
+      inviteSecret
+      inviteSecretTmp
+      owner {
+        _id
+        name
+      }
+      rate
+      state
+      course {
+        _id
+        title
+        updatedAt
+        rating
+      }
+      members {
+        _id
+      }
+      createdAt
+      updatedAt
+      tags
+      image
+      desc
+    }
+  }
+`;
+
+/**
+ * __useGetMyClassesQuery__
+ *
+ * To run a query within a React component, call `useGetMyClassesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyClassesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyClassesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyClassesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetMyClassesQuery,
+    GetMyClassesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetMyClassesQuery, GetMyClassesQueryVariables>(
+    GetMyClassesDocument,
+    options
+  );
+}
+export function useGetMyClassesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMyClassesQuery,
+    GetMyClassesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetMyClassesQuery, GetMyClassesQueryVariables>(
+    GetMyClassesDocument,
+    options
+  );
+}
+export type GetMyClassesQueryHookResult = ReturnType<
+  typeof useGetMyClassesQuery
+>;
+export type GetMyClassesLazyQueryHookResult = ReturnType<
+  typeof useGetMyClassesLazyQuery
+>;
+export type GetMyClassesQueryResult = Apollo.QueryResult<
+  GetMyClassesQuery,
+  GetMyClassesQueryVariables
+>;
+export const GetOneClassRoomDocument = gql`
+  query getOneClassRoom($id: String!) {
+    getOneClassRoom(id: $id) {
+      _id
+      name
+      inviteSecret
+      inviteSecretTmp
+      owner {
+        _id
+      }
+      rate
+      state
+      course {
+        _id
+        title
+        steps {
+          title
+          step
+        }
+        updatedAt
+        rating
+      }
+      members {
+        _id
+      }
+      createdAt
+      updatedAt
+      tags
+      image
+      desc
+    }
+  }
+`;
+
+/**
+ * __useGetOneClassRoomQuery__
+ *
+ * To run a query within a React component, call `useGetOneClassRoomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOneClassRoomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOneClassRoomQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOneClassRoomQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetOneClassRoomQuery,
+    GetOneClassRoomQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOneClassRoomQuery, GetOneClassRoomQueryVariables>(
+    GetOneClassRoomDocument,
+    options
+  );
+}
+export function useGetOneClassRoomLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetOneClassRoomQuery,
+    GetOneClassRoomQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetOneClassRoomQuery,
+    GetOneClassRoomQueryVariables
+  >(GetOneClassRoomDocument, options);
+}
+export type GetOneClassRoomQueryHookResult = ReturnType<
+  typeof useGetOneClassRoomQuery
+>;
+export type GetOneClassRoomLazyQueryHookResult = ReturnType<
+  typeof useGetOneClassRoomLazyQuery
+>;
+export type GetOneClassRoomQueryResult = Apollo.QueryResult<
+  GetOneClassRoomQuery,
+  GetOneClassRoomQueryVariables
 >;

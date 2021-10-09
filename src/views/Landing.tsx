@@ -8,8 +8,8 @@ import userContext from "../store/userContext";
 import arrow from "../assets/svg/right-arrow.svg";
 
 export const Landing = (): JSX.Element => {
-  const { user, updateUser } = useContext(userContext);
-  if (user) return <Redirect to="/course" />;
+  const { user } = useContext(userContext);
+  if (user) return <Redirect to="/dashboard" />;
 
   return (
     <div className="w-10/12 mx-auto">
@@ -17,7 +17,7 @@ export const Landing = (): JSX.Element => {
         <div className="row-span-2 col-span-2">
           <h1 className=" text-4xl ">
             Way to communicate Resources to{" "}
-            <span style={{ color: "#e04f4f" }}> Students</span>
+            <span style={{ color: "#059669" }}> Students</span>
           </h1>
           <p className="mt-11">
             Join us to share resources and get feedback with comment and review
@@ -28,7 +28,7 @@ export const Landing = (): JSX.Element => {
           <Link
             to="/register"
             key={Date.now() + Math.random() * 100}
-            className=" bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline"
+            className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
           >
             SignUp
             <img src={arrow} alt="arrow" width="12" className="ml-3 inline" />

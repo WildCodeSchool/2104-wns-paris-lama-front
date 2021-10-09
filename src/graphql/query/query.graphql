@@ -7,55 +7,68 @@ query getUser {
 
 query getCourses {
   getCourses {
-    _id
-    link {
-      title
-      url
-    }
     title
+    steps {
+      title
+      next
+      step
+      prev
+      contentMd
+      contentHtml
+    }
+    classRoom {
+      name
+    }
     createdAt
-    categories
-    description
-    video
+    updatedAt
+    rating
+    localRate
   }
 }
 query getOneCourse($id: String!) {
   getOneCourse(id: $id) {
-    _id
     title
-    categories
-    video
-    description
-    link {
+    steps {
       title
-      url
+      next
+      step
+      prev
+      contentMd
+      contentHtml
     }
+    classRoom {
+      name
+    }
+    createdAt
+    updatedAt
     rating
+    localRate
   }
 }
 
 mutation createCourse($data: CourseInput!) {
   createCourse(data: $data) {
     title
-    video
-    categories
-    description
-    link {
+    steps {
       title
-      url
+      step
     }
+    createdAt
+    updatedAt
+    rating
+    localRate
   }
 }
 
-mutation createComment($data: CommentInput!) {
-  createComment(data: $data) {
-    _id
-    name
-    content
-    rate
-    course
-  }
-}
+# mutation createComment($data: CommentInput!) {
+#   createComment(data: $data) {
+#     _id
+#     name
+#     content
+#     rate
+#     course
+#   }
+# }
 
 mutation register($data: UserInput!) {
   Register(data: $data) {
@@ -69,5 +82,74 @@ mutation login($data: UserLoginInput!) {
     accessToken
     Ok
     message
+  }
+}
+mutation createClass($data: ClassRoomInput!) {
+  createClass(data: $data) {
+    _id
+    inviteSecret
+    name
+    state
+  }
+}
+
+query getMyClasses {
+  getMyClasses {
+    _id
+    name
+    inviteSecret
+    inviteSecretTmp
+    owner {
+      _id
+      name
+    }
+    rate
+    state
+    course {
+      _id
+      title
+      updatedAt
+      rating
+    }
+    members {
+      _id
+    }
+    createdAt
+    updatedAt
+    tags
+    image
+    desc
+  }
+}
+
+query getOneClassRoom($id: String!) {
+  getOneClassRoom(id: $id) {
+    _id
+    name
+    inviteSecret
+    inviteSecretTmp
+    owner {
+      _id
+    }
+    rate
+    state
+    course {
+      _id
+      title
+      steps {
+        title
+        step
+      }
+      updatedAt
+      rating
+    }
+    members {
+      _id
+    }
+    createdAt
+    updatedAt
+    tags
+    image
+    desc
   }
 }

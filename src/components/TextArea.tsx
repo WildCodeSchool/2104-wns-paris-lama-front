@@ -4,17 +4,15 @@ import React from "react";
 import { FieldError } from "react-hook-form";
 import { v4 } from "uuid";
 
-export const Input = ({
+export const TextArea = ({
   label,
   placeHolder,
-  type,
   error,
   register,
   inputName,
 }: {
   label: string;
   placeHolder: string;
-  type: string;
   error: FieldError | undefined;
   register: any;
   inputName: string | undefined;
@@ -24,15 +22,14 @@ export const Input = ({
     <>
       <div className="w-full ">
         <label
-          className="block uppercase tracking-wide text-gray-300 text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor={`form-${label}--${uid}`}
         >
           {label}
         </label>
-        <input
-          className="appearance-none block w-full bg-gray-700 text-gray-200 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-900 "
+        <textarea
+          className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
           id={`form-${label}--${uid}`}
-          type={type}
           {...register}
           placeholder={placeHolder}
           name={inputName}

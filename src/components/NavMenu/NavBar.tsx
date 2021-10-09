@@ -1,8 +1,8 @@
+/* eslint-disable no-console */
 /* eslint-disable import/named */
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { ReactComponent as LogoSvg } from "../../assets/svg/logo.svg";
 import { ToggleButton } from "./Buttons/ToggleButton";
 import { Title } from "../Title";
 import { useScreenDimensions } from "../../hooks/useScreenDimensions";
@@ -18,15 +18,14 @@ export const NavBar = (): JSX.Element => {
   const { user, updateUser } = useContext(userContext);
 
   const contentList = [
-    { text: "Courses", link: "/course", loggedIn: !!user?.accessToken },
-    { text: "Login", link: "/login", loggedIn: !user?.accessToken },
+    { text: "Log in", link: "/login", loggedIn: !user?.accessToken },
     { text: "SignUp", link: "/register", loggedIn: !user?.accessToken },
-    { text: "LogOut", link: "/", loggedIn: !!user?.accessToken },
+    { text: "Log out", link: "/", loggedIn: !!user?.accessToken },
   ];
 
   return (
-    <>
-      <MenuWrapper>
+    <div className="mb-10 shadow-2xl  bg-gray-900">
+      <MenuWrapper className=" w-11/12 mx-auto ">
         <NavTitle>LAMA</NavTitle>
         {!mobile && (
           <>
@@ -38,7 +37,7 @@ export const NavBar = (): JSX.Element => {
                       <Link
                         to={link}
                         onClick={
-                          text === "LogOut"
+                          text === "Log out"
                             ? () => {
                                 localStorage.removeItem("user");
                                 updateUser(null);
@@ -77,7 +76,7 @@ export const NavBar = (): JSX.Element => {
           )}
         </MenuContent>
       )}
-    </>
+    </div>
   );
 };
 
@@ -85,7 +84,6 @@ const MenuWrapper = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 20px;
 `;
 
 const NavDesktop = styled.div`
@@ -101,7 +99,7 @@ const ListWrapper = styled.div`
 `;
 
 const NavTitle = styled.h1`
-  font-family: "Racing Sans One", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif !important;
   font-size: 3em;
   margin: 0;
   // position: absolute;
@@ -122,29 +120,4 @@ const MenuContent = styled.div<TypeProps>`
   transition: transform 0.7s ease;
   transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
   z-index: 1000;
-`;
-
-const LogoWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-// const Link = styled.a`
-//   color: inherit;
-//   text-decoration: none;
-//   margin-bottom: 20px;
-//   @media (min-width: 800px) {
-//     margin-right: 50px;
-//     :last-child {
-//       margin-right: 0;
-//     }
-//   }
-// `;
-
-const H1 = styled.h1`
-  font-family: "Racing Sans One", sans-serif;
-  font-size: 13px;
-  margin: 0;
 `;
