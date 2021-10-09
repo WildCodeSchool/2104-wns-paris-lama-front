@@ -1,38 +1,36 @@
 @font-face {
-  font-family: "Belleza Regular";
-  src: url("./assets/fonts/Belleza-Regular.ttf") format("truetype");
+  font-family: "PTSansCaption Bold";
+  src: url("./assets/fonts/PTSansCaption-Bold.ttf") format("truetype");
 }
 @font-face {
-  font-family: "Manjari Thin";
-  src: url("./assets/fonts/Manjari-Thin.ttf") format("truetype");
+  font-family: "PTSansCaption Regular";
+  src: url("./assets/fonts/PTSansCaption-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Racing Sans One";
+  src: url("./assets/fonts/RacingSansOne-Regular.ttf") format("truetype");
 }
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #FBFFCD;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
-section {
-  position: relative;
-  margin-top: 30px;
-}
+/* .App {
+  width: 100vw;
+} */
 
-@media (min-width: 700px) {
-  section {
-    margin-top: 30px;
+.link {
+  color: inherit;
+  text-decoration: none;
+  margin-bottom: 20px;
+  @media (min-width: 800px) {
+    margin-right: 50px;
+    :last-child {
+      margin-right: 0;
+    }
   }
-}
-
-@media (max-width: 700px) {
-  section {
-    margin-top: 78px;
-  }
-}
-
-@media (min-width: 1000px) {
-  section {
-    margin-top: 50px;
-  }
+  cursor: pointer;
 }

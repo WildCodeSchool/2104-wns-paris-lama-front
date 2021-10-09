@@ -4,10 +4,19 @@ import "./index.css";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { UserState } from "./store/userContext";
+import "./assets/f.scss";
 
+const token: UserState | null = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user") as string)
+  : null;
 const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
   cache: new InMemoryCache(),
+
+  headers: {
+    Authorization: token ? `Bearer ${token.accessToken}` : "",
+  },
 });
 
 ReactDOM.render(
