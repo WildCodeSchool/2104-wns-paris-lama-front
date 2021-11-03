@@ -22,13 +22,13 @@ export const TextArea = ({
     <>
       <div className="w-full ">
         <label
-          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
           htmlFor={`form-${label}--${uid}`}
         >
           {label}
         </label>
         <textarea
-          className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
+          className="appearance-none block w-full bg-gray-700 text-gray-200 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-900 "
           id={`form-${label}--${uid}`}
           {...register}
           placeholder={placeHolder}

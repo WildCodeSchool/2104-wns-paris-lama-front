@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-multi-assign */
 /* eslint-disable no-param-reassign */
@@ -8,29 +9,49 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-console */
 
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 // import { Link, Redirect } from "react-router-dom";
 import { SimpleMdeReact } from "react-simplemde-editor";
 import MarkdownView from "react-showdown";
 import showdownHighlight from "showdown-highlight";
-import { useCreateCourseMutation } from "../graphql/generated/graphql";
+import remarkGfm from "remark-gfm";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import vscDarkPlus from "react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import courseContext from "../store/course";
+import {
+  GetOneClassRoomQuery,
+  useCreateCourseMutation,
+  useGetOneClassRoomLazyQuery,
+  useGetOneClassRoomQuery,
+} from "../graphql/generated/graphql";
 
 type ClassParams = {
   id: string;
 };
+type ICourse = {
+  contentMd: string;
+  step: number;
+  title: string;
+  next: number | null;
+  prev: number | null;
+  contentHtml: string;
+};
 export const CreateCourse = (): JSX.Element => {
-  const [steps, setSteps] = useState<
-    Array<{
-      contentMd: string;
-      step: number;
-      title: string;
-      next: number | null;
-      prev: number | null;
-      contentHtml: string;
-    }>
-  >([
+  const history = useHistory();
+  const { id } = useParams<ClassParams>();
+
+  const { updateCourses } = useContext(courseContext);
+
+  const [getQuery, { data }] = useGetOneClassRoomLazyQuery({
+    variables: { id },
+    onCompleted: (datassf) => console.log(datassf),
+  });
+  // todo update state after form submition
+
+  const [steps, setSteps] = useState<Array<ICourse>>([
     {
       contentMd: localStorage.getItem(`smde_demo`) || "Initial value",
       step: 1,
@@ -51,7 +72,6 @@ export const CreateCourse = (): JSX.Element => {
   const onAddStep = () => {
     const d = [...steps];
     d.forEach((l) => {
-      // eslint-disable-next-line no-param-reassign
       l.next = l.step + 1;
     });
     setSteps([
@@ -73,15 +93,15 @@ export const CreateCourse = (): JSX.Element => {
     setSteps(newArr);
   };
 
-  const { id } = useParams<ClassParams>();
   const { handleSubmit } = useForm({ mode: "onTouched" });
 
-  const [createCourse] = useCreateCourseMutation();
+  const [createCourse] = useCreateCourseMutation({
+    onCompleted: () => getQuery(),
+  });
 
   const onSubmit = handleSubmit(async () => {
-    console.log(steps);
     try {
-      const course = await createCourse({
+      await createCourse({
         variables: {
           data: {
             steps,
@@ -90,11 +110,18 @@ export const CreateCourse = (): JSX.Element => {
           },
         },
       });
-      console.log(course);
+      history.push(`/class-room/${id}`);
+      window.scrollTo(0, 0);
     } catch (err) {
       console.log(err);
     }
   });
+  React.useEffect(() => {
+    if (data && data.getOneClassRoom) {
+      console.log(data);
+      updateCourses(data);
+    }
+  }, [data, updateCourses]);
   const delay = 1000;
   const anOptions = useMemo(() => {
     return {
@@ -105,6 +132,29 @@ export const CreateCourse = (): JSX.Element => {
       },
     };
   }, [delay]);
+
+  React.useEffect(() => {
+    // Update the document title using the browser API
+    const div = document.createElement("div");
+    const circle1 = document.createElement("div");
+    const circle2 = document.createElement("div");
+    const circle3 = document.createElement("div");
+    circle1.className = `w-4  rounded-full h-4 bg-purple-400 `;
+    circle2.className = `w-4  rounded-full h-4 bg-green-400 `;
+    circle3.className = `w-4  rounded-full h-4 bg-red-400 `;
+    div.appendChild(circle1);
+    div.appendChild(circle2);
+    div.appendChild(circle3);
+
+    div.className = `flex gap-4 mb-4`;
+
+    document.querySelectorAll(".markdown-priview > pre").forEach((el) => {
+      el.childNodes.length === 1 &&
+        el.children[0].hasAttribute("class") &&
+        el.appendChild(div);
+    });
+  });
+
   const addVideo = (index: number) => {
     const video = `\n <iframe id="ytplayer" type="text/html" width="100%" height="460"
       src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
@@ -164,14 +214,29 @@ export const CreateCourse = (): JSX.Element => {
                   onChange={onChangeStepsContent(i)}
                   options={anOptions}
                 />
-                <MarkdownView
-                  className="bg-gray-800"
+                <ReactMarkdown
                   key={step.step}
-                  markdown={step.contentMd}
-                  options={{
-                    tables: true,
-                    emoji: true,
-                    extensions: [showdownHighlight],
+                  className="bg-gray-800 markdown-priview"
+                  children={step.contentMd}
+                  remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+                  skipHtml={false}
+                  allowElement="iframe"
+                  components={{
+                    code({ node, inline, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <SyntaxHighlighter
+                          children={String(children).replace(/\n$/, "")}
+                          language={match[1]}
+                          style={vscDarkPlus}
+                          PreTag="div"
+                        />
+                      ) : (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
                   }}
                 />
               </div>
@@ -180,7 +245,7 @@ export const CreateCourse = (): JSX.Element => {
           ))}
           <button
             type="submit"
-            className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
+            className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mb-5"
           >
             submit
           </button>
@@ -188,7 +253,7 @@ export const CreateCourse = (): JSX.Element => {
         <button
           onClick={onAddStep}
           type="button"
-          className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
+          className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mb-5"
         >
           add another step
         </button>

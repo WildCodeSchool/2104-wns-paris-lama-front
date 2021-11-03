@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
@@ -190,9 +189,7 @@ export type MutationUpdateClassArgs = {
 };
 
 export type MutationJoinClassArgs = {
-  memberId: Scalars["String"];
   invite: Scalars["String"];
-  data: ClassRoomUpdateInput;
 };
 
 export type MutationDeleteClassArgs = {
@@ -206,8 +203,10 @@ export type Query = {
   getComments: Array<Comment>;
   getOneComment: Comment;
   getUser?: Maybe<User>;
-  getMyClasses: Array<ClassRoom>;
+  getClasses: Array<ClassRoom>;
   getPublicClasses: Array<ClassRoom>;
+  getJoinedClasses: Array<ClassRoom>;
+  getFilteredClass: Array<ClassRoom>;
   getOneClassRoom: ClassRoom;
 };
 
@@ -221,6 +220,12 @@ export type QueryGetCommentsArgs = {
 
 export type QueryGetOneCommentArgs = {
   _id: Scalars["String"];
+};
+
+export type QueryGetFilteredClassArgs = {
+  name?: Maybe<Scalars["String"]>;
+  tag?: Maybe<Scalars["String"]>;
+  invite?: Maybe<Scalars["String"]>;
 };
 
 export type QueryGetOneClassRoomArgs = {
@@ -363,10 +368,46 @@ export type CreateClassMutation = { __typename?: "Mutation" } & {
   >;
 };
 
-export type GetMyClassesQueryVariables = Exact<{ [key: string]: never }>;
+export type GetFilteredClassQueryVariables = Exact<{
+  tag?: Maybe<Scalars["String"]>;
+  name?: Maybe<Scalars["String"]>;
+  invite?: Maybe<Scalars["String"]>;
+}>;
 
-export type GetMyClassesQuery = { __typename?: "Query" } & {
-  getMyClasses: Array<
+export type GetFilteredClassQuery = { __typename?: "Query" } & {
+  getFilteredClass: Array<
+    { __typename?: "ClassRoom" } & Pick<
+      ClassRoom,
+      | "_id"
+      | "name"
+      | "rate"
+      | "state"
+      | "createdAt"
+      | "updatedAt"
+      | "tags"
+      | "image"
+      | "desc"
+    > & {
+        owner: { __typename?: "User" } & Pick<User, "_id">;
+        course: Array<
+          { __typename?: "Course" } & Pick<
+            Course,
+            "_id" | "title" | "updatedAt" | "rating"
+          > & {
+              steps: Array<
+                { __typename?: "Steps" } & Pick<Steps, "title" | "step">
+              >;
+            }
+        >;
+        members: Array<{ __typename?: "User" } & Pick<User, "_id">>;
+      }
+  >;
+};
+
+export type GetClassesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetClassesQuery = { __typename?: "Query" } & {
+  getClasses: Array<
     { __typename?: "ClassRoom" } & Pick<
       ClassRoom,
       | "_id"
@@ -398,32 +439,17 @@ export type GetOneClassRoomQueryVariables = Exact<{
 }>;
 
 export type GetOneClassRoomQuery = { __typename?: "Query" } & {
-  getOneClassRoom: { __typename?: "ClassRoom" } & Pick<
-    ClassRoom,
-    | "_id"
-    | "name"
-    | "inviteSecret"
-    | "inviteSecretTmp"
-    | "rate"
-    | "state"
-    | "createdAt"
-    | "updatedAt"
-    | "tags"
-    | "image"
-    | "desc"
-  > & {
-      owner: { __typename?: "User" } & Pick<User, "_id">;
+  getOneClassRoom: { __typename?: "ClassRoom" } & Pick<ClassRoom, "_id"> & {
       course: Array<
         { __typename?: "Course" } & Pick<
           Course,
-          "_id" | "title" | "updatedAt" | "rating"
+          "_id" | "title" | "rating" | "updatedAt" | "createdAt"
         > & {
             steps: Array<
               { __typename?: "Steps" } & Pick<Steps, "title" | "step">
             >;
           }
       >;
-      members: Array<{ __typename?: "User" } & Pick<User, "_id">>;
     };
 };
 
@@ -827,9 +853,93 @@ export type CreateClassMutationOptions = Apollo.BaseMutationOptions<
   CreateClassMutation,
   CreateClassMutationVariables
 >;
-export const GetMyClassesDocument = gql`
-  query getMyClasses {
-    getMyClasses {
+export const GetFilteredClassDocument = gql`
+  query getFilteredClass($tag: String, $name: String, $invite: String) {
+    getFilteredClass(tag: $tag, name: $name, invite: $invite) {
+      _id
+      name
+      owner {
+        _id
+      }
+      rate
+      state
+      course {
+        _id
+        title
+        steps {
+          title
+          step
+        }
+        updatedAt
+        rating
+      }
+      members {
+        _id
+      }
+      createdAt
+      updatedAt
+      tags
+      image
+      desc
+    }
+  }
+`;
+
+/**
+ * __useGetFilteredClassQuery__
+ *
+ * To run a query within a React component, call `useGetFilteredClassQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFilteredClassQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFilteredClassQuery({
+ *   variables: {
+ *      tag: // value for 'tag'
+ *      name: // value for 'name'
+ *      invite: // value for 'invite'
+ *   },
+ * });
+ */
+export function useGetFilteredClassQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetFilteredClassQuery,
+    GetFilteredClassQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetFilteredClassQuery, GetFilteredClassQueryVariables>(
+    GetFilteredClassDocument,
+    options
+  );
+}
+export function useGetFilteredClassLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetFilteredClassQuery,
+    GetFilteredClassQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetFilteredClassQuery,
+    GetFilteredClassQueryVariables
+  >(GetFilteredClassDocument, options);
+}
+export type GetFilteredClassQueryHookResult = ReturnType<
+  typeof useGetFilteredClassQuery
+>;
+export type GetFilteredClassLazyQueryHookResult = ReturnType<
+  typeof useGetFilteredClassLazyQuery
+>;
+export type GetFilteredClassQueryResult = Apollo.QueryResult<
+  GetFilteredClassQuery,
+  GetFilteredClassQueryVariables
+>;
+export const GetClassesDocument = gql`
+  query getClasses {
+    getClasses {
       _id
       name
       inviteSecret
@@ -859,84 +969,67 @@ export const GetMyClassesDocument = gql`
 `;
 
 /**
- * __useGetMyClassesQuery__
+ * __useGetClassesQuery__
  *
- * To run a query within a React component, call `useGetMyClassesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMyClassesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetClassesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClassesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetMyClassesQuery({
+ * const { data, loading, error } = useGetClassesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetMyClassesQuery(
+export function useGetClassesQuery(
   baseOptions?: Apollo.QueryHookOptions<
-    GetMyClassesQuery,
-    GetMyClassesQueryVariables
+    GetClassesQuery,
+    GetClassesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetMyClassesQuery, GetMyClassesQueryVariables>(
-    GetMyClassesDocument,
+  return Apollo.useQuery<GetClassesQuery, GetClassesQueryVariables>(
+    GetClassesDocument,
     options
   );
 }
-export function useGetMyClassesLazyQuery(
+export function useGetClassesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMyClassesQuery,
-    GetMyClassesQueryVariables
+    GetClassesQuery,
+    GetClassesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetMyClassesQuery, GetMyClassesQueryVariables>(
-    GetMyClassesDocument,
+  return Apollo.useLazyQuery<GetClassesQuery, GetClassesQueryVariables>(
+    GetClassesDocument,
     options
   );
 }
-export type GetMyClassesQueryHookResult = ReturnType<
-  typeof useGetMyClassesQuery
+export type GetClassesQueryHookResult = ReturnType<typeof useGetClassesQuery>;
+export type GetClassesLazyQueryHookResult = ReturnType<
+  typeof useGetClassesLazyQuery
 >;
-export type GetMyClassesLazyQueryHookResult = ReturnType<
-  typeof useGetMyClassesLazyQuery
->;
-export type GetMyClassesQueryResult = Apollo.QueryResult<
-  GetMyClassesQuery,
-  GetMyClassesQueryVariables
+export type GetClassesQueryResult = Apollo.QueryResult<
+  GetClassesQuery,
+  GetClassesQueryVariables
 >;
 export const GetOneClassRoomDocument = gql`
   query getOneClassRoom($id: String!) {
     getOneClassRoom(id: $id) {
       _id
-      name
-      inviteSecret
-      inviteSecretTmp
-      owner {
-        _id
-      }
-      rate
-      state
       course {
         _id
         title
+        rating
         steps {
           title
           step
         }
         updatedAt
-        rating
+        createdAt
       }
-      members {
-        _id
-      }
-      createdAt
-      updatedAt
-      tags
-      image
-      desc
     }
   }
 `;

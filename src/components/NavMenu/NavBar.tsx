@@ -102,10 +102,6 @@ const NavTitle = styled.h1`
   font-family: "IBM Plex Sans", sans-serif !important;
   font-size: 3em;
   margin: 0;
-  // position: absolute;
-  // inset: 0;
-  // display: flex;
-  // justify-content: center;
 `;
 
 const MenuContent = styled.div<TypeProps>`

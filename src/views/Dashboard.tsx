@@ -5,170 +5,146 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-console */
 
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { useGetMyClassesQuery } from "../graphql/generated/graphql";
-import { timeDifference } from "../utils/date";
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
-const Menu = (): JSX.Element => (
-  <div className="absolute bg-gray-100 w-20 h-52 text-gray-800">menu</div>
-);
+import { Search } from "../components/Search";
+import { ClassCard } from "../components/ClassCard";
+import classRoomContext, { IClassRoomState } from "../store/classRoom";
+
 export const Dashboard = (): JSX.Element => {
-  const history = useHistory();
-  const [showMenu, showMenuSet] = useState<{ [key: string]: boolean }>({});
-  const showMenuHandler = (id: string) => {
-    if (showMenu[id]) {
-      const { [id]: tmp, ...rest } = showMenu;
-      showMenuSet(rest);
-    } else {
-      showMenu[id] = true;
-      showMenuSet({ [id]: true, ...showMenu });
-    }
-  };
-  const { loading, error, data } = useGetMyClassesQuery();
-  if (loading || !data) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-  return (
-    <div className=" w-11/12 mx-auto flex">
-      <div className="w-3/12 ">
-        <Link
-          to="/create-class-room"
-          key={Date.now() + Math.random() * 100}
-          className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
-        >
-          Create new class
-          <svg
-            className="ml-3 inline"
-            width="24"
-            height="24"
-            xmlns="http://www.w3.org/2000/svg"
-            fillRule="evenodd"
-            clipRule="evenodd"
-            fill="#fff"
-          >
-            <path d="M7 9h-7v-7h1v5.2c1.853-4.237 6.083-7.2 11-7.2 6.623 0 12 5.377 12 12s-5.377 12-12 12c-6.286 0-11.45-4.844-11.959-11h1.004c.506 5.603 5.221 10 10.955 10 6.071 0 11-4.929 11-11s-4.929-11-11-11c-4.66 0-8.647 2.904-10.249 7h5.249v1z" />
-          </svg>
-        </Link>
-      </div>
+  const [searchResults, setSearchResults] = useState<Array<IClassRoomState>>(
+    []
+  );
+  const [perPage] = useState(5);
+  const [pageNumber, setPageNumber] = useState(0);
+  const pageVisited = pageNumber * perPage;
+  console.log(searchResults.slice(pageVisited, pageVisited + perPage));
 
-      <div className="w-9/12 mx-auto ">
-        {data.getMyClasses.map(
-          ({ state, name, _id, desc, tags, image, owner, updatedAt }, i) => (
-            <div className=" w-10/12 lg:max-w-full lg:flex mb-8" key={_id}>
-              <div
-                className="h-36 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
-                style={{
-                  backgroundImage: `url(${image})`,
-                }}
-                onClick={() => history.push(`class-room/${_id}`)}
-              >
-                <img
-                  className="object-cover w-full h-full"
-                  src={image}
-                  alt={image}
-                />
-              </div>
-              <div className=" bg-gray-800   rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-                <div className="mb-2">
-                  {state === "PUBLIC" ? (
-                    <p className="bg-green-200 text-green-800  text-xs px-2 rounded-full  uppercase font-semibold tracking-wide  inline-block  items-center">
-                      public
-                    </p>
-                  ) : (
-                    <p className="bg-green-200 text-green-800  text-xs px-2  rounded-full  uppercase font-semibold tracking-wide flex items-center w-36 ">
-                      <svg
-                        className="text-gray-500 w-3 h-3 mr-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="#108497"
-                      >
-                        <path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z" />
-                      </svg>
-                      Members only
-                    </p>
-                  )}
-                  <div
-                    className="float-right  test inline relative cursor-pointer "
-                    onClick={() => showMenuHandler(_id)}
-                  >
-                    {showMenu[_id] ? (
-                      <div
-                        x-show="dropdownOpen"
-                        className="absolute right-1 top-4 mt-2 w-48 bg-gray-900 rounded-md overflow-hidden shadow-xl z-20"
-                      >
-                        <div className="px-4 py-2 text-sm text-gray-200 border-b border-gray-700 hover:bg-gray-800 flex gap-4 items-center">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="#108497"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                          >
-                            <path d="M19 24h-14c-1.104 0-2-.896-2-2v-16h18v16c0 1.104-.896 2-2 2zm-7-10.414l3.293-3.293 1.414 1.414-3.293 3.293 3.293 3.293-1.414 1.414-3.293-3.293-3.293 3.293-1.414-1.414 3.293-3.293-3.293-3.293 1.414-1.414 3.293 3.293zm10-8.586h-20v-2h6v-1.5c0-.827.673-1.5 1.5-1.5h5c.825 0 1.5.671 1.5 1.5v1.5h6v2zm-8-3h-4v1h4v-1z" />
-                          </svg>
-                          <span className="text-md">Delete</span>
-                        </div>
-                        <div
-                          className=" px-4 py-2 text-sm text-gray-200 border-b border-gray-700 hover:bg-gray-800   gap-4  flex items-center"
-                          onClick={() => console.log(_id)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="#108497"
-                          >
-                            <path d="M24 20v1h-4v-1h.835c.258 0 .405-.178.321-.422l-.473-1.371h-2.231l-.575-1.59h2.295l-1.362-4.077-1.154 3.451-.879-2.498.921-2.493h2.222l3.033 8.516c.111.315.244.484.578.484h.469zm-6-1h1v2h-7v-2h.532c.459 0 .782-.453.633-.887l-.816-2.113h-6.232l-.815 2.113c-.149.434.174.887.633.887h1.065v2h-7v-2h.43c.593 0 1.123-.375 1.32-.935l5.507-15.065h3.952l5.507 15.065c.197.56.69.935 1.284.935zm-10.886-6h4.238l-2.259-6.199-1.979 6.199z" />
-                          </svg>
-                          <span className="text-md">Edit</span>
-                        </div>
-                        <div className=" px-4 py-2 text-sm text-gray-200 hover:bg-gray-800   gap-4  flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="#108497"
-                          >
-                            <path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z" />
-                          </svg>
-                          <span className="text-md">Share</span>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="text-gray-50 font-bold text-xl my-2">
-                    {name}
-                  </div>
-                  <p className="text-gray-200 text-base">{desc}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="text-sm">
-                      <p className="text-gray-300 leading-none">{owner.name}</p>
-                      <p className="text-gray-400">
-                        {timeDifference(new Date(updatedAt).getTime())}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-6 pt-4 pb-2">
-                    {tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-block bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        )}
+  const { classRooms, updateClassRooms } = useContext(classRoomContext);
+
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  React.useEffect(() => {
+    const results = classRooms.filter(
+      (classRoom) =>
+        classRoom.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        classRoom.tags.includes(searchTerm.toLowerCase()) ||
+        classRoom.desc.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setSearchResults(results);
+  }, [searchTerm, classRooms]);
+
+  useEffect(() => {
+    if (classRooms) {
+      updateClassRooms(classRooms);
+    }
+  }, [classRooms, updateClassRooms]);
+  const changePage = ({ selected }: { selected: number }) => {
+    window.scrollTo(0, 0);
+    setPageNumber(selected);
+  };
+  const dsqdf = searchResults
+    .slice(pageVisited, pageVisited + perPage)
+    .map(({ state, name, _id, desc, tags, image, owner, updatedAt }) => (
+      <ClassCard
+        key={_id}
+        state={state}
+        name={name}
+        _id={_id}
+        desc={desc}
+        tags={tags}
+        image={image}
+        owner={owner}
+        updatedAt={updatedAt}
+        setSearchTerm={(tag) => setSearchTerm(tag)}
+      />
+    ));
+  return (
+    <div>
+      <div className=" w-11/12 mx-auto flex gap-4">
+        <div className="w-3/12 flex flex-col gap-1 items-start  ">
+          <Search
+            label="Search"
+            placeHolder="Search"
+            handleChange={handleChange}
+            searchTerm={searchTerm}
+          />
+          <Link
+            to="/create-class-room"
+            key={Date.now() + Math.random() * 100}
+            className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
+          >
+            Create new class
+            <svg
+              className="ml-3 inline"
+              width="24"
+              height="24"
+              xmlns="http://www.w3.org/2000/svg"
+              fillRule="evenodd"
+              clipRule="evenodd"
+              fill="#fff"
+            >
+              <path d="M7 9h-7v-7h1v5.2c1.853-4.237 6.083-7.2 11-7.2 6.623 0 12 5.377 12 12s-5.377 12-12 12c-6.286 0-11.45-4.844-11.959-11h1.004c.506 5.603 5.221 10 10.955 10 6.071 0 11-4.929 11-11s-4.929-11-11-11c-4.66 0-8.647 2.904-10.249 7h5.249v1z" />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="w-9/12 mx-auto ">
+          <div className=" flex justify-between  mb-5">
+            {searchTerm ? (
+              <>
+                <p className="text-purple-600 ">
+                  {`${searchResults.length} Result${
+                    searchResults.length > 1 ? "s" : ""
+                  } found`}
+                </p>
+                <span
+                  className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn cursor-pointer"
+                  onClick={() => setSearchTerm("")}
+                >
+                  {" "}
+                  X{" "}
+                </span>
+              </>
+            ) : null}
+          </div>
+          {searchResults.length > 5 && (
+            <ReactPaginate
+              nextLabel="Next"
+              previousLabel="Prev"
+              pageCount={Math.ceil(searchResults.length / perPage)}
+              onPageChange={changePage}
+              containerClassName="flex gap-4 mb-5  justify-center items-center "
+              nextLinkClassName="flex items-center jus  px-2 py-1 text-gray-300 bg-gray-500 rounded-md"
+              previousLinkClassName="flex items-center px-2 py-1 text-gray-300 bg-gray-500 rounded-md"
+              activeLinkClassName=" bg-gray-700"
+              pageRangeDisplayed={4}
+              marginPagesDisplayed={5}
+              pageLinkClassName="px-2 py-1 text-gray-200 bg-gray-500 rounded-md hover:bg-gray-400 hover:text-white"
+            />
+          )}
+          {dsqdf}
+          {searchResults.length > 5 && (
+            <ReactPaginate
+              nextLabel="Next"
+              previousLabel="Prev"
+              pageCount={Math.ceil(searchResults.length / perPage)}
+              onPageChange={changePage}
+              containerClassName="flex gap-4 mb-5  justify-center items-center "
+              nextLinkClassName="flex items-center jus  px-2 py-1 text-gray-300 bg-gray-500 rounded-md"
+              previousLinkClassName="flex items-center px-2 py-1 text-gray-300 bg-gray-500 rounded-md"
+              activeLinkClassName=" bg-gray-700"
+              pageRangeDisplayed={4}
+              marginPagesDisplayed={5}
+              pageLinkClassName="px-2 py-1 text-gray-200 bg-gray-500 rounded-md hover:bg-gray-400 hover:text-white"
+            />
+          )}
+        </div>
       </div>
     </div>
   );

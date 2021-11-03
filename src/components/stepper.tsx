@@ -9,7 +9,6 @@ export const Steps = ({
   stepTitleNext,
   stepNumberNext,
   stepTitlePrev,
-  stepNumberPrev,
   onPrevClick,
   onNextClick,
   stepsCount,
@@ -18,7 +17,6 @@ export const Steps = ({
   onRestart,
 }: {
   stepTitlePrev: string | undefined;
-  stepNumberPrev: string | undefined;
   stepTitleNext: string | undefined;
   stepNumberNext: string | undefined;
   onPrevClick: () => void | undefined;
@@ -30,12 +28,12 @@ export const Steps = ({
 }): JSX.Element => {
   return (
     <>
-      <div className=" sticky bottom-0 left-0 w-full h-20 bg-gray-700 ">
+      <div className="  fixed bottom-0 left-0 w-full h-20 bg-gray-700 ">
         <div className="relative">
-          <div className="overflow-hidden h-2 text-xs flex rounded bg-green-200">
+          <div className="overflow-hidden h-2 text-xs flex rounded bg-purple-200">
             <div
               style={{ width: `${(+currentStep / +stepsCount) * 100}%` }}
-              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-400"
+              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-600"
             />
           </div>
         </div>

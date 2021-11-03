@@ -23,7 +23,7 @@ const TitleContent = styled.span`
 const Underline = styled.div`
   width: 80px;
   height: 3px;
-  background-color: #059669;
+  background-color: #392755;
   border-radius: 30px;
   margin-top: 5px;
 `;

@@ -29,7 +29,6 @@ export const Login = (): JSX.Element => {
   const [loginUser] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(errors, data);
     try {
       const respondeLogin = await loginUser({
         variables: {

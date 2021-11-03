@@ -94,7 +94,7 @@ export const CreateClassRoom = (): JSX.Element => {
     <div className="w-11/12 mx-auto">
       <form
         onSubmit={onSubmit}
-        className="mx-auto w-4/6 flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="mx-auto w-4/6 flex flex-col justify-center items-center bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <Input
           label="Name"
@@ -139,7 +139,7 @@ export const CreateClassRoom = (): JSX.Element => {
         />
         <div className="w-full ">
           <div className="mt-4">
-            <span className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            <span className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2">
               Status
             </span>
             <div className="mt-2">
@@ -166,7 +166,7 @@ export const CreateClassRoom = (): JSX.Element => {
         </div>
         <button
           type="submit"
-          className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
+          className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mb-5"
         >
           submit
         </button>
@@ -176,7 +176,7 @@ export const CreateClassRoom = (): JSX.Element => {
           Invite your audince with this invation link it will expire in 48 hours
           but you can regenerate new one
           <div
-            className="bg-gray-300 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
+            className="bg-gray-800 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
             onClick={() => {
               navigator.clipboard.writeText(secret);
               showCopyAlertSet(true);
@@ -199,7 +199,7 @@ export const CreateClassRoom = (): JSX.Element => {
               </svg>
             </p>
             {showCopyAlert ? (
-              <div className="bg-gray-300 w-2/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer">
+              <div className="bg-gray-800 w-2/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer">
                 copied
                 <svg
                   className="ml-3 inline float-right "

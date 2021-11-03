@@ -1,26 +1,28 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useGetOneClassRoomQuery } from "../graphql/generated/graphql";
+import courseContext from "../store/course";
 import { timeDifference } from "../utils/date";
 
-type ClassParams = {
+export type ClassParams = {
   id: string;
 };
 export const ClassRoom = (): JSX.Element => {
   const history = useHistory();
   const { id } = useParams<ClassParams>();
+  const { courses, updateCourses } = useContext(courseContext);
 
-  const { loading, error, data } = useGetOneClassRoomQuery({
+  const { data } = useGetOneClassRoomQuery({
     variables: { id },
   });
-  if (loading) return <p>Loading...</p>;
-  if (error || !data) {
-    console.log(error, data);
-    return <p>{error && error.message}</p>;
-  }
+  React.useEffect(() => {
+    if (data && data.getOneClassRoom) {
+      updateCourses(data);
+    }
+  }, [data, updateCourses, id]);
   return (
     <>
       <div className="w-11/12 mx-auto flex ">
@@ -45,7 +47,7 @@ export const ClassRoom = (): JSX.Element => {
           </Link>
         </div>
         <div className="grid grid-cols-3 w-9/12 mx-auto gap-4  justify-center items-center">
-          {data.getOneClassRoom.course.map((c) => (
+          {courses?.getOneClassRoom.course.map((c) => (
             <div
               className="bg-gray-800 p-6 hover:scale-x-125 col-span-1 rounded-lg shadow-lg cursor-pointer"
               key={c._id}
@@ -54,7 +56,7 @@ export const ClassRoom = (): JSX.Element => {
               }
             >
               <div className="flex items-baseline justify-between">
-                <span className=" bg-green-200 text-green-800  text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
+                <span className=" bg-purple-100 text-purple-600   text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
                   New
                 </span>
                 <div className=" text-gray-200 text-xs   font-semibold tracking-wider">
@@ -74,7 +76,7 @@ export const ClassRoom = (): JSX.Element => {
                 </span>
               </div>
               <div className="mt-4">
-                <span className="text-green-600  text-sm font-semibold">
+                <span className="text-indi-600  text-sm font-semibold">
                   {c.rating} ratings{" "}
                 </span>
               </div>

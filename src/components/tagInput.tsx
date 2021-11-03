@@ -25,7 +25,7 @@ export const TagInput = ({
     <>
       <div className="w-full ">
         <label
-          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
           htmlFor="form-tag"
         >
           Tags
@@ -35,7 +35,7 @@ export const TagInput = ({
             {tags.map((tag, index) => (
               <span
                 key={index}
-                className=" flex flex-row   gap-2 justify-betweeninline-block bg-gray-200 hover:bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                className=" flex flex-row   gap-2 justify-betweeninline-block bg-gray-900 hover:bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2"
               >
                 #{tag}
                 <button onClick={() => deleteTag(index)}>x</button>
@@ -43,7 +43,7 @@ export const TagInput = ({
             ))}
           </div>
           <input
-            className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
+            className="appearance-none block w-full bg-gray-700 text-gray-200 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-900 "
             value={input}
             placeholder="Enter a tag"
             onKeyDown={onKeyDown}
