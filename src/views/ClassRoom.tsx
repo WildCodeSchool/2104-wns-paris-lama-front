@@ -37,7 +37,7 @@ export const ClassRoom = (): JSX.Element => {
       <div className="w-11/12 mx-auto  gap-6  mt-6 flex flex-col md:flex-row justify-center md:items-start items-center ">
         <div className=" w-9/12 md:w-4/12 lg:w-3/12">
           <Link
-            to={`/class-room/${id}/create-course/1`}
+            to={`/class-room/${id}/create-course`}
             key={Date.now() + Math.random() * 100}
             className=" text-gray-200 flex   items-center justify-around   font-bold py-4 px-4 shadow-sm focus:outline-none focus:shadow-outline btn"
           >

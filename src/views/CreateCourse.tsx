@@ -1,22 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-children-prop */
-/* eslint-disable react/button-has-type */
-/* eslint-disable no-multi-assign */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router-dom";
 import { Markdown } from "../components/Markdown";
-import TextAreaMarkdown from "../components/TextAreaMarkdown";
-// import { Steps } from "../components/stepper";
-// import TextAreaMarkdown from "../components/TextAreaMarkdown";
 import { useCreateCourseMutation } from "../graphql/generated/graphql";
 
 type ClassParams = {
@@ -82,12 +72,10 @@ export const CreateCourse = (): JSX.Element => {
     setSteps(stepsCopy);
   };
   const onChangeStepsContent = (i) => (data: Array<any>) => {
-    console.log(data, i);
     const stepsCopy = [...steps];
     const content = JSON.stringify(data);
     stepsCopy[i].contentMd = content;
     setSteps(stepsCopy);
-    console.log(stepsCopy);
   };
 
   const { handleSubmit } = useForm({ mode: "onTouched" });
@@ -97,7 +85,6 @@ export const CreateCourse = (): JSX.Element => {
   });
 
   const onSubmit = handleSubmit(async () => {
-    console.log(steps);
     try {
       await createCourse({
         variables: {

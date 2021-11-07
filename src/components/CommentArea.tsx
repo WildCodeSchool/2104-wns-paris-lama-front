@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/ban-types */
-import ReactDOM from "react-dom";
 import React, { FunctionComponent, useMemo } from "react";
 import {
   createPlateComponents,
@@ -31,7 +29,6 @@ import {
   createResetNodePlugin,
   createSelectOnBackspacePlugin,
   createSoftBreakPlugin,
-  createDndPlugin,
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
@@ -58,11 +55,8 @@ import {
   ExcalidrawElement,
 } from "@udecode/plate-excalidraw";
 import "tippy.js/dist/tippy.css";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
-import { v4 } from "uuid";
 import { withStyledPlaceHolders } from "../config/components/withStyledPlaceHolders";
 import { ToolbarButtons } from "../config/components/CommentToolbars";
 import { CONFIG } from "../config/config";
@@ -110,7 +104,6 @@ const CommentArea = ({ value, onChange, id }: { value; onChange; id }) => {
       createFontSizePlugin(),
       createKbdPlugin(),
       createNodeIdPlugin(),
-      createDndPlugin(),
       createIndentPlugin(CONFIG.indent),
       createAutoformatPlugin(CONFIG.autoformat),
       createResetNodePlugin(CONFIG.resetBlockType),

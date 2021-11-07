@@ -1,4 +1,4 @@
-FROM node:14.16.1
+FROM node:14.18.1
 
 RUN mkdir /client
 WORKDIR /client

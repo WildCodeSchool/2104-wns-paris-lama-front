@@ -31,7 +31,6 @@ import {
   createResetNodePlugin,
   createSelectOnBackspacePlugin,
   createSoftBreakPlugin,
-  createDndPlugin,
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
@@ -58,8 +57,6 @@ import {
   ExcalidrawElement,
 } from "@udecode/plate-excalidraw";
 import "tippy.js/dist/tippy.css";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 import { v4 } from "uuid";
@@ -121,7 +118,6 @@ const TextAreaMarkdownReadOnly = ({
       createFontSizePlugin(),
       createKbdPlugin(),
       createNodeIdPlugin(),
-      createDndPlugin(),
       createIndentPlugin(CONFIG.indent),
       createAutoformatPlugin(CONFIG.autoformat),
       createResetNodePlugin(CONFIG.resetBlockType),
@@ -146,16 +142,14 @@ const TextAreaMarkdownReadOnly = ({
   }, []);
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <Plate
-        id={id}
-        plugins={pluginsMemo}
-        components={components}
-        editableProps={CONFIG.editableProps}
-        initialValue={value}
-        onChange={onChange}
-      />
-    </DndProvider>
+    <Plate
+      id={id}
+      plugins={pluginsMemo}
+      components={components}
+      editableProps={CONFIG.editableProps}
+      initialValue={value}
+      onChange={onChange}
+    />
   );
 };
 export default TextAreaMarkdownReadOnly;

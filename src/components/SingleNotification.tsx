@@ -5,10 +5,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 import { useHistory } from "react-router-dom";
-import {
-  useGetCommentsQuery,
-  useGetOneCommentQuery,
-} from "../graphql/generated/graphql";
+import { useGetOneCommentQuery } from "../graphql/generated/graphql";
 
 export const SingleNotification = ({
   notification,

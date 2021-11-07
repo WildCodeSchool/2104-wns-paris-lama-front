@@ -5,12 +5,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 import { useForm } from "react-hook-form";
-import { v4 } from "uuid";
 import { useCreateCommentMutation } from "../graphql/generated/graphql";
-import CommentArea from "./CommentArea";
 import { CommentChild } from "./CommentChild";
-import { Markdown } from "./Markdown";
-import { ToggleButton } from "./NavMenu/Buttons/ToggleButton";
 
 type FormValues = {
   comment: string;
@@ -20,14 +16,12 @@ export const Comments = ({
   course,
   step,
   classRoom,
-  open,
   onChangeOpen,
 }: {
   comments;
   course;
   step;
   classRoom;
-  open;
   onChangeOpen;
 }): JSX.Element => {
   const [parentComment, parentCommentSet] = React.useState<string | null>(null);

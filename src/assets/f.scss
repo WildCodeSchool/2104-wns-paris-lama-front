@@ -245,7 +245,7 @@ body::-webkit-scrollbar-thumb {
   ol,
   li {
     text-align: left;
-    list-style: revert;
+    list-style: revert !important;
     padding: revert !important;
   }
 
@@ -277,6 +277,7 @@ body::-webkit-scrollbar-thumb {
   th {
     background-color: #1f2937;
   }
+  .slate-media_embed,
   iframe {
     max-height: 300px;
   }
@@ -774,4 +775,16 @@ pre[class*="language-"] > code[class*="language-"] {
 }
 .slate-HeadingToolbar {
   color: rgba(109, 40, 217, 0.7) !important;
+  border: none !important;
+  padding-bottom: 3px !important;
+  justify-content: center !important;
+  flex-direction: column;
+  flex-flow: row wrap !important;
+}
+.slate-ol,
+.slate-ul {
+  list-style: revert !important;
+}
+.slate-MediaEmbedElement-input {
+  display: none !important;
 }

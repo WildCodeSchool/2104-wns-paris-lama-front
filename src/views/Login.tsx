@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { Input } from "../components/Input";
 import { useLoginMutation } from "../graphql/generated/graphql";
 import userContext from "../store/userContext";

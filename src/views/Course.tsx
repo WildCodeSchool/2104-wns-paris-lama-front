@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-children-prop */
 /* eslint-disable no-console */
@@ -38,6 +39,7 @@ export const Course = (): JSX.Element => {
       course: course_id,
     },
   });
+
   if (loading || !data) return <p>Loading...</p>;
   if (error) return <p>Error </p>;
 
@@ -58,11 +60,10 @@ export const Course = (): JSX.Element => {
     <>
       <div className="flex min-h-full gap-4  flex-col mt-6 ">
         <MenuContent
-          className="bg-gray-800  absolute flex flex-col items-center  pt-10  w-4/12"
+          className="bg-gray-800  fixed flex flex-col items-center  pt-10  w-4/12"
           open={open}
         >
           <Comments
-            open={open}
             onChangeOpen={() => setOpen(!open)}
             comments={comments?.getComments}
             course={course_id}
@@ -75,7 +76,7 @@ export const Course = (): JSX.Element => {
           <div className="flex flex-col justify-center items-center w-full">
             <div className=" py-3 px-5 rounded-3xl w-10/12">
               {currentstep && (
-                <div id="markdown">
+                <div id="markdown" className="select-none">
                   <TextAreaMarkdownReadOnly
                     id={v4()}
                     value={JSON.parse(currentstep.contentMd)}

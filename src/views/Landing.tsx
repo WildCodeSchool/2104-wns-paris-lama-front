@@ -4,9 +4,8 @@
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useContext } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import userContext from "../store/userContext";
-import arrow from "../assets/svg/right-arrow.svg";
 
 export const Landing = (): JSX.Element => {
   const { user } = useContext(userContext);

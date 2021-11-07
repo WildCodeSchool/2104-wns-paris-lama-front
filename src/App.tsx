@@ -100,7 +100,7 @@ function App(): JSX.Element {
                   />
                   <PrivateRoute
                     isAuthenticated={!!user}
-                    path="/class-room/:id/create-course/:stepId"
+                    path="/class-room/:id/create-course"
                     exact
                     component={CreateCourse}
                   />
@@ -165,3 +165,19 @@ function App(): JSX.Element {
 }
 
 export default App;
+
+// TODO
+/**
+ * Fix rerndring course page on open comments
+ * Fix cant resolve Slate point
+ * add update & delete on class & course & comment
+ * add rating page at the end of course
+ * code highlight problem
+ * refacoring the code dont repeat your self
+ * adding profile edit delete page(bio , photo ...etc)
+ * notification on comment  to course owner or to parent comment
+ * notification on join class
+ * join class
+ * beter input on create course
+ * better ui on notification
+ */

@@ -31,7 +31,6 @@ import {
   createResetNodePlugin,
   createSelectOnBackspacePlugin,
   createSoftBreakPlugin,
-  createDndPlugin,
   createStrikethroughPlugin,
   createSubscriptPlugin,
   createSuperscriptPlugin,
@@ -58,8 +57,6 @@ import {
   ExcalidrawElement,
 } from "@udecode/plate-excalidraw";
 import "tippy.js/dist/tippy.css";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 import { v4 } from "uuid";
@@ -113,7 +110,6 @@ const Plugins = ({ value, onChange, id }: { value; onChange; id }) => {
       createFontSizePlugin(),
       createKbdPlugin(),
       createNodeIdPlugin(),
-      createDndPlugin(),
       createIndentPlugin(CONFIG.indent),
       createAutoformatPlugin(CONFIG.autoformat),
       createResetNodePlugin(CONFIG.resetBlockType),
@@ -147,7 +143,15 @@ const Plugins = ({ value, onChange, id }: { value; onChange; id }) => {
       initialValue={value}
       onChange={onChange}
     >
-      <div className="text-purple-700">
+      <div
+        className="text-purple-700 fixed bg-gray-800 z-10 w-1/12"
+        style={{
+          left: "0",
+          top: "50%",
+          transform: "translateY(-50%)",
+          maxWidth: "75px",
+        }}
+      >
         <HeadingToolbar>
           <ToolbarButtons />
         </HeadingToolbar>
