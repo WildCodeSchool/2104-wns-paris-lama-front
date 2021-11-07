@@ -1,0 +1,16 @@
+{
+  "plugins": [
+    "babel-plugin-twin",
+    "babel-plugin-macros",
+    "styled-components",
+    [
+      "prismjs",
+      {
+        "languages": ["javascript", "css", "html"],
+        "plugins": ["line-numbers", "show-language"],
+        "theme": "okaidia",
+        "css": true
+      }
+    ]
+  ]
+}

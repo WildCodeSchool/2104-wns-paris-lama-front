@@ -9,7 +9,7 @@ RUN npm i
 
 COPY public public
 COPY tsconfig.json ./
-COPY .cracorc ./
+COPY .cracorc.js ./
 COPY tailwind.config.js ./
 COPY src src
 

@@ -67,25 +67,27 @@ export type ClassRoomUpdateInput = {
 export type Comment = {
   __typename?: "Comment";
   _id: Scalars["ID"];
-  name: Scalars["String"];
+  commenter: User;
+  parent?: Maybe<Scalars["String"]>;
   content: Scalars["String"];
-  rate: Scalars["String"];
+  step: Scalars["String"];
   course: Scalars["String"];
+  classRoom: Scalars["String"];
+  createdAt: Scalars["DateTime"];
+  updatedAt: Scalars["DateTime"];
 };
 
 export type CommentInput = {
-  name: Scalars["String"];
   content: Scalars["String"];
-  rate: Scalars["String"];
-  course?: Maybe<Scalars["String"]>;
+  step: Scalars["String"];
+  parent?: Maybe<Scalars["String"]>;
+  course: Scalars["String"];
+  classRoom: Scalars["String"];
 };
 
 export type CommentUpdateInput = {
   _id: Scalars["ID"];
-  name: Scalars["String"];
   content: Scalars["String"];
-  rate: Scalars["String"];
-  course?: Maybe<Scalars["String"]>;
 };
 
 export type Course = {
@@ -133,7 +135,7 @@ export type Mutation = {
   deleteCourse: IdeleteResponse;
   createComment: Comment;
   updateComment: Comment;
-  deleteComment: Scalars["Boolean"];
+  deleteComment: IdeleteResponse;
   Register: RigesterResponse;
   UpdateUser: Ilama_Response;
   Login: RigesterResponse;
@@ -189,7 +191,9 @@ export type MutationUpdateClassArgs = {
 };
 
 export type MutationJoinClassArgs = {
+  memberId: Scalars["String"];
   invite: Scalars["String"];
+  data: ClassRoomUpdateInput;
 };
 
 export type MutationDeleteClassArgs = {
@@ -201,13 +205,14 @@ export type Query = {
   getCourses: Array<Course>;
   getOneCourse: Course;
   getComments: Array<Comment>;
+  getChildComments: Array<Comment>;
   getOneComment: Comment;
   getUser?: Maybe<User>;
+  getMyClasses: Array<ClassRoom>;
+  isJoined: Scalars["Boolean"];
   getClasses: Array<ClassRoom>;
-  getPublicClasses: Array<ClassRoom>;
-  getJoinedClasses: Array<ClassRoom>;
-  getFilteredClass: Array<ClassRoom>;
   getOneClassRoom: ClassRoom;
+  getFilteredClass: ClassRoom;
 };
 
 export type QueryGetOneCourseArgs = {
@@ -216,20 +221,27 @@ export type QueryGetOneCourseArgs = {
 
 export type QueryGetCommentsArgs = {
   course: Scalars["String"];
+  step: Scalars["String"];
+};
+
+export type QueryGetChildCommentsArgs = {
+  id: Scalars["String"];
 };
 
 export type QueryGetOneCommentArgs = {
-  _id: Scalars["String"];
+  id: Scalars["String"];
 };
 
-export type QueryGetFilteredClassArgs = {
-  name?: Maybe<Scalars["String"]>;
-  tag?: Maybe<Scalars["String"]>;
-  invite?: Maybe<Scalars["String"]>;
+export type QueryIsJoinedArgs = {
+  id: Scalars["String"];
 };
 
 export type QueryGetOneClassRoomArgs = {
   id: Scalars["String"];
+};
+
+export type QueryGetFilteredClassArgs = {
+  invite: Scalars["String"];
 };
 
 export type RigesterResponse = {
@@ -369,39 +381,35 @@ export type CreateClassMutation = { __typename?: "Mutation" } & {
 };
 
 export type GetFilteredClassQueryVariables = Exact<{
-  tag?: Maybe<Scalars["String"]>;
-  name?: Maybe<Scalars["String"]>;
-  invite?: Maybe<Scalars["String"]>;
+  invite: Scalars["String"];
 }>;
 
 export type GetFilteredClassQuery = { __typename?: "Query" } & {
-  getFilteredClass: Array<
-    { __typename?: "ClassRoom" } & Pick<
-      ClassRoom,
-      | "_id"
-      | "name"
-      | "rate"
-      | "state"
-      | "createdAt"
-      | "updatedAt"
-      | "tags"
-      | "image"
-      | "desc"
-    > & {
-        owner: { __typename?: "User" } & Pick<User, "_id">;
-        course: Array<
-          { __typename?: "Course" } & Pick<
-            Course,
-            "_id" | "title" | "updatedAt" | "rating"
-          > & {
-              steps: Array<
-                { __typename?: "Steps" } & Pick<Steps, "title" | "step">
-              >;
-            }
-        >;
-        members: Array<{ __typename?: "User" } & Pick<User, "_id">>;
-      }
-  >;
+  getFilteredClass: { __typename?: "ClassRoom" } & Pick<
+    ClassRoom,
+    | "_id"
+    | "name"
+    | "rate"
+    | "state"
+    | "createdAt"
+    | "updatedAt"
+    | "tags"
+    | "image"
+    | "desc"
+  > & {
+      owner: { __typename?: "User" } & Pick<User, "_id">;
+      course: Array<
+        { __typename?: "Course" } & Pick<
+          Course,
+          "_id" | "title" | "updatedAt" | "rating"
+        > & {
+            steps: Array<
+              { __typename?: "Steps" } & Pick<Steps, "title" | "step">
+            >;
+          }
+      >;
+      members: Array<{ __typename?: "User" } & Pick<User, "_id">>;
+    };
 };
 
 export type GetClassesQueryVariables = Exact<{ [key: string]: never }>;
@@ -452,6 +460,82 @@ export type GetOneClassRoomQuery = { __typename?: "Query" } & {
       >;
     };
 };
+
+export type GetCommentsQueryVariables = Exact<{
+  course: Scalars["String"];
+  step: Scalars["String"];
+}>;
+
+export type GetCommentsQuery = { __typename?: "Query" } & {
+  getComments: Array<
+    { __typename?: "Comment" } & Pick<
+      Comment,
+      | "content"
+      | "_id"
+      | "parent"
+      | "course"
+      | "classRoom"
+      | "step"
+      | "updatedAt"
+      | "createdAt"
+    > & { commenter: { __typename?: "User" } & Pick<User, "_id" | "name"> }
+  >;
+};
+
+export type GetChildCommentsQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type GetChildCommentsQuery = { __typename?: "Query" } & {
+  getChildComments: Array<
+    { __typename?: "Comment" } & Pick<
+      Comment,
+      | "content"
+      | "_id"
+      | "parent"
+      | "course"
+      | "classRoom"
+      | "step"
+      | "updatedAt"
+      | "createdAt"
+    > & { commenter: { __typename?: "User" } & Pick<User, "_id" | "name"> }
+  >;
+};
+
+export type CreateCommentMutationVariables = Exact<{
+  data: CommentInput;
+}>;
+
+export type CreateCommentMutation = { __typename?: "Mutation" } & {
+  createComment: { __typename?: "Comment" } & Pick<
+    Comment,
+    "content" | "_id" | "parent" | "course" | "step" | "updatedAt" | "createdAt"
+  > & { commenter: { __typename?: "User" } & Pick<User, "_id" | "name"> };
+};
+
+export type GetOneCommentQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type GetOneCommentQuery = { __typename?: "Query" } & {
+  getOneComment: { __typename?: "Comment" } & Pick<
+    Comment,
+    | "content"
+    | "_id"
+    | "parent"
+    | "course"
+    | "classRoom"
+    | "step"
+    | "updatedAt"
+    | "createdAt"
+  > & { commenter: { __typename?: "User" } & Pick<User, "_id" | "name"> };
+};
+
+export type IsJoinedQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type IsJoinedQuery = { __typename?: "Query" } & Pick<Query, "isJoined">;
 
 export const GetUserDocument = gql`
   query getUser {
@@ -854,8 +938,8 @@ export type CreateClassMutationOptions = Apollo.BaseMutationOptions<
   CreateClassMutationVariables
 >;
 export const GetFilteredClassDocument = gql`
-  query getFilteredClass($tag: String, $name: String, $invite: String) {
-    getFilteredClass(tag: $tag, name: $name, invite: $invite) {
+  query getFilteredClass($invite: String!) {
+    getFilteredClass(invite: $invite) {
       _id
       name
       owner {
@@ -897,14 +981,12 @@ export const GetFilteredClassDocument = gql`
  * @example
  * const { data, loading, error } = useGetFilteredClassQuery({
  *   variables: {
- *      tag: // value for 'tag'
- *      name: // value for 'name'
  *      invite: // value for 'invite'
  *   },
  * });
  */
 export function useGetFilteredClassQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetFilteredClassQuery,
     GetFilteredClassQueryVariables
   >
@@ -1083,4 +1165,321 @@ export type GetOneClassRoomLazyQueryHookResult = ReturnType<
 export type GetOneClassRoomQueryResult = Apollo.QueryResult<
   GetOneClassRoomQuery,
   GetOneClassRoomQueryVariables
+>;
+export const GetCommentsDocument = gql`
+  query getComments($course: String!, $step: String!) {
+    getComments(course: $course, step: $step) {
+      content
+      _id
+      parent
+      commenter {
+        _id
+        name
+      }
+      course
+      classRoom
+      step
+      updatedAt
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsQuery({
+ *   variables: {
+ *      course: // value for 'course'
+ *      step: // value for 'step'
+ *   },
+ * });
+ */
+export function useGetCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCommentsQuery,
+    GetCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(
+    GetCommentsDocument,
+    options
+  );
+}
+export function useGetCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCommentsQuery,
+    GetCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(
+    GetCommentsDocument,
+    options
+  );
+}
+export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>;
+export type GetCommentsLazyQueryHookResult = ReturnType<
+  typeof useGetCommentsLazyQuery
+>;
+export type GetCommentsQueryResult = Apollo.QueryResult<
+  GetCommentsQuery,
+  GetCommentsQueryVariables
+>;
+export const GetChildCommentsDocument = gql`
+  query getChildComments($id: String!) {
+    getChildComments(id: $id) {
+      content
+      _id
+      parent
+      commenter {
+        _id
+        name
+      }
+      course
+      classRoom
+      step
+      updatedAt
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetChildCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetChildCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChildCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChildCommentsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetChildCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetChildCommentsQuery,
+    GetChildCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetChildCommentsQuery, GetChildCommentsQueryVariables>(
+    GetChildCommentsDocument,
+    options
+  );
+}
+export function useGetChildCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetChildCommentsQuery,
+    GetChildCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetChildCommentsQuery,
+    GetChildCommentsQueryVariables
+  >(GetChildCommentsDocument, options);
+}
+export type GetChildCommentsQueryHookResult = ReturnType<
+  typeof useGetChildCommentsQuery
+>;
+export type GetChildCommentsLazyQueryHookResult = ReturnType<
+  typeof useGetChildCommentsLazyQuery
+>;
+export type GetChildCommentsQueryResult = Apollo.QueryResult<
+  GetChildCommentsQuery,
+  GetChildCommentsQueryVariables
+>;
+export const CreateCommentDocument = gql`
+  mutation createComment($data: CommentInput!) {
+    createComment(data: $data) {
+      content
+      _id
+      parent
+      commenter {
+        _id
+        name
+      }
+      course
+      step
+      updatedAt
+      createdAt
+    }
+  }
+`;
+export type CreateCommentMutationFn = Apollo.MutationFunction<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >(CreateCommentDocument, options);
+}
+export type CreateCommentMutationHookResult = ReturnType<
+  typeof useCreateCommentMutation
+>;
+export type CreateCommentMutationResult =
+  Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>;
+export const GetOneCommentDocument = gql`
+  query getOneComment($id: String!) {
+    getOneComment(id: $id) {
+      content
+      _id
+      parent
+      commenter {
+        _id
+        name
+      }
+      course
+      classRoom
+      step
+      updatedAt
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetOneCommentQuery__
+ *
+ * To run a query within a React component, call `useGetOneCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOneCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOneCommentQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOneCommentQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetOneCommentQuery,
+    GetOneCommentQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetOneCommentQuery, GetOneCommentQueryVariables>(
+    GetOneCommentDocument,
+    options
+  );
+}
+export function useGetOneCommentLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetOneCommentQuery,
+    GetOneCommentQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetOneCommentQuery, GetOneCommentQueryVariables>(
+    GetOneCommentDocument,
+    options
+  );
+}
+export type GetOneCommentQueryHookResult = ReturnType<
+  typeof useGetOneCommentQuery
+>;
+export type GetOneCommentLazyQueryHookResult = ReturnType<
+  typeof useGetOneCommentLazyQuery
+>;
+export type GetOneCommentQueryResult = Apollo.QueryResult<
+  GetOneCommentQuery,
+  GetOneCommentQueryVariables
+>;
+export const IsJoinedDocument = gql`
+  query isJoined($id: String!) {
+    isJoined(id: $id)
+  }
+`;
+
+/**
+ * __useIsJoinedQuery__
+ *
+ * To run a query within a React component, call `useIsJoinedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsJoinedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsJoinedQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useIsJoinedQuery(
+  baseOptions: Apollo.QueryHookOptions<IsJoinedQuery, IsJoinedQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<IsJoinedQuery, IsJoinedQueryVariables>(
+    IsJoinedDocument,
+    options
+  );
+}
+export function useIsJoinedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    IsJoinedQuery,
+    IsJoinedQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<IsJoinedQuery, IsJoinedQueryVariables>(
+    IsJoinedDocument,
+    options
+  );
+}
+export type IsJoinedQueryHookResult = ReturnType<typeof useIsJoinedQuery>;
+export type IsJoinedLazyQueryHookResult = ReturnType<
+  typeof useIsJoinedLazyQuery
+>;
+export type IsJoinedQueryResult = Apollo.QueryResult<
+  IsJoinedQuery,
+  IsJoinedQueryVariables
 >;

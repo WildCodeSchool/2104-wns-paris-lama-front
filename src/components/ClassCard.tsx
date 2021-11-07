@@ -17,6 +17,7 @@ export const ClassCard = ({
   owner,
   updatedAt,
   setSearchTerm,
+  user,
 }: {
   state;
   name;
@@ -26,6 +27,7 @@ export const ClassCard = ({
   image;
   owner;
   updatedAt;
+  user;
   setSearchTerm: (tag: string) => void;
 }): JSX.Element => {
   const history = useHistory();
@@ -62,11 +64,11 @@ export const ClassCard = ({
       <div className=" bg-gray-800   rounded-b lg:rounded-b-none w-full lg:rounded-r p-4 flex flex-col justify-between leading-normal">
         <div className="mb-2">
           {state === "PUBLIC" ? (
-            <p className="bg-purple-100 text-purple-600  text-xs px-2 rounded-full  uppercase font-semibold tracking-wide  inline-block  items-center">
+            <p className="bg-purple-50 text-purple-700  text-xs px-2 rounded-full  uppercase font-semibold tracking-wide  inline-block  items-center">
               public
             </p>
           ) : (
-            <p className="bg-purple-100 text-purple-600  text-xs px-2  rounded-full  uppercase font-semibold tracking-wide flex items-center w-36 ">
+            <p className="bg-purple-50 text-purple-700  text-xs px-2  rounded-full  uppercase font-semibold tracking-wide flex items-center w-36 ">
               <svg
                 className="text-gray-500 w-3 h-3 mr-2"
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,8 +87,22 @@ export const ClassCard = ({
             {showMenu[_id] ? (
               <div
                 x-show="dropdownOpen"
-                className="absolute right-1 top-4 mt-2 w-48 bg-gray-900 rounded-md overflow-hidden shadow-xl z-20"
+                className="absolute right-1 top-4 mt-2 w-48 bg-gray-800 rounded-md overflow-hidden shadow-xl z-20"
               >
+                {user && owner._id === user._id && (
+                  <div className=" px-4 py-2 text-sm text-gray-200 hover:bg-gray-800   gap-4  flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="#108497"
+                    >
+                      <path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z" />
+                    </svg>
+                    <span className="text-md">Copy invite</span>
+                  </div>
+                )}
                 <div className="px-4 py-2 text-sm text-gray-200 border-b border-gray-700 hover:bg-gray-800 flex gap-4 items-center">
                   <svg
                     width="16"
@@ -128,13 +144,27 @@ export const ClassCard = ({
               </div>
             ) : null}
           </div>
+
           <div className="text-gray-50 font-bold text-xl my-2">{name}</div>
           <p className="text-gray-200 text-base">{desc}</p>
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <div className="text-sm">
-              <p className="text-gray-300 leading-none">{owner.name}</p>
+              <div className="flex items-center gap-2 mb-3">
+                <div
+                  className="inline object-cover w-6 h-6 rounded-full bg-purple-700 text-center leading-6 uppercase"
+                  id="profileImage"
+                >
+                  {owner.name.charAt(0)}
+                </div>
+                {/* <img
+                  className="inline object-cover w-6 h-6 rounded-full"
+                  src="https://images.pexels.com/photos/2589653/pexels-photo-2589653.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
+                  alt="Profile"
+                /> */}
+                <p className="text-gray-300 leading-none">{owner.name}</p>
+              </div>
               <p className="text-gray-400">
                 {timeDifference(new Date(updatedAt).getTime())}
               </p>

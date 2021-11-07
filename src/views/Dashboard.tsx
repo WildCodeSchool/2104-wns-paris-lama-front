@@ -12,15 +12,16 @@ import ReactPaginate from "react-paginate";
 import { Search } from "../components/Search";
 import { ClassCard } from "../components/ClassCard";
 import classRoomContext, { IClassRoomState } from "../store/classRoom";
+import userContext from "../store/userContext";
 
 export const Dashboard = (): JSX.Element => {
+  const { user } = useContext(userContext);
   const [searchResults, setSearchResults] = useState<Array<IClassRoomState>>(
     []
   );
   const [perPage] = useState(5);
   const [pageNumber, setPageNumber] = useState(0);
   const pageVisited = pageNumber * perPage;
-  console.log(searchResults.slice(pageVisited, pageVisited + perPage));
 
   const { classRooms, updateClassRooms } = useContext(classRoomContext);
 
@@ -62,11 +63,12 @@ export const Dashboard = (): JSX.Element => {
         owner={owner}
         updatedAt={updatedAt}
         setSearchTerm={(tag) => setSearchTerm(tag)}
+        user={user}
       />
     ));
   return (
     <div>
-      <div className=" w-11/12 mx-auto flex gap-4">
+      <div className=" w-11/12 mx-auto flex gap-4 mt-6">
         <div className="w-3/12 flex flex-col gap-1 items-start  ">
           <Search
             label="Search"
@@ -98,7 +100,7 @@ export const Dashboard = (): JSX.Element => {
           <div className=" flex justify-between  mb-5">
             {searchTerm ? (
               <>
-                <p className="text-purple-600 ">
+                <p className="text-purple-700 ">
                   {`${searchResults.length} Result${
                     searchResults.length > 1 ? "s" : ""
                   } found`}

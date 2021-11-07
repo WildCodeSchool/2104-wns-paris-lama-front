@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { Input } from "../components/Input";
 import { useLoginMutation } from "../graphql/generated/graphql";
 import userContext from "../store/userContext";
@@ -15,6 +15,10 @@ type FormValues = {
   email: string;
   password: string;
   password_repeat: string;
+};
+
+export type ClassParams = {
+  redirect: string;
 };
 
 export const Login = (): JSX.Element => {
@@ -42,11 +46,12 @@ export const Login = (): JSX.Element => {
         respondeLogin.data?.Login.accessToken as string
       );
 
-      const { name, email } = resUser;
+      const { name, email, _id } = resUser;
       updateUser({
         accessToken: respondeLogin.data?.Login.accessToken as string,
         email,
         name,
+        _id,
       });
       localStorage.setItem(
         "user",
@@ -54,8 +59,10 @@ export const Login = (): JSX.Element => {
           accessToken: respondeLogin.data?.Login.accessToken as string,
           email,
           name,
+          _id,
         })
       );
+      console.log(resUser);
     } catch (error) {
       console.log(error);
     }

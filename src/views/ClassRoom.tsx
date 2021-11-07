@@ -2,8 +2,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { useGetOneClassRoomQuery } from "../graphql/generated/graphql";
+import { Link, Redirect, useHistory, useParams } from "react-router-dom";
+import {
+  useGetOneClassRoomQuery,
+  useIsJoinedQuery,
+} from "../graphql/generated/graphql";
 import courseContext from "../store/course";
 import { timeDifference } from "../utils/date";
 
@@ -14,6 +17,9 @@ export const ClassRoom = (): JSX.Element => {
   const history = useHistory();
   const { id } = useParams<ClassParams>();
   const { courses, updateCourses } = useContext(courseContext);
+  const { data: isJoinedData } = useIsJoinedQuery({
+    variables: { id },
+  });
 
   const { data } = useGetOneClassRoomQuery({
     variables: { id },
@@ -25,14 +31,17 @@ export const ClassRoom = (): JSX.Element => {
   }, [data, updateCourses, id]);
   return (
     <>
-      <div className="w-11/12 mx-auto flex ">
-        <div className="w-3/12 ">
+      {isJoinedData && !isJoinedData.isJoined && (
+        <Redirect to={{ pathname: `/join-class/${id}` }} />
+      )}
+      <div className="w-11/12 mx-auto  gap-6  mt-6 flex flex-col md:flex-row justify-center md:items-start items-center ">
+        <div className=" w-9/12 md:w-4/12 lg:w-3/12">
           <Link
-            to={`/class-room/${id}/create-course`}
+            to={`/class-room/${id}/create-course/1`}
             key={Date.now() + Math.random() * 100}
-            className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
+            className=" text-gray-200 flex   items-center justify-around   font-bold py-4 px-4 shadow-sm focus:outline-none focus:shadow-outline btn"
           >
-            Create new course
+            <span>Create new course</span>
             <svg
               className="ml-3 inline"
               width="24"
@@ -46,7 +55,7 @@ export const ClassRoom = (): JSX.Element => {
             </svg>
           </Link>
         </div>
-        <div className="grid grid-cols-3 w-9/12 mx-auto gap-4  justify-center items-center">
+        <div className=" grid  md:grid-cols-2  lg:grid-cols-3  grid-cols-1 w-9/12 mx-auto gap-4  justify-center items-center">
           {courses?.getOneClassRoom.course.map((c) => (
             <div
               className="bg-gray-800 p-6 hover:scale-x-125 col-span-1 rounded-lg shadow-lg cursor-pointer"
@@ -56,7 +65,7 @@ export const ClassRoom = (): JSX.Element => {
               }
             >
               <div className="flex items-baseline justify-between">
-                <span className=" bg-purple-100 text-purple-600   text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
+                <span className=" bg-purple-50 text-purple-700   text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
                   New
                 </span>
                 <div className=" text-gray-200 text-xs   font-semibold tracking-wider">

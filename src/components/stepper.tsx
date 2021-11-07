@@ -15,6 +15,8 @@ export const Steps = ({
   currentStep,
   onDone,
   onRestart,
+  onChangeOpen,
+  commentCont,
 }: {
   stepTitlePrev: string | undefined;
   stepTitleNext: string | undefined;
@@ -25,15 +27,17 @@ export const Steps = ({
   currentStep: string;
   onDone: string;
   onRestart: string;
+  onChangeOpen;
+  commentCont;
 }): JSX.Element => {
   return (
     <>
-      <div className="  fixed bottom-0 left-0 w-full h-20 bg-gray-700 ">
+      <div className="  fixed bottom-0 left-0 w-full h-16 bg-gray-700 z-10 ">
         <div className="relative">
-          <div className="overflow-hidden h-2 text-xs flex rounded bg-purple-200">
+          <div className="overflow-hidden h-2 text-xs flex rounded bg-purple-100">
             <div
               style={{ width: `${(+currentStep / +stepsCount) * 100}%` }}
-              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-600"
+              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-700"
             />
           </div>
         </div>
@@ -44,7 +48,7 @@ export const Steps = ({
                 className="flex w-1/3 gap-4 cursor-pointer"
                 onClick={onPrevClick}
               >
-                <div className="w-1/6 bg-transparent h-16 flex items-center justify-center icon-step">
+                <div className="w-1/6 bg-transparent h-12 flex items-center justify-center icon-step">
                   <div className="flex-1 flex items-center justify-center">
                     <svg
                       width="24"
@@ -58,7 +62,7 @@ export const Steps = ({
                     </svg>
                   </div>
                 </div>
-                <div className="w-5/6 bg-gray-700 h-16 flex flex-col items-center justify-center px-1 rounded-r-lg body-step">
+                <div className="w-5/6 bg-gray-700 h-12 flex flex-col items-center justify-center px-1 rounded-r-lg body-step">
                   {stepTitlePrev ? (
                     <>
                       <h2 className="font-bold text-lg">{stepTitlePrev}</h2>
@@ -66,12 +70,18 @@ export const Steps = ({
                   ) : null}
                 </div>
               </div>
-
               <div
-                className="flex w-1/3  gap-4 cursor-pointer"
+                onClick={onChangeOpen}
+                className="flex w-1/3  gap-4 cursor-pointer items-center"
+              >
+                Questions & Comments
+                <span className="text-gray-400">({commentCont})</span>
+              </div>
+              <div
+                className="flex w-1/3  gap-4 cursor-pointer items-center"
                 onClick={onNextClick}
               >
-                <div className="w-5/6 bg-gray-700 h-16 flex flex-col items-center justify-center px-1 rounded-r-lg body-step">
+                <div className="w-5/6 bg-gray-700 h-12 flex flex-col items-center justify-center px-1 rounded-r-lg body-step">
                   {stepNumberNext ? (
                     <>
                       <h2 className="font-bold text-lg">{stepTitleNext}</h2>
@@ -81,7 +91,7 @@ export const Steps = ({
                       <Link
                         to={onDone}
                         key={Date.now() + Math.random() * 100}
-                        className="  text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn "
+                        className="  text-gray-200  font-bold py-1 px-2 shadow-sm focus:outline-none focus:shadow-outline btn "
                       >
                         Done
                         <svg
@@ -98,7 +108,7 @@ export const Steps = ({
                       <Link
                         to={onRestart}
                         key={Date.now() + Math.random() * 100}
-                        className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
+                        className="text-gray-200  font-bold py-1 px-2 shadow-sm focus:outline-none focus:shadow-outline btn"
                       >
                         Restart
                         <svg
@@ -116,7 +126,7 @@ export const Steps = ({
                     </div>
                   )}
                 </div>
-                <div className="w-1/6 bg-transparent h-16 flex items-center justify-center icon-step">
+                <div className="w-1/6 bg-transparent h-12  flex items-center justify-center icon-step">
                   <div className="flex-1 flex items-center justify-center">
                     <svg
                       width="24"

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-alert */
 import React, { useEffect, useState } from "react";
 import {
@@ -5,7 +6,6 @@ import {
   Redirect,
   Route,
   Switch,
-  useParams,
 } from "react-router-dom";
 import "./App.css";
 import { NavBar } from "./components/NavMenu/NavBar";
@@ -21,24 +21,26 @@ import { ClassRoom } from "./views/ClassRoom";
 import { Course } from "./views/Course";
 import { CreateCourse } from "./views/CreateCourse";
 import { CreateClassRoom } from "./views/CreateClassRoom";
-import {
-  useGetClassesQuery,
-  useGetOneClassRoomQuery,
-} from "./graphql/generated/graphql";
+import { useGetClassesQuery } from "./graphql/generated/graphql";
 import { CourseContextProvider, ICourseState } from "./store/course";
+import { PrivateRoute } from "./components/ProtectedRoute";
+import { JoinClass } from "./views/JoinClass";
 
 export type ClassParams = {
   id: string;
 };
 function App(): JSX.Element {
   const [user, userSet] = useState<UserState | null>(null);
+
   const updateUser = (_user: UserState | null) => userSet(_user);
   useEffect(() => {
-    const d = getCurrentUser();
-    if (d) {
-      userSet(d);
+    const userLocal = getCurrentUser();
+    if (!user && userLocal) {
+      userSet(userLocal);
     }
-  }, []);
+  }, [user]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const [classRooms, classRoomsSet] = useState<Array<IClassRoomState> | []>([]);
   const updateClassRooms = (_classRoom: Array<IClassRoomState> | []) =>
@@ -73,40 +75,85 @@ function App(): JSX.Element {
                     );
                   }}
                 />
+                <Route path="/login" exact component={Login} />
+                <Route path="/landing" exact component={Landing} />
                 <Route path="/register" exact component={Register} />
-                <Route path="/dashboard" exact component={Dashboard} />
+                <PrivateRoute
+                  isAuthenticated={!!user}
+                  path="/dashboard"
+                  exact
+                  component={Dashboard}
+                />
+
                 <CourseContextProvider value={{ courses, updateCourses }}>
-                  <Route path="/class-room/:id" exact component={ClassRoom} />
-                  <Route
-                    path="/class-room/:id/create-course"
+                  <PrivateRoute
+                    isAuthenticated={!!user}
+                    path="/join-class/:id"
+                    exact
+                    component={JoinClass}
+                  />
+                  <PrivateRoute
+                    isAuthenticated={!!user}
+                    path="/class-room/:id"
+                    exact
+                    component={ClassRoom}
+                  />
+                  <PrivateRoute
+                    isAuthenticated={!!user}
+                    path="/class-room/:id/create-course/:stepId"
                     exact
                     component={CreateCourse}
                   />
-                  <Route
+                  <PrivateRoute
+                    isAuthenticated={!!user}
                     path="/class-room/:class_id/course/:course_id/:step"
                     exact
                     component={Course}
                   />
+                  <PrivateRoute
+                    isAuthenticated={!!user}
+                    path="/create-class-room"
+                    exact
+                    component={CreateClassRoom}
+                  />
                 </CourseContextProvider>
-                <Route
-                  path="/create-class-room"
-                  exact
-                  component={CreateClassRoom}
-                />
-
-                <Route path="/login" exact component={Login} />
-                <Route path="/landing" exact component={Landing} />
               </Switch>
             </section>
           </div>
         </Router>
         <ul className="circles">
-          <li className="bg-yellow-300" />
-          <li className="bg-pink-300" />
-          <li className="bg-purple-300" />
-          <li className="bg-purple-300" />
-          <li className="bg-green-300" />
-          <li className="bg-red-300" />
+          <li>
+            <span className=" text-9xl text-gray-600 opacity-10">
+              &#10096;div&#10097;
+            </span>
+          </li>
+          <li>
+            <span className=" text-9xl text-gray-600 opacity-10">
+              &#10100;&#10101;
+            </span>
+          </li>
+          <li>
+            <span className=" text-9xl text-gray-600 opacity-10">
+              &#10090;&#10091;
+            </span>
+          </li>
+
+          <li>
+            <span className=" text-9xl text-gray-600 opacity-10">
+              &#10096;li&#10097;
+            </span>
+          </li>
+          <li>
+            <span className=" text-9xl text-gray-600 opacity-10">
+              &#10100;&#10101;
+            </span>
+          </li>
+          <li>
+            <span className=" text-9xl text-gray-600 opacity-10">
+              &#10090;&#10091;
+            </span>
+          </li>
+
           <li className="bg-gray-900" />
           <li className="bg-blue-300" />
           <li className="border-purple-300" />

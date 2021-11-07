@@ -5,6 +5,7 @@ export const initialUserState = {
   accessToken: "",
   name: "",
   email: "",
+  _id: "",
 };
 export type UserState = typeof initialUserState | null;
 export interface IUserContext {

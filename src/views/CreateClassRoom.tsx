@@ -24,15 +24,15 @@ export const CreateClassRoom = (): JSX.Element => {
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
   const [tags, setTags] = useState<Array<string>>([]);
-  const [createClass] = useCreateClassMutation();
+  const [createClass] = useCreateClassMutation({
+    refetchQueries: ["getClasses"],
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onTouched" });
   const onSubmit = handleSubmit(async (data) => {
-    console.log(errors, data);
-    console.log(tags);
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const res = await createClass({
@@ -75,7 +75,6 @@ export const CreateClassRoom = (): JSX.Element => {
       const tagsCopy = [...tags];
       const poppedTag = tagsCopy.pop() as string;
       e.preventDefault();
-      console.log(tagsCopy);
       setTags(tagsCopy);
       setInput(poppedTag);
     }
@@ -170,52 +169,54 @@ export const CreateClassRoom = (): JSX.Element => {
         >
           submit
         </button>
-      </form>
-      {secret !== "" ? (
-        <>
-          Invite your audince with this invation link it will expire in 48 hours
-          but you can regenerate new one
-          <div
-            className="bg-gray-800 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
-            onClick={() => {
-              navigator.clipboard.writeText(secret);
-              showCopyAlertSet(true);
-              setTimeout(() => {
-                showCopyAlertSet(false);
-              }, 4000);
-            }}
-          >
-            <p className="font-bold ">
-              {secret}
-              <svg
-                className="ml-3 inline float-right "
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="#aaa"
-              >
-                <path d="M22 6v16h-16v-16h16zm2-2h-20v20h20v-20zm-24 17v-21h21v2h-19v19h-2z" />
-              </svg>
+        {secret !== "" ? (
+          <>
+            <p>
+              Invite your audince with this invation link it will expire in 48
+              hours but you can regenerate new one
             </p>
-            {showCopyAlert ? (
-              <div className="bg-gray-800 w-2/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer">
-                copied
+            <div
+              className="bg-gray-800 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(secret);
+                showCopyAlertSet(true);
+                setTimeout(() => {
+                  showCopyAlertSet(false);
+                }, 5000);
+              }}
+            >
+              <p className="font-bold ">
+                {secret}
                 <svg
                   className="ml-3 inline float-right "
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
-                  fill="#5EBA7D"
+                  fill="#aaa"
                 >
-                  <path d="M0 11.386l1.17-1.206c1.951.522 5.313 1.731 8.33 3.597 3.175-4.177 9.582-9.398 13.456-11.777l1.044 1.073-14 18.927-10-10.614z" />
+                  <path d="M22 6v16h-16v-16h16zm2-2h-20v20h20v-20zm-24 17v-21h21v2h-19v19h-2z" />
                 </svg>
-              </div>
-            ) : null}
-          </div>
-        </>
-      ) : null}
+              </p>
+              {showCopyAlert ? (
+                <div className="bg-gray-800 w-4/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-2 cursor-pointer flex gap-2">
+                  <span> copied </span>
+                  <svg
+                    className="ml-3 inline float-right "
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="#5EBA7D"
+                  >
+                    <path d="M0 11.386l1.17-1.206c1.951.522 5.313 1.731 8.33 3.597 3.175-4.177 9.582-9.398 13.456-11.777l1.044 1.073-14 18.927-10-10.614z" />
+                  </svg>
+                </div>
+              ) : null}
+            </div>
+          </>
+        ) : null}
+      </form>
     </div>
   );
 };

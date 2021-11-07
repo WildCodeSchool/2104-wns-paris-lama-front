@@ -93,8 +93,8 @@ mutation createClass($data: ClassRoomInput!) {
   }
 }
 
-query getFilteredClass($tag: String, $name: String, $invite: String) {
-  getFilteredClass(tag: $tag, name: $name, invite: $invite) {
+query getFilteredClass($invite: String!) {
+  getFilteredClass(invite: $invite) {
     _id
     name
     owner {
@@ -167,4 +167,75 @@ query getOneClassRoom($id: String!) {
       createdAt
     }
   }
+}
+
+query getComments($course: String!, $step: String!) {
+  getComments(course: $course, step: $step) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    classRoom
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+query getChildComments($id: String!) {
+  getChildComments(id: $id) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    classRoom
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+mutation createComment($data: CommentInput!) {
+  createComment(data: $data) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+query getOneComment($id: String!) {
+  getOneComment(id: $id) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    classRoom
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+query isJoined($id: String!) {
+  isJoined(id: $id)
 }
