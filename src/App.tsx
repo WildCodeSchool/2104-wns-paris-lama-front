@@ -180,4 +180,5 @@ export default App;
  * join class
  * beter input on create course
  * better ui on notification
+ * add underscore if name is tow part
  */
