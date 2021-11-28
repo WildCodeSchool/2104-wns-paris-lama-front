@@ -1,8 +1,11 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext } from "react";
 import { Link, Redirect, useHistory, useParams } from "react-router-dom";
+
 import {
   useGetOneClassRoomQuery,
   useIsJoinedQuery,
@@ -24,6 +27,7 @@ export const ClassRoom = (): JSX.Element => {
   const { data } = useGetOneClassRoomQuery({
     variables: { id },
   });
+
   React.useEffect(() => {
     if (data && data.getOneClassRoom) {
       updateCourses(data);

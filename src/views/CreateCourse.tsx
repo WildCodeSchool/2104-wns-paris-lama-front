@@ -6,7 +6,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router-dom";
-import { Markdown } from "../components/Markdown";
+import Tiptap from "../components/Tiptap";
 import { useCreateCourseMutation } from "../graphql/generated/graphql";
 
 type ClassParams = {
@@ -147,7 +147,49 @@ export const CreateCourse = (): JSX.Element => {
                   onChange={onChangeStepsTitle(i)}
                 />
               </div>
-              <Markdown
+              <div id="markdown">
+                <Tiptap
+                  editable
+                  content={{
+                    type: "doc",
+                    content: [
+                      {
+                        type: "heading",
+                        attrs: {
+                          textAlign: "left",
+                          level: 1,
+                        },
+                        content: [
+                          {
+                            type: "text",
+                            text: "hello",
+                          },
+                        ],
+                      },
+                      {
+                        type: "paragraph",
+                        attrs: {
+                          textAlign: "left",
+                        },
+                      },
+                      {
+                        type: "paragraph",
+                        attrs: {
+                          textAlign: "left",
+                        },
+                      },
+                    ],
+                  }}
+                  onChange={(data) => {
+                    onChangeStepsContent(i);
+                    const stepsCopy = [...steps];
+                    const content = JSON.stringify(data);
+                    stepsCopy[i].contentMd = content;
+                    localStorage.setItem(`steps`, JSON.stringify(stepsCopy));
+                  }}
+                />
+              </div>
+              {/* <Markdown
                 handleOnChange={(data) => {
                   onChangeStepsContent(i);
                   const stepsCopy = [...steps];
@@ -156,7 +198,7 @@ export const CreateCourse = (): JSX.Element => {
                   localStorage.setItem(`steps`, JSON.stringify(stepsCopy));
                 }}
                 value={JSON.parse(step.contentMd)}
-              />
+              /> */}
             </div>
           ))}
           <button

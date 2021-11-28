@@ -121,7 +121,7 @@ function App(): JSX.Element {
             </section>
           </div>
         </Router>
-        <ul className="circles">
+        {/* <ul className="circles">
           <li>
             <span className=" text-9xl text-gray-600 opacity-10">
               &#10096;div&#10097;
@@ -158,7 +158,7 @@ function App(): JSX.Element {
           <li className="bg-blue-300" />
           <li className="border-purple-300" />
           <li />
-        </ul>
+        </ul> */}
       </ClassRoomContextProvider>
     </UserContextProvider>
   );
@@ -181,4 +181,6 @@ export default App;
  * beter input on create course
  * better ui on notification
  * add underscore if name is tow part
+ * use tiptop
+ * shared code room ?
  */

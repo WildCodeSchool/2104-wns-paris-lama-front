@@ -6,7 +6,6 @@
 
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { v4 } from "uuid";
 import styled from "styled-components";
 import {
   useGetOneCourseQuery,
@@ -14,7 +13,7 @@ import {
 } from "../graphql/generated/graphql";
 import { Steps } from "../components/stepper";
 import { Comments } from "../components/Comments";
-import TextAreaMarkdownReadOnly from "../components/TextAreaMarkdownReadOnly";
+import Tiptap from "../components/Tiptap";
 
 type ClassParams = {
   course_id: string;
@@ -46,9 +45,6 @@ export const Course = (): JSX.Element => {
   const currentstep = data.getOneCourse.steps.find(
     (obj) => obj.step.toString() === step
   );
-  if (data) {
-    console.log(JSON.parse(currentstep?.contentMd || "{}"));
-  }
   const next = currentstep?.next
     ? data.getOneCourse.steps.find((obj) => obj.step === currentstep.next)
     : null;
@@ -76,11 +72,11 @@ export const Course = (): JSX.Element => {
           <div className="flex flex-col justify-center items-center w-full">
             <div className=" py-3 px-5 rounded-3xl w-10/12">
               {currentstep && (
-                <div id="markdown" className="select-none">
-                  <TextAreaMarkdownReadOnly
-                    id={v4()}
-                    value={JSON.parse(currentstep.contentMd)}
-                    onChange={() => console.log("object")}
+                <div id="markdown">
+                  <Tiptap
+                    editable={false}
+                    content={JSON.parse(currentstep.contentMd)}
+                    onChange={(sdsd) => console.log(sdsd)}
                   />
                 </div>
               )}

@@ -67,7 +67,7 @@ export const NavBar = (): JSX.Element => {
 
   return (
     <div className=" shadow-2xl  bg-gray-900">
-      <MenuWrapper className=" w-11/12 mx-auto ">
+      <MenuWrapper className="p-5 w-11/12 mx-auto ">
         <NavTitle onClick={() => history.push(`/`)} className="cursor-pointer">
           <span className="text-purple-700">&#10100;&#10075;&#8515;</span>
           LAMA&#10101;
