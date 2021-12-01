@@ -33,3 +33,16 @@ body {
   }
   cursor: pointer;
 }
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  margin-bottom: 20px;
+  @media (min-width: 800px) {
+    margin-right: 50px;
+    :last-child {
+      margin-right: 0;
+    }
+  }
+  cursor: pointer;
+}

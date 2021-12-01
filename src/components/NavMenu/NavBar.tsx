@@ -194,6 +194,7 @@ const MenuWrapper = styled.nav`
 const NavDesktop = styled.div`
   display: flex;
   align-items: center;
+  gap: 20px;
 `;
 
 const NavTitle = styled.h1`

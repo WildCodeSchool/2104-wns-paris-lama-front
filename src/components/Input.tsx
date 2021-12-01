@@ -35,7 +35,6 @@ export const Input = ({
           placeholder={placeHolder}
           name={inputName}
         />
-
         {error ? (
           <p className="text-red-500 text-xs italic"> {error.message} </p>
         ) : (
