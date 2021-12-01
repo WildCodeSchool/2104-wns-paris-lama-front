@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
@@ -20,20 +21,18 @@ export const TextArea = ({
   const uid = v4();
   return (
     <>
-      <div className="w-full ">
-        <label
-          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-          htmlFor={`form-${label}--${uid}`}
-        >
-          {label}
+      <div className="w-full form-control mb-1">
+        <label className="label" htmlFor={`form-${label}--${uid}`}>
+          <span className="label-text">{label}</span>
         </label>
         <textarea
-          className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
+          className="textarea h-24 textarea-bordered textarea-primary"
           id={`form-${label}--${uid}`}
           {...register}
           placeholder={placeHolder}
           name={inputName}
         />
+
         {error ? (
           <p className="text-red-500 text-xs italic"> {error.message} </p>
         ) : (

@@ -49,19 +49,20 @@ export const Register = (): JSX.Element => {
         respondeRegister.data?.Register.accessToken as string
       );
 
-      const { name, email } = resUser;
+      const { name, email, _id } = resUser;
       updateUser({
         accessToken: respondeRegister.data?.Register.accessToken as string,
         email,
         name,
+        _id,
       });
-      console.log(JSON.stringify(user));
       localStorage.setItem(
         "user",
         JSON.stringify({
           accessToken: respondeRegister.data?.Register.accessToken as string,
           email,
           name,
+          _id,
         })
       );
     } catch (error) {
@@ -130,10 +131,7 @@ export const Register = (): JSX.Element => {
             })}
           />
           <div className="w-full mx-auto mt-5">
-            <button
-              className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
-              type="submit"
-            >
+            <button className="btn btn-primary" type="submit">
               submit
             </button>
           </div>

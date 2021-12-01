@@ -17,6 +17,10 @@ type FormValues = {
   password_repeat: string;
 };
 
+export type ClassParams = {
+  redirect: string;
+};
+
 export const Login = (): JSX.Element => {
   const { user, updateUser } = useContext(userContext);
 
@@ -29,7 +33,6 @@ export const Login = (): JSX.Element => {
   const [loginUser] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(errors, data);
     try {
       const respondeLogin = await loginUser({
         variables: {
@@ -43,11 +46,12 @@ export const Login = (): JSX.Element => {
         respondeLogin.data?.Login.accessToken as string
       );
 
-      const { name, email } = resUser;
+      const { name, email, _id } = resUser;
       updateUser({
         accessToken: respondeLogin.data?.Login.accessToken as string,
         email,
         name,
+        _id,
       });
       localStorage.setItem(
         "user",
@@ -55,8 +59,10 @@ export const Login = (): JSX.Element => {
           accessToken: respondeLogin.data?.Login.accessToken as string,
           email,
           name,
+          _id,
         })
       );
+      console.log(resUser);
     } catch (error) {
       console.log(error);
     }
@@ -99,10 +105,7 @@ export const Login = (): JSX.Element => {
             },
           })}
         />
-        <button
-          type="submit"
-          className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mt-5"
-        >
+        <button type="submit" className="btn btn-primary">
           submit
         </button>
       </form>

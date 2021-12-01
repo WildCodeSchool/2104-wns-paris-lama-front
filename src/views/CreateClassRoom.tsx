@@ -24,15 +24,15 @@ export const CreateClassRoom = (): JSX.Element => {
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
   const [tags, setTags] = useState<Array<string>>([]);
-  const [createClass] = useCreateClassMutation();
+  const [createClass] = useCreateClassMutation({
+    refetchQueries: ["getClasses"],
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onTouched" });
   const onSubmit = handleSubmit(async (data) => {
-    console.log(errors, data);
-    console.log(tags);
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const res = await createClass({
@@ -75,7 +75,6 @@ export const CreateClassRoom = (): JSX.Element => {
       const tagsCopy = [...tags];
       const poppedTag = tagsCopy.pop() as string;
       e.preventDefault();
-      console.log(tagsCopy);
       setTags(tagsCopy);
       setInput(poppedTag);
     }
@@ -91,10 +90,10 @@ export const CreateClassRoom = (): JSX.Element => {
   };
 
   return (
-    <div className="w-11/12 mx-auto">
+    <div className="w-11/12 mx-auto mt-5">
       <form
         onSubmit={onSubmit}
-        className="mx-auto w-4/6 flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="mx-auto w-4/6 flex flex-col justify-center items-center bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <Input
           label="Name"
@@ -139,83 +138,97 @@ export const CreateClassRoom = (): JSX.Element => {
         />
         <div className="w-full ">
           <div className="mt-4">
-            <span className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            <span className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2">
               Status
             </span>
             <div className="mt-2">
-              <label className="inline-flex items-center">
+              <div className="form-control">
+                <label className="cursor-pointer label gap-3 justify-start">
+                  <input
+                    type="radio"
+                    value="PRIVATE"
+                    {...register("state")}
+                    checked
+                    className="radio radio-primary"
+                  />
+                  <span className="label-text">private</span>
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="cursor-pointer label gap-3 justify-start">
+                  <input
+                    type="radio"
+                    value="PUBLIC"
+                    {...register("state")}
+                    checked
+                    className="radio radio-primary"
+                  />
+                  <span className="label-text">public</span>
+                </label>
+              </div>
+              {/* <label className="inline-flex items-center ml-6">
                 <input
-                  type="radio"
                   className="form-radio"
-                  value="PRIVATE"
-                  {...register("state")}
-                />
-                <span className="ml-2">private</span>
-              </label>
-              <label className="inline-flex items-center ml-6">
-                <input
                   type="radio"
-                  className="form-radio"
                   value="PUBLIC"
                   {...register("state")}
                 />
                 <span className="ml-2">public</span>
-              </label>
+              </label> */}
             </div>
           </div>
         </div>
-        <button
-          type="submit"
-          className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
-        >
-          submit
+        <button type="submit" className="btn btn-primary">
+          Submit
         </button>
-      </form>
-      {secret !== "" ? (
-        <>
-          Invite your audince with this invation link it will expire in 48 hours
-          but you can regenerate new one
-          <div
-            className="bg-gray-300 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
-            onClick={() => {
-              navigator.clipboard.writeText(secret);
-              showCopyAlertSet(true);
-              setTimeout(() => {
-                showCopyAlertSet(false);
-              }, 4000);
-            }}
-          >
-            <p className="font-bold ">
-              {secret}
-              <svg
-                className="ml-3 inline float-right "
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="#aaa"
-              >
-                <path d="M22 6v16h-16v-16h16zm2-2h-20v20h20v-20zm-24 17v-21h21v2h-19v19h-2z" />
-              </svg>
+        {secret !== "" ? (
+          <>
+            <p>
+              Invite your audince with this invation link it will expire in 48
+              hours but you can regenerate new one
             </p>
-            {showCopyAlert ? (
-              <div className="bg-gray-300 w-2/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer">
-                copied
+            <div
+              className="bg-gray-800 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(secret);
+                showCopyAlertSet(true);
+                setTimeout(() => {
+                  showCopyAlertSet(false);
+                }, 5000);
+              }}
+            >
+              <p className="font-bold ">
+                {secret}
                 <svg
                   className="ml-3 inline float-right "
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
-                  fill="#5EBA7D"
+                  fill="#aaa"
                 >
-                  <path d="M0 11.386l1.17-1.206c1.951.522 5.313 1.731 8.33 3.597 3.175-4.177 9.582-9.398 13.456-11.777l1.044 1.073-14 18.927-10-10.614z" />
+                  <path d="M22 6v16h-16v-16h16zm2-2h-20v20h20v-20zm-24 17v-21h21v2h-19v19h-2z" />
                 </svg>
-              </div>
-            ) : null}
-          </div>
-        </>
-      ) : null}
+              </p>
+              {showCopyAlert ? (
+                <div className="bg-gray-800 w-4/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-2 cursor-pointer flex gap-2">
+                  <span> copied </span>
+                  <svg
+                    className="ml-3 inline float-right "
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="#5EBA7D"
+                  >
+                    <path d="M0 11.386l1.17-1.206c1.951.522 5.313 1.731 8.33 3.597 3.175-4.177 9.582-9.398 13.456-11.777l1.044 1.073-14 18.927-10-10.614z" />
+                  </svg>
+                </div>
+              ) : null}
+            </div>
+          </>
+        ) : null}
+      </form>
     </div>
   );
 };
