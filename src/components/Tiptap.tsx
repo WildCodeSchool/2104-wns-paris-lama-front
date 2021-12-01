@@ -85,8 +85,8 @@ const Tiptap = ({
     onUpdate(instance: any) {
       if (!editable) {
         instance.editor.commands.setContent(instance.editor.getJSON());
-        onChange(instance.editor.getJSON());
       }
+      onChange(instance.editor.getJSON());
     },
   });
   React.useEffect(() => {
