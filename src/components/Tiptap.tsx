@@ -90,7 +90,8 @@ const Tiptap = ({
     },
   });
   React.useEffect(() => {
-    if (content && editor) editor.commands.setContent(content, true);
+    if (content && editor && !editable)
+      editor.commands.setContent(content, true);
   }, [content, editable, editor]);
   return (
     <div>
