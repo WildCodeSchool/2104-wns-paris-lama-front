@@ -180,6 +180,10 @@ query getOneClassRoom($id: String!) {
     image
     desc
     state
+    owner {
+      _id
+      name
+    }
     course {
       _id
       title
