@@ -17,6 +17,7 @@ import {
   useIsJoinedQuery,
 } from "../graphql/generated/graphql";
 import courseContext from "../store/course";
+import userContext from "../store/userContext";
 import { timeDifference } from "../utils/date";
 
 export type ClassParams = {
@@ -28,6 +29,8 @@ export const ClassRoom = (): JSX.Element => {
   const [showMenu, showMenuSet] = React.useState<{ [key: string]: boolean }>(
     {}
   );
+  const { user } = useContext(userContext);
+
   const [showModel, showModelSet] = React.useState(false);
   const [toDelete, toDeleteSet] = React.useState("");
 
@@ -94,36 +97,37 @@ export const ClassRoom = (): JSX.Element => {
                   New
                 </span>
 
-                <div
-                  className="float-right  test inline relative cursor-pointer px-5 py-2  z-10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    showMenuHandler(c._id);
-                  }}
-                >
-                  {showMenu[c._id] ? (
-                    <div className="absolute right-1 top-4 mt-2 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-20">
-                      <div
-                        onClick={() => {
-                          showModelSet(!showModel);
-                          toDeleteSet(c._id);
-                        }}
-                        className="px-4 py-2 text-sm text-gray-200 border-b border-gray-700 hover:bg-gray-800 flex gap-4 items-center"
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="#108497"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
+                {user && courses?.getOneClassRoom.owner._id === user._id && (
+                  <div
+                    className="float-right  test inline relative cursor-pointer px-5 py-2  z-10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showMenuHandler(c._id);
+                    }}
+                  >
+                    {showMenu[c._id] ? (
+                      <div className="absolute right-1 top-4 mt-2 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-20">
+                        <div
+                          onClick={() => {
+                            showModelSet(!showModel);
+                            toDeleteSet(c._id);
+                          }}
+                          className="px-4 py-2 text-sm text-gray-200 border-b border-gray-700 hover:bg-gray-800 flex gap-4 items-center"
                         >
-                          <path d="M19 24h-14c-1.104 0-2-.896-2-2v-16h18v16c0 1.104-.896 2-2 2zm-7-10.414l3.293-3.293 1.414 1.414-3.293 3.293 3.293 3.293-1.414 1.414-3.293-3.293-3.293 3.293-1.414-1.414 3.293-3.293-3.293-3.293 1.414-1.414 3.293 3.293zm10-8.586h-20v-2h6v-1.5c0-.827.673-1.5 1.5-1.5h5c.825 0 1.5.671 1.5 1.5v1.5h6v2zm-8-3h-4v1h4v-1z" />
-                        </svg>
-                        <span className="text-md">Delete</span>
-                      </div>
-                      {/* <div
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="#108497"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                          >
+                            <path d="M19 24h-14c-1.104 0-2-.896-2-2v-16h18v16c0 1.104-.896 2-2 2zm-7-10.414l3.293-3.293 1.414 1.414-3.293 3.293 3.293 3.293-1.414 1.414-3.293-3.293-3.293 3.293-1.414-1.414 3.293-3.293-3.293-3.293 1.414-1.414 3.293 3.293zm10-8.586h-20v-2h6v-1.5c0-.827.673-1.5 1.5-1.5h5c.825 0 1.5.671 1.5 1.5v1.5h6v2zm-8-3h-4v1h4v-1z" />
+                          </svg>
+                          <span className="text-md">Delete</span>
+                        </div>
+                        {/* <div
                         onClick={() =>
                           history.push(
                             `/class-room/${id}/update-course/${c._id}`
@@ -143,9 +147,10 @@ export const ClassRoom = (): JSX.Element => {
 
                         <span className="text-md">Edit</span>
                       </div> */}
-                    </div>
-                  ) : null}
-                </div>
+                      </div>
+                    ) : null}
+                  </div>
+                )}
               </div>
 
               <h4 className="mt-1 text-xl font-semibold uppercase leading-tight truncate">

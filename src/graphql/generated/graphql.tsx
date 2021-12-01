@@ -476,6 +476,7 @@ export type GetOneClassRoomQuery = { __typename?: "Query" } & {
     ClassRoom,
     "_id" | "name" | "tags" | "image" | "desc" | "state"
   > & {
+      owner: { __typename?: "User" } & Pick<User, "_id" | "name">;
       course: Array<
         { __typename?: "Course" } & Pick<
           Course,
@@ -1264,6 +1265,10 @@ export const GetOneClassRoomDocument = gql`
       image
       desc
       state
+      owner {
+        _id
+        name
+      }
       course {
         _id
         title
