@@ -37,14 +37,12 @@ const Tiptap = ({
   onChange,
   stepTitle,
   onStepTitleChange,
-  computed,
 }: {
   editable: boolean;
   content: any;
   onChange?: any;
   stepTitle?: any;
   onStepTitleChange?: any;
-  computed?: any;
 }): JSX.Element => {
   const id = v4();
   const editor = useEditor({

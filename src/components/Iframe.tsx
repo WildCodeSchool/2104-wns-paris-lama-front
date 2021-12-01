@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Node } from "@tiptap/core";
 
 export interface IframeOptions {
