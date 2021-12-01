@@ -105,10 +105,7 @@ export const Login = (): JSX.Element => {
             },
           })}
         />
-        <button
-          type="submit"
-          className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mt-5"
-        >
+        <button type="submit" className="btn btn-primary">
           submit
         </button>
       </form>

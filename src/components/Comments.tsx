@@ -118,10 +118,7 @@ export const Comments = ({
             )}
           </div>
 
-          <button
-            type="submit"
-            className="text-gray-200   font-bold py-3 px-4 shadow-sm focus:outline-none focus:shadow-outline btn"
-          >
+          <button type="submit" className="btn btn-primary">
             submit
           </button>
         </form>

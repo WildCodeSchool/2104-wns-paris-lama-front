@@ -21,7 +21,7 @@ export const SingleNotification = ({
   return (
     <>
       <div
-        className="flex max-w-md bg-white rounded-lg overflow-hidden mb-1 hover:bg-gray-200 bg-gray-100 cursor-pointer  "
+        className="flex max-w-md  rounded-lg overflow-hidden mb-1 hover:bg-gray-800  cursor-pointer  "
         onClick={() =>
           history.push(
             `/class-room/${notification.classRoom}/course/${notification.course}/${notification.step}`
@@ -36,7 +36,7 @@ export const SingleNotification = ({
             {comments?.getOneComment.commenter.name.charAt(0)}
           </div>
           <div className="mx-3">
-            <p className="text-gray-600">
+            <p className="text-gray-200">
               <strong>{comments?.getOneComment.commenter.name}</strong> was
               replied on a comment.
             </p>

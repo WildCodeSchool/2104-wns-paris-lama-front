@@ -60,6 +60,19 @@ mutation createCourse($data: CourseInput!) {
   }
 }
 
+mutation updateCourse($data: CourseUpdateInput!) {
+  updateCourse(data: $data) {
+    title
+    steps {
+      title
+      step
+    }
+    createdAt
+    updatedAt
+    rating
+    localRate
+  }
+}
 # mutation createComment($data: CommentInput!) {
 #   createComment(data: $data) {
 #     _id
@@ -88,6 +101,13 @@ mutation createClass($data: ClassRoomInput!) {
   createClass(data: $data) {
     _id
     inviteSecret
+    name
+    state
+  }
+}
+mutation updateClass($data: ClassRoomUpdateInput!) {
+  updateClass(data: $data) {
+    _id
     name
     state
   }
@@ -155,6 +175,11 @@ query getClasses {
 query getOneClassRoom($id: String!) {
   getOneClassRoom(id: $id) {
     _id
+    name
+    tags
+    image
+    desc
+    state
     course {
       _id
       title
@@ -168,7 +193,16 @@ query getOneClassRoom($id: String!) {
     }
   }
 }
-
+mutation deleteClass($id: String!) {
+  deleteClass(id: $id) {
+    ok
+    n
+    deletedCount
+  }
+}
+mutation deleteCourse($id: String!) {
+  deleteCourse(id: $id)
+}
 query getComments($course: String!, $step: String!) {
   getComments(course: $course, step: $step) {
     content

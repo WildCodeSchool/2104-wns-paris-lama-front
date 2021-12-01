@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
@@ -57,8 +56,8 @@ export type ClassRoomUpdateInput = {
   _id: Scalars["ID"];
   name?: Maybe<Scalars["String"]>;
   tags?: Maybe<Array<Scalars["String"]>>;
-  desc: Scalars["String"];
-  image: Scalars["String"];
+  desc?: Maybe<Scalars["String"]>;
+  image?: Maybe<Scalars["String"]>;
   rate?: Maybe<Scalars["Float"]>;
   state?: Maybe<Scalars["String"]>;
   course?: Maybe<Array<Scalars["String"]>>;
@@ -133,7 +132,7 @@ export type Mutation = {
   __typename?: "Mutation";
   createCourse: Course;
   updateCourse: Course;
-  deleteCourse: IdeleteResponse;
+  deleteCourse: Scalars["Boolean"];
   createComment: Comment;
   updateComment: Comment;
   deleteComment: IdeleteResponse;
@@ -348,6 +347,19 @@ export type CreateCourseMutation = { __typename?: "Mutation" } & {
     };
 };
 
+export type UpdateCourseMutationVariables = Exact<{
+  data: CourseUpdateInput;
+}>;
+
+export type UpdateCourseMutation = { __typename?: "Mutation" } & {
+  updateCourse: { __typename?: "Course" } & Pick<
+    Course,
+    "title" | "createdAt" | "updatedAt" | "rating" | "localRate"
+  > & {
+      steps: Array<{ __typename?: "Steps" } & Pick<Steps, "title" | "step">>;
+    };
+};
+
 export type RegisterMutationVariables = Exact<{
   data: UserInput;
 }>;
@@ -378,6 +390,17 @@ export type CreateClassMutation = { __typename?: "Mutation" } & {
   createClass: { __typename?: "ClassRoom" } & Pick<
     ClassRoom,
     "_id" | "inviteSecret" | "name" | "state"
+  >;
+};
+
+export type UpdateClassMutationVariables = Exact<{
+  data: ClassRoomUpdateInput;
+}>;
+
+export type UpdateClassMutation = { __typename?: "Mutation" } & {
+  updateClass: { __typename?: "ClassRoom" } & Pick<
+    ClassRoom,
+    "_id" | "name" | "state"
   >;
 };
 
@@ -448,7 +471,10 @@ export type GetOneClassRoomQueryVariables = Exact<{
 }>;
 
 export type GetOneClassRoomQuery = { __typename?: "Query" } & {
-  getOneClassRoom: { __typename?: "ClassRoom" } & Pick<ClassRoom, "_id"> & {
+  getOneClassRoom: { __typename?: "ClassRoom" } & Pick<
+    ClassRoom,
+    "_id" | "name" | "tags" | "image" | "desc" | "state"
+  > & {
       course: Array<
         { __typename?: "Course" } & Pick<
           Course,
@@ -461,6 +487,26 @@ export type GetOneClassRoomQuery = { __typename?: "Query" } & {
       >;
     };
 };
+
+export type DeleteClassMutationVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type DeleteClassMutation = { __typename?: "Mutation" } & {
+  deleteClass: { __typename?: "IdeleteResponse" } & Pick<
+    IdeleteResponse,
+    "ok" | "n" | "deletedCount"
+  >;
+};
+
+export type DeleteCourseMutationVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type DeleteCourseMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "deleteCourse"
+>;
 
 export type GetCommentsQueryVariables = Exact<{
   course: Scalars["String"];
@@ -787,6 +833,64 @@ export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
 >;
+export const UpdateCourseDocument = gql`
+  mutation updateCourse($data: CourseUpdateInput!) {
+    updateCourse(data: $data) {
+      title
+      steps {
+        title
+        step
+      }
+      createdAt
+      updatedAt
+      rating
+      localRate
+    }
+  }
+`;
+export type UpdateCourseMutationFn = Apollo.MutationFunction<
+  UpdateCourseMutation,
+  UpdateCourseMutationVariables
+>;
+
+/**
+ * __useUpdateCourseMutation__
+ *
+ * To run a mutation, you first call `useUpdateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCourseMutation, { data, loading, error }] = useUpdateCourseMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >(UpdateCourseDocument, options);
+}
+export type UpdateCourseMutationHookResult = ReturnType<
+  typeof useUpdateCourseMutation
+>;
+export type UpdateCourseMutationResult =
+  Apollo.MutationResult<UpdateCourseMutation>;
+export type UpdateCourseMutationOptions = Apollo.BaseMutationOptions<
+  UpdateCourseMutation,
+  UpdateCourseMutationVariables
+>;
 export const RegisterDocument = gql`
   mutation register($data: UserInput!) {
     Register(data: $data) {
@@ -937,6 +1041,58 @@ export type CreateClassMutationResult =
 export type CreateClassMutationOptions = Apollo.BaseMutationOptions<
   CreateClassMutation,
   CreateClassMutationVariables
+>;
+export const UpdateClassDocument = gql`
+  mutation updateClass($data: ClassRoomUpdateInput!) {
+    updateClass(data: $data) {
+      _id
+      name
+      state
+    }
+  }
+`;
+export type UpdateClassMutationFn = Apollo.MutationFunction<
+  UpdateClassMutation,
+  UpdateClassMutationVariables
+>;
+
+/**
+ * __useUpdateClassMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassMutation, { data, loading, error }] = useUpdateClassMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateClassMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassMutation,
+    UpdateClassMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateClassMutation, UpdateClassMutationVariables>(
+    UpdateClassDocument,
+    options
+  );
+}
+export type UpdateClassMutationHookResult = ReturnType<
+  typeof useUpdateClassMutation
+>;
+export type UpdateClassMutationResult =
+  Apollo.MutationResult<UpdateClassMutation>;
+export type UpdateClassMutationOptions = Apollo.BaseMutationOptions<
+  UpdateClassMutation,
+  UpdateClassMutationVariables
 >;
 export const GetFilteredClassDocument = gql`
   query getFilteredClass($invite: String!) {
@@ -1102,6 +1258,11 @@ export const GetOneClassRoomDocument = gql`
   query getOneClassRoom($id: String!) {
     getOneClassRoom(id: $id) {
       _id
+      name
+      tags
+      image
+      desc
+      state
       course {
         _id
         title
@@ -1166,6 +1327,106 @@ export type GetOneClassRoomLazyQueryHookResult = ReturnType<
 export type GetOneClassRoomQueryResult = Apollo.QueryResult<
   GetOneClassRoomQuery,
   GetOneClassRoomQueryVariables
+>;
+export const DeleteClassDocument = gql`
+  mutation deleteClass($id: String!) {
+    deleteClass(id: $id) {
+      ok
+      n
+      deletedCount
+    }
+  }
+`;
+export type DeleteClassMutationFn = Apollo.MutationFunction<
+  DeleteClassMutation,
+  DeleteClassMutationVariables
+>;
+
+/**
+ * __useDeleteClassMutation__
+ *
+ * To run a mutation, you first call `useDeleteClassMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteClassMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteClassMutation, { data, loading, error }] = useDeleteClassMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteClassMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteClassMutation,
+    DeleteClassMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteClassMutation, DeleteClassMutationVariables>(
+    DeleteClassDocument,
+    options
+  );
+}
+export type DeleteClassMutationHookResult = ReturnType<
+  typeof useDeleteClassMutation
+>;
+export type DeleteClassMutationResult =
+  Apollo.MutationResult<DeleteClassMutation>;
+export type DeleteClassMutationOptions = Apollo.BaseMutationOptions<
+  DeleteClassMutation,
+  DeleteClassMutationVariables
+>;
+export const DeleteCourseDocument = gql`
+  mutation deleteCourse($id: String!) {
+    deleteCourse(id: $id)
+  }
+`;
+export type DeleteCourseMutationFn = Apollo.MutationFunction<
+  DeleteCourseMutation,
+  DeleteCourseMutationVariables
+>;
+
+/**
+ * __useDeleteCourseMutation__
+ *
+ * To run a mutation, you first call `useDeleteCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCourseMutation, { data, loading, error }] = useDeleteCourseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCourseMutation,
+    DeleteCourseMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteCourseMutation,
+    DeleteCourseMutationVariables
+  >(DeleteCourseDocument, options);
+}
+export type DeleteCourseMutationHookResult = ReturnType<
+  typeof useDeleteCourseMutation
+>;
+export type DeleteCourseMutationResult =
+  Apollo.MutationResult<DeleteCourseMutation>;
+export type DeleteCourseMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCourseMutation,
+  DeleteCourseMutationVariables
 >;
 export const GetCommentsDocument = gql`
   query getComments($course: String!, $step: String!) {

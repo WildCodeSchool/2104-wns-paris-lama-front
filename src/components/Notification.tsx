@@ -13,18 +13,14 @@ export const Notification = ({
 }): JSX.Element => {
   return (
     <>
-      {notifications.length &&
+      {notifications.length > 0 &&
         notifications.map((notification) => (
           <SingleNotification
             notification={notification}
             key={notification._id}
           />
         ))}
-      {!notifications.length && (
-        <div className="bg-white rounded-lg overflow-hidden mb-1 p-6 text-center  text-gray-800">
-          No Comments
-        </div>
-      )}
+      {!notifications.length && <div className="px-2 py-1">No Comments</div>}
     </>
   );
 };

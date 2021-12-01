@@ -25,6 +25,7 @@ import { useGetClassesQuery } from "./graphql/generated/graphql";
 import { CourseContextProvider, ICourseState } from "./store/course";
 import { PrivateRoute } from "./components/ProtectedRoute";
 import { JoinClass } from "./views/JoinClass";
+import { UpdateClassRoom } from "./views/UpdateClass";
 
 export type ClassParams = {
   id: string;
@@ -104,6 +105,13 @@ function App(): JSX.Element {
                     exact
                     component={CreateCourse}
                   />
+
+                  <PrivateRoute
+                    isAuthenticated={!!user}
+                    path="/class-room/:id/update-course"
+                    exact
+                    component={UpdateClassRoom}
+                  />
                   <PrivateRoute
                     isAuthenticated={!!user}
                     path="/class-room/:class_id/course/:course_id/:step"
@@ -168,19 +176,19 @@ export default App;
 
 // TODO
 /**
- * Fix rerndring course page on open comments
- * Fix cant resolve Slate point
  * add update & delete on class & course & comment
- * add rating page at the end of course
- * code highlight problem
  * refacoring the code dont repeat your self
  * adding profile edit delete page(bio , photo ...etc)
  * notification on comment  to course owner or to parent comment
  * notification on join class
  * join class
+ * add underscore if name is tow part
  * beter input on create course
  * better ui on notification
- * add underscore if name is tow part
- * use tiptop
  * shared code room ?
+ * add rating page at the end of course
+ * Fix cant resolve Slate point done
+ * Fix rerndring course page on open comments done
+ * use tiptop done
+ * code highlight problem done
  */

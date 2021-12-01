@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -35,11 +36,14 @@ export const NavBar = (): JSX.Element => {
 
   const { mobile } = useScreenDimensions();
   const { user, updateUser } = useContext(userContext);
+
   React.useEffect(() => {
     if (!listening && user) {
-      const events = new EventSource(
-        `http://localhost:8080/events/${user._id}`
-      );
+      const uri =
+        process.env.NODE_ENV === "development"
+          ? `http://localhost:8080/events/${user._id}`
+          : `/events/${user._id}`;
+      const events = new EventSource(uri);
 
       events.onmessage = async (event) => {
         const parsedData =
@@ -67,7 +71,7 @@ export const NavBar = (): JSX.Element => {
 
   return (
     <div className=" shadow-2xl  bg-gray-900">
-      <MenuWrapper className="p-5 w-11/12 mx-auto ">
+      <MenuWrapper className="w-11/12 mx-auto ">
         <NavTitle onClick={() => history.push(`/`)} className="cursor-pointer">
           <span className="text-purple-700">&#10100;&#10075;&#8515;</span>
           LAMA&#10101;
@@ -78,28 +82,40 @@ export const NavBar = (): JSX.Element => {
             <NavDesktop>
               <div className="flex flex-row justify-center items-center gap-5 relative">
                 {user && (
-                  <div
-                    className="relative cursor-pointer"
-                    onClick={() => notificationOpenSet(!notificationOpen)}
-                  >
-                    <img
-                      src={notificationSVG}
-                      alt="notification"
-                      width="24"
-                      className="inline-block"
-                    />
-                    <span className="absolute w-2 h-2 -ml-2 top-0 bg-red-600 rounded-full " />
+                  <div className="dropdown dropdown-end">
+                    <div
+                      tabIndex={0}
+                      className={`"my-6  cursor-pointer mx-3 relative m-1 btn" ${
+                        notification.length > 0 ? "indicator" : ""
+                      }`}
+                      onClick={() => notificationOpenSet(!notificationOpen)}
+                    >
+                      {notification.length > 0 && (
+                        <div className="indicator-item badge bg-red-500 border-0 badge-sm ">
+                          {notification.length}
+                        </div>
+                      )}
+                      <img
+                        src={notificationSVG}
+                        alt="notification"
+                        width="24"
+                        className="inline-block"
+                      />
+                    </div>
+                    {notificationOpen && (
+                      <ul
+                        tabIndex={0}
+                        className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-96"
+                      >
+                        {/* <div
+                    className="absolute top-12 right-10 w-96 bg-white  overflow-y-scroll z-20"
+                  style={{ maxHeight: "400px" }} */}
+                        {/* > */}
+                        <Notification notifications={notification} />
+                      </ul>
+                    )}
                   </div>
                 )}
-                {notificationOpen && (
-                  <div
-                    className="absolute top-10 right-10 w-96 bg-white  overflow-y-scroll z-20"
-                    style={{ maxHeight: "400px" }}
-                  >
-                    <Notification notifications={notification} />
-                  </div>
-                )}
-
                 {contentList.map(
                   ({ text, link, loggedIn }) =>
                     loggedIn && (

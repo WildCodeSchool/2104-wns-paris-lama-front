@@ -23,19 +23,16 @@ export const TagInput = ({
 }): JSX.Element => {
   return (
     <>
-      <div className="w-full ">
-        <label
-          className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-          htmlFor="form-tag"
-        >
-          Tags
+      <div className="w-full form-control mb-1">
+        <label className="label" htmlFor="form-tag">
+          <span className="label-text">Tags</span>
         </label>
         <div className=" overflow-hidden ">
           <div className="px-6 pt-4 pb-2 flex flex-wrap ">
             {tags.map((tag, index) => (
               <span
                 key={index}
-                className=" flex flex-row   gap-2 justify-betweeninline-block bg-gray-900 hover:bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2"
+                className=" flex flex-row   gap-2 justify-betweeninline-block bg-gray-900 hover:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2"
               >
                 #{tag}
                 <button onClick={() => deleteTag(index)}>x</button>
@@ -43,7 +40,9 @@ export const TagInput = ({
             ))}
           </div>
           <input
-            className="appearance-none block w-full bg-gray-700 text-gray-200 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-900 "
+            id="form-tag"
+            type="text"
+            className="input input-primary input-bordered    w-11/12 leading-tight my-2 mx-2 outline-none"
             value={input}
             placeholder="Enter a tag"
             onKeyDown={onKeyDown}

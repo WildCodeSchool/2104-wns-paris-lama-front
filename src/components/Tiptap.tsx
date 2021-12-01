@@ -7,7 +7,6 @@ import {
   ReactNodeViewRenderer,
   useEditor,
   BubbleMenu,
-  FloatingMenu,
   EditorContent,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -19,6 +18,8 @@ import Document from "@tiptap/extension-document";
 import Placeholder from "@tiptap/extension-placeholder";
 import LinkTiptap from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
+import TextStyle from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
 import { v4 } from "uuid";
 import Iframe from "./Iframe";
 import MenuBar from "./TiptapToolbar";
@@ -34,10 +35,16 @@ const Tiptap = ({
   editable,
   content,
   onChange,
+  stepTitle,
+  onStepTitleChange,
+  computed,
 }: {
   editable: boolean;
-  content?: any;
+  content: any;
   onChange?: any;
+  stepTitle?: any;
+  onStepTitleChange?: any;
+  computed?: any;
 }): JSX.Element => {
   const id = v4();
   const editor = useEditor({
@@ -50,6 +57,8 @@ const Tiptap = ({
       Iframe,
       Image,
       Highlight,
+      TextStyle,
+      Color,
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -76,21 +85,38 @@ const Tiptap = ({
     },
     content,
     onUpdate(instance: any) {
-      // The content has changed.
-      if (!editable)
+      if (!editable) {
         instance.editor.commands.setContent(instance.editor.getJSON());
-      onChange(instance.editor.getJSON());
+        onChange(instance.editor.getJSON());
+      }
     },
   });
   React.useEffect(() => {
-    if (content && editor && !editable) editor.commands.setContent(content);
+    if (content && editor) editor.commands.setContent(content, true);
   }, [content, editable, editor]);
   return (
     <div>
-      {editable && <MenuBar id={id} editor={editor} />}
+      {editable && (
+        <div className="flex items-center gap-3">
+          <div className="form-control">
+            <input
+              id="form-title"
+              type="text"
+              placeholder="Step Title"
+              className="input input-primary input-bordered"
+              value={stepTitle}
+              onChange={onStepTitleChange}
+            />
+          </div>
+          <div>
+            {" "}
+            <MenuBar id={id} editor={editor} />
+          </div>
+        </div>
+      )}
       {editor && editable && (
         <BubbleMenu
-          className="flex gap-2 "
+          className="flex gap-2 bg-gray-600 rounded-lg"
           tippyOptions={{ duration: 100 }}
           editor={editor}
         >
@@ -149,7 +175,10 @@ const Tiptap = ({
         </FloatingMenu>
       )} */}
 
-      <EditorContent editor={editor} />
+      <EditorContent
+        editor={editor}
+        className=" rounded-lg py-2 my-2 max-w-4xl mx-auto"
+      />
     </div>
   );
 };

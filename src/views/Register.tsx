@@ -131,10 +131,7 @@ export const Register = (): JSX.Element => {
             })}
           />
           <div className="w-full mx-auto mt-5">
-            <button
-              className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
-              type="submit"
-            >
+            <button className="btn btn-primary" type="submit">
               submit
             </button>
           </div>

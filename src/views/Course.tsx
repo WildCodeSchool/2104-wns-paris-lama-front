@@ -68,11 +68,11 @@ export const Course = (): JSX.Element => {
           />
         </MenuContent>
 
-        <div className="  w-11/12     bg-gray-900 mx-auto ">
+        <div className="  w-11/12 mx-auto ">
           <div className="flex flex-col justify-center items-center w-full">
             <div className=" py-3 px-5 rounded-3xl w-10/12">
               {currentstep && (
-                <div id="markdown">
+                <div id="markdown" className="mb-52 ">
                   <Tiptap
                     editable={false}
                     content={JSON.parse(currentstep.contentMd)}

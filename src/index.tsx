@@ -14,9 +14,11 @@ import reportWebVitals from "./reportWebVitals";
 import "./assets/f.scss";
 import { getCurrentUser } from "./utils/auth";
 
-const httpLink = createHttpLink({
-  uri: "http://localhost:8080/graphql",
-});
+const uri =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:8080/graphql"
+    : "/graphql";
+const httpLink = createHttpLink({ uri });
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists

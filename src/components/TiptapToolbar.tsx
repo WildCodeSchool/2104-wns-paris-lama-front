@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/require-default-props */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -26,8 +27,10 @@ import right from "../assets/svg/right.svg";
 import justify from "../assets/svg/align-justify.svg";
 import link from "../assets/svg/link.svg";
 import underline from "../assets/svg/underline.svg";
-import breakd from "../assets/svg/break.svg";
 
+import fontColor from "../assets/svg/fontColor.svg";
+import breakd from "../assets/svg/break.svg";
+import { iframe } from "../utils/urlToembed";
 // import "./styles.scss";
 
 const MenuBar = ({ editor, id }: { editor: any; id?: string }): JSX.Element => {
@@ -71,35 +74,35 @@ const MenuBar = ({ editor, id }: { editor: any; id?: string }): JSX.Element => {
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`${
           editor.isActive("bold") ? "bg-gray-300" : "bg-gray-50"
-        } inline w-7 p-2`}
+        } inline w-7 py-2 px-1`}
       />
       <img
         src={italic}
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`${
           editor.isActive("italic") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <img
         src={strike}
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`${
           editor.isActive("strike") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <img
         src={code}
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={`${
           editor.isActive("code") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <img
         src={paragraph}
         onClick={() => editor.chain().focus().setParagraph().run()}
         className={`${
           editor.isActive("paragraph") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -131,43 +134,47 @@ const MenuBar = ({ editor, id }: { editor: any; id?: string }): JSX.Element => {
       >
         H3
       </button>
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-        className={`p-1 ${
-          editor.isActive("heading", { level: 4 })
-            ? "bg-gray-300"
-            : "bg-gray-50"
-        }`}
-      >
-        H4
-      </button>
       <img
         src={ul}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`${
           editor.isActive("bulletList") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
+      <div>
+        <label htmlFor="fileInput">
+          <img id="icon" src={fontColor} className={` inline w-7 pt-2 `} />
+        </label>
+        <input
+          id="fileInput"
+          style={{ display: "none" }}
+          type="color"
+          onInput={(event) =>
+            editor.chain().focus().setColor(event.currentTarget.value).run()
+          }
+          value={editor.getAttributes("textStyle").color}
+        />
+      </div>
       <img
         src={ol}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`${
           editor.isActive("orderedList") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <img
         src={codeBlock}
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={`${
           editor.isActive("codeBlock") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <img
         src={quote}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`${
           editor.isActive("blockquote") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2`}
+        } inline  w-7 py-2 px-1`}
       />
       <img
         src={hr}
@@ -220,17 +227,17 @@ const MenuBar = ({ editor, id }: { editor: any; id?: string }): JSX.Element => {
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={`${
           editor.isActive("underline") ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2 bg-gray-50`}
+        } inline  w-7 py-2 px-1 bg-gray-50`}
       />
       <img
         src={undo}
         onClick={() => editor.chain().focus().undo().run()}
-        className={` inline  w-7 p-2 bg-gray-50`}
+        className={` inline  w-7 py-2 px-1 bg-gray-50`}
       />
       <img
         src={redo}
         onClick={() => editor.chain().focus().redo().run()}
-        className={` inline  w-7 p-2 bg-gray-50`}
+        className={` inline  w-7 py-2 px-1 bg-gray-50`}
       />
       <img
         src={video}
@@ -238,27 +245,34 @@ const MenuBar = ({ editor, id }: { editor: any; id?: string }): JSX.Element => {
           const url = window.prompt("URL");
 
           if (url) {
-            editor.chain().focus().setIframe({ src: url }).run();
+            const regExp =
+              /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+
+            const vedioId = match && match[2].length === 11 ? match[2] : null;
+
+            const iframeVersion = (vedioId && iframe(vedioId)) || url;
+            editor.chain().focus().setIframe({ src: iframeVersion }).run();
           }
         }}
-        className={` inline  w-7 p-2 bg-gray-50`}
+        className={` inline  w-7 py-2 px-1 bg-gray-50`}
       />
       <img
         src={image}
         onClick={addImage}
-        className={` inline  w-7 p-2 bg-gray-50`}
+        className={` inline  w-7 py-2 px-1 bg-gray-50`}
       />
       <img
         src={link}
         onClick={setLink}
         className={`${
           editor.isActive({ textAlign: "link" }) ? "bg-gray-300" : "bg-gray-50"
-        } inline  w-7 p-2 bg-gray-50`}
+        } inline  w-7 py-2 px-1 bg-gray-50`}
       />
       <img
         src={breakd}
         onClick={() => editor.chain().focus().setHardBreak().run()}
-        className={` inline  w-7 p-2 bg-gray-50`}
+        className={` inline  w-7 py-2 px-1 bg-gray-50`}
       />
     </div>
   );

@@ -5,11 +5,16 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 // import { Link, Redirect } from "react-router-dom";
 import { Input } from "../components/Input";
 import { TagInput } from "../components/tagInput";
 import { TextArea } from "../components/TextArea";
-import { useCreateClassMutation } from "../graphql/generated/graphql";
+import {
+  useGetOneClassRoomQuery,
+  useUpdateClassMutation,
+} from "../graphql/generated/graphql";
+import { ClassParams } from "./ClassRoom";
 
 type FormValues = {
   name: string;
@@ -17,36 +22,48 @@ type FormValues = {
   image: string;
   desc: string;
 };
-export const CreateClassRoom = (): JSX.Element => {
-  const [secret, secretSet] = useState("");
-  const [showCopyAlert, showCopyAlertSet] = useState(false);
+export const UpdateClassRoom = (): JSX.Element => {
   const [input, setInput] = useState("");
   const [isKeyReleased, setIsKeyReleased] = useState(false);
+  const { id } = useParams<ClassParams>();
 
   const [tags, setTags] = useState<Array<string>>([]);
-  const [createClass] = useCreateClassMutation({
+  const [updateClass] = useUpdateClassMutation({
     refetchQueries: ["getClasses"],
+  });
+  const { data } = useGetOneClassRoomQuery({
+    variables: { id },
   });
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onTouched" });
-  const onSubmit = handleSubmit(async (data) => {
+  React.useEffect(() => {
+    if (data) {
+      setValue("name", data.getOneClassRoom.name);
+      setValue("state", data.getOneClassRoom.state);
+      setValue("desc", data.getOneClassRoom.desc);
+      setValue("image", data.getOneClassRoom.image);
+      setTags(data.getOneClassRoom.tags);
+    }
+  }, [data, setValue]);
+  const onSubmit = handleSubmit(async (form) => {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const res = await createClass({
+      await updateClass({
         variables: {
           data: {
-            name: data.name,
-            state: data.state,
-            desc: data.desc,
+            _id: id,
+            name: form.name,
+            state: form.state,
+            desc: form.desc,
             tags,
-            image: data.image,
+            image: form.image,
           },
         },
       });
-      secretSet(res.data?.createClass.inviteSecret as string);
     } catch (error) {
       console.log(error);
     }
@@ -166,68 +183,12 @@ export const CreateClassRoom = (): JSX.Element => {
                   <span className="label-text">public</span>
                 </label>
               </div>
-              {/* <label className="inline-flex items-center ml-6">
-                <input
-                  className="form-radio"
-                  type="radio"
-                  value="PUBLIC"
-                  {...register("state")}
-                />
-                <span className="ml-2">public</span>
-              </label> */}
             </div>
           </div>
         </div>
         <button type="submit" className="btn btn-primary">
-          Submit
+          Update
         </button>
-        {secret !== "" ? (
-          <>
-            <p>
-              Invite your audince with this invation link it will expire in 48
-              hours but you can regenerate new one
-            </p>
-            <div
-              className="bg-gray-800 w-3/6  h-12 py-3 px-5 rounded-3xl  mx-auto my-10  cursor-pointer"
-              onClick={() => {
-                navigator.clipboard.writeText(secret);
-                showCopyAlertSet(true);
-                setTimeout(() => {
-                  showCopyAlertSet(false);
-                }, 5000);
-              }}
-            >
-              <p className="font-bold ">
-                {secret}
-                <svg
-                  className="ml-3 inline float-right "
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="#aaa"
-                >
-                  <path d="M22 6v16h-16v-16h16zm2-2h-20v20h20v-20zm-24 17v-21h21v2h-19v19h-2z" />
-                </svg>
-              </p>
-              {showCopyAlert ? (
-                <div className="bg-gray-800 w-4/12  h-12 py-3 px-5 rounded-3xl  mx-auto my-2 cursor-pointer flex gap-2">
-                  <span> copied </span>
-                  <svg
-                    className="ml-3 inline float-right "
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="#5EBA7D"
-                  >
-                    <path d="M0 11.386l1.17-1.206c1.951.522 5.313 1.731 8.33 3.597 3.175-4.177 9.582-9.398 13.456-11.777l1.044 1.073-14 18.927-10-10.614z" />
-                  </svg>
-                </div>
-              ) : null}
-            </div>
-          </>
-        ) : null}
       </form>
     </div>
   );

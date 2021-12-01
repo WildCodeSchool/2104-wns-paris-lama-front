@@ -6,7 +6,7 @@
 /* eslint-disable no-console */
 
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 import { Search } from "../components/Search";
@@ -15,6 +15,7 @@ import classRoomContext, { IClassRoomState } from "../store/classRoom";
 import userContext from "../store/userContext";
 
 export const Dashboard = (): JSX.Element => {
+  const history = useHistory();
   const { user } = useContext(userContext);
   const [searchResults, setSearchResults] = useState<Array<IClassRoomState>>(
     []
@@ -76,24 +77,14 @@ export const Dashboard = (): JSX.Element => {
             handleChange={handleChange}
             searchTerm={searchTerm}
           />
-          <Link
-            to="/create-class-room"
+          <button
+            type="button"
+            onClick={() => history.push("/create-class-room")}
             key={Date.now() + Math.random() * 100}
-            className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn"
+            className="btn btn-primary"
           >
             Create new class
-            <svg
-              className="ml-3 inline"
-              width="24"
-              height="24"
-              xmlns="http://www.w3.org/2000/svg"
-              fillRule="evenodd"
-              clipRule="evenodd"
-              fill="#fff"
-            >
-              <path d="M7 9h-7v-7h1v5.2c1.853-4.237 6.083-7.2 11-7.2 6.623 0 12 5.377 12 12s-5.377 12-12 12c-6.286 0-11.45-4.844-11.959-11h1.004c.506 5.603 5.221 10 10.955 10 6.071 0 11-4.929 11-11s-4.929-11-11-11c-4.66 0-8.647 2.904-10.249 7h5.249v1z" />
-            </svg>
-          </Link>
+          </button>
         </div>
 
         <div className="w-9/12 mx-auto ">
@@ -106,7 +97,7 @@ export const Dashboard = (): JSX.Element => {
                   } found`}
                 </p>
                 <span
-                  className=" text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn cursor-pointer"
+                  className="btn btn-primary"
                   onClick={() => setSearchTerm("")}
                 >
                   {" "}

@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/button-has-type */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
@@ -27,12 +30,48 @@ export const CreateCourse = (): JSX.Element => {
 
   const initialValue = (stepId) =>
     localStorage.getItem(`content-${stepId}`) ||
-    JSON.stringify([
-      {
-        type: "paragraph",
-        children: [{ text: `A line of text in a paragraph.${stepId}` }],
-      },
-    ]);
+    JSON.stringify({
+      type: "doc",
+      content: [
+        {
+          type: "heading",
+          attrs: {
+            textAlign: "left",
+            level: 1,
+          },
+          content: [
+            {
+              type: "text",
+              text: "What's the title ?",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+          },
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+          },
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+          },
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            textAlign: "left",
+          },
+        },
+      ],
+    });
   const initialSteps =
     localStorage.getItem(`steps`) ||
     JSON.stringify([
@@ -64,6 +103,15 @@ export const CreateCourse = (): JSX.Element => {
         contentHtml: "",
       },
     ]);
+  };
+
+  const onRemoveStep = (i: number) => {
+    console.log(i);
+    const stepsCopy = [...steps];
+    const deleted = stepsCopy.splice(i, 1);
+    console.log(deleted, stepsCopy);
+    localStorage.setItem(`steps`, JSON.stringify(stepsCopy));
+    setSteps(stepsCopy);
   };
 
   const onChangeStepsTitle = (i) => (e: React.FormEvent<HTMLInputElement>) => {
@@ -107,79 +155,45 @@ export const CreateCourse = (): JSX.Element => {
     <>
       <div className="w-9/12 mx-auto">
         <form onSubmit={onSubmit} className=" flex flex-col  pt-6 pb-8 mb-4">
-          <div className="flex justify-between items-center ">
+          <div className="flex justify-between items-center mb-3 ">
             <div className="w-1/4 ">
-              <input
-                className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
-                id="form-title"
-                type="text"
-                placeholder="Course Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-
-              <hr />
+              <div className="form-control">
+                <input
+                  id="form-title"
+                  type="text"
+                  placeholder="Course Title"
+                  className="input input-primary input-bordered"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
             </div>
             <button
               onClick={onAddStep}
               type="button"
-              className="text-gray-200 float-right   font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mb-5"
+              className="btn btn-primary"
             >
               add another step
             </button>
           </div>
           {steps.map((step, i) => (
             <div key={step.step} className="w-full">
-              <h1>{`step - ${step.step} `}</h1>
-              <div className="w-1/4 ">
-                <label
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  htmlFor={`form-${step.step}`}
-                >
-                  Title
-                </label>
-                <input
-                  className="appearance-none block w-full bg-gray-300 text-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none  rounded-xl   focus:bg-gray-200 "
-                  id={`form-${step.step}`}
-                  type="text"
-                  placeholder="Course Title"
-                  value={step.title}
-                  onChange={onChangeStepsTitle(i)}
-                />
-              </div>
-              <div id="markdown">
+              <div
+                id="markdown"
+                className="border-2 border-purple-500 p-3 mb-2 "
+              >
+                {steps[steps.length - 1] === steps[i] && i > 0 && (
+                  <div className=" flex justify-end mb-2">
+                    <div className="btn " onClick={() => onRemoveStep(i)}>
+                      X
+                    </div>
+                  </div>
+                )}
                 <Tiptap
+                  stepTitle={step.title}
+                  onStepTitleChange={onChangeStepsTitle(i)}
                   editable
-                  content={{
-                    type: "doc",
-                    content: [
-                      {
-                        type: "heading",
-                        attrs: {
-                          textAlign: "left",
-                          level: 1,
-                        },
-                        content: [
-                          {
-                            type: "text",
-                            text: "hello",
-                          },
-                        ],
-                      },
-                      {
-                        type: "paragraph",
-                        attrs: {
-                          textAlign: "left",
-                        },
-                      },
-                      {
-                        type: "paragraph",
-                        attrs: {
-                          textAlign: "left",
-                        },
-                      },
-                    ],
-                  }}
+                  content={JSON.parse(step.contentMd)}
                   onChange={(data) => {
                     onChangeStepsContent(i);
                     const stepsCopy = [...steps];
@@ -189,24 +203,13 @@ export const CreateCourse = (): JSX.Element => {
                   }}
                 />
               </div>
-              {/* <Markdown
-                handleOnChange={(data) => {
-                  onChangeStepsContent(i);
-                  const stepsCopy = [...steps];
-                  const content = JSON.stringify(data);
-                  stepsCopy[i].contentMd = content;
-                  localStorage.setItem(`steps`, JSON.stringify(stepsCopy));
-                }}
-                value={JSON.parse(step.contentMd)}
-              /> */}
             </div>
           ))}
-          <button
-            type="submit"
-            className="text-gray-200  font-bold py-4 px-8 shadow-sm focus:outline-none focus:shadow-outline btn mb-5"
-          >
-            submit
-          </button>
+          <div className="mt-5 mx-auto">
+            <button type="submit" className="btn btn-primary ">
+              submit
+            </button>
+          </div>
         </form>
       </div>
     </>
