@@ -1,80 +1,179 @@
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/jsx-no-duplicate-props */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable no-console */
 /* eslint-disable import/named */
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { ReactComponent as LogoSvg } from "../../assets/svg/logo.svg";
+import { Link, useHistory } from "react-router-dom";
+import { useApolloClient } from "@apollo/client";
 import { ToggleButton } from "./Buttons/ToggleButton";
 import { Title } from "../Title";
 import { useScreenDimensions } from "../../hooks/useScreenDimensions";
 import userContext from "../../store/userContext";
+import notificationSVG from "../../assets/svg/notif.svg";
+import { Notification } from "../Notification";
 
 type TypeProps = {
   open: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const NavBar = (): JSX.Element => {
+  const history = useHistory();
+  const client = useApolloClient();
+
   const [open, setOpen] = useState(false);
+
+  const [notificationOpen, notificationOpenSet] = useState(false);
+  const [notification, notificationSet] = useState<Array<any>>([]);
+  const [listening, setListening] = useState(false);
+
   const { mobile } = useScreenDimensions();
   const { user, updateUser } = useContext(userContext);
 
+  React.useEffect(() => {
+    if (!listening && user) {
+      const uri =
+        process.env.NODE_ENV === "development"
+          ? `http://localhost:8080/events/${user._id}`
+          : `/events/${user._id}`;
+      const events = new EventSource(uri);
+
+      events.onmessage = async (event) => {
+        const parsedData =
+          event.data === "connected" ? event.data : JSON.parse(event.data);
+        console.log(parsedData);
+        event.data !== "connected" &&
+          notificationSet((notif) => notif.concat(parsedData.message));
+      };
+
+      setListening(true);
+    }
+  }, [listening, notification, user]);
+
   const contentList = [
-    { text: "Home", link: "/" },
-    { text: "Login", link: "/login", loggedIn: user && !!user.accessToken },
-    { text: "SignUp", link: "/register", loggedIn: user && !!user.accessToken },
-    // { text: "LogOut", link: "/", loggedIn: user.accessToken },
+    { text: "Sign In", link: "/login", loggedIn: !user?.accessToken },
+    { text: "Sign Up", link: "/register", loggedIn: !user?.accessToken },
+    { text: "Log out", link: "/", loggedIn: !!user?.accessToken },
   ];
+  const logout = async () => {
+    await client.cache.reset();
+    if (mobile) setOpen(!open);
+    localStorage.removeItem("user");
+    updateUser(null);
+  };
 
   return (
-    <>
-      <MenuWrapper>
-        <NavTitle>LAMA</NavTitle>
+    <div className=" shadow-2xl  bg-gray-900">
+      <MenuWrapper className="w-11/12 mx-auto ">
+        <NavTitle onClick={() => history.push(`/`)} className="cursor-pointer">
+          <span className="text-purple-700">&#10100;&#10075;&#8515;</span>
+          LAMA&#10101;
+        </NavTitle>
+
         {!mobile && (
           <>
             <NavDesktop>
-              <ListWrapper>
+              <div className="flex flex-row justify-center items-center gap-5 relative">
+                {user && (
+                  <div className="dropdown dropdown-end">
+                    <div
+                      tabIndex={0}
+                      className={`"my-6  cursor-pointer mx-3 relative m-1 btn" ${
+                        notification.length > 0 ? "indicator" : ""
+                      }`}
+                      onClick={() => notificationOpenSet(!notificationOpen)}
+                    >
+                      {notification.length > 0 && (
+                        <div className="indicator-item badge bg-red-500 border-0 badge-sm ">
+                          {notification.length}
+                        </div>
+                      )}
+                      <img
+                        src={notificationSVG}
+                        alt="notification"
+                        width="24"
+                        className="inline-block"
+                      />
+                    </div>
+                    {notificationOpen && (
+                      <ul
+                        tabIndex={0}
+                        className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-96"
+                      >
+                        {/* <div
+                    className="absolute top-12 right-10 w-96 bg-white  overflow-y-scroll z-20"
+                  style={{ maxHeight: "400px" }} */}
+                        {/* > */}
+                        <Notification notifications={notification} />
+                      </ul>
+                    )}
+                  </div>
+                )}
                 {contentList.map(
                   ({ text, link, loggedIn }) =>
-                    !loggedIn && (
-                      <Link
-                        to={link}
-                        key={Date.now() + Math.random() * 100}
-                        className="link"
+                    loggedIn && (
+                      <div
+                        className="flex items-center mt-2 -mx-2 sm:mt-0"
+                        key={text}
                       >
-                        <Title text={text} />
-                      </Link>
+                        <Link
+                          to={link}
+                          onClick={
+                            text === "Log out"
+                              ? logout
+                              : () => console.log("redirect")
+                          }
+                          key={Date.now() + Math.random() * 100}
+                          className={`px-3 py-1 text-sm font-semibold text-white transition-colors duration-200 transform border-2 rounded-md 
+                          ${
+                            text === "Sign Up"
+                              ? "bg-black rounded-md hover:bg-gray-800"
+                              : "hover:bg-gray-700"
+                          }`}
+                        >
+                          {text}
+                        </Link>
+                      </div>
+                      // <Link
+                      //   to={link}
+                      //   onClick={
+                      //     text === "Log out"
+                      //       ? logout
+                      //       : () => console.log("redirect")
+                      //   }
+                      //   key={Date.now() + Math.random() * 100}
+                      //   className="link"
+                      // >
+                      //   <Title text={text} />
+                      // </Link>
                     )
                 )}
-                {user && user.accessToken && (
-                  <Link
-                    to="/"
-                    key={Date.now() + Math.random() * 100}
-                    className="link"
-                    onClick={() => {
-                      localStorage.removeItem("user");
-                      updateUser(null);
-                    }}
-                  >
-                    <Title text="LogOut" />
-                  </Link>
-                )}
-              </ListWrapper>
+              </div>
             </NavDesktop>
           </>
         )}
         {mobile && <ToggleButton open={open} setOpen={setOpen} />}
       </MenuWrapper>
       {mobile && (
-        <MenuContent open={open}>
+        <MenuContent
+          className="bg-gray-800  absolute flex flex-col items-center w-full pt-10 "
+          open={open}
+        >
           {contentList.map(
             ({ text, link, loggedIn }) =>
-              !loggedIn && (
+              loggedIn && (
                 <Link
                   to={link}
                   key={Date.now() + Math.random() * 100}
                   className="link"
-                  onClick={() => {
-                    setOpen(!open);
-                  }}
+                  onClick={text === "Log out" ? logout : () => setOpen(!open)}
                 >
                   <Title text={text} />
                 </Link>
@@ -82,7 +181,7 @@ export const NavBar = (): JSX.Element => {
           )}
         </MenuContent>
       )}
-    </>
+    </div>
   );
 };
 
@@ -90,66 +189,23 @@ const MenuWrapper = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 20px;
 `;
 
 const NavDesktop = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const ListWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 20px;
 `;
 
 const NavTitle = styled.h1`
-  font-family: "Racing Sans One", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif !important;
   font-size: 3em;
   margin: 0;
-  // position: absolute;
-  // inset: 0;
-  // display: flex;
-  // justify-content: center;
 `;
 
 const MenuContent = styled.div<TypeProps>`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 80px 0 0 0;
   inset: 0;
-  background-color: white;
   transition: transform 0.7s ease;
   transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
   z-index: 1000;
-`;
-
-const LogoWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-// const Link = styled.a`
-//   color: inherit;
-//   text-decoration: none;
-//   margin-bottom: 20px;
-//   @media (min-width: 800px) {
-//     margin-right: 50px;
-//     :last-child {
-//       margin-right: 0;
-//     }
-//   }
-// `;
-
-const H1 = styled.h1`
-  font-family: "Racing Sans One", sans-serif;
-  font-size: 13px;
-  margin: 0;
 `;

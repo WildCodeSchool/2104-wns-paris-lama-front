@@ -49,19 +49,20 @@ export const Register = (): JSX.Element => {
         respondeRegister.data?.Register.accessToken as string
       );
 
-      const { name, email } = resUser;
+      const { name, email, _id } = resUser;
       updateUser({
         accessToken: respondeRegister.data?.Register.accessToken as string,
         email,
         name,
+        _id,
       });
-      console.log(JSON.stringify(user));
       localStorage.setItem(
         "user",
         JSON.stringify({
           accessToken: respondeRegister.data?.Register.accessToken as string,
           email,
           name,
+          _id,
         })
       );
     } catch (error) {
@@ -70,11 +71,12 @@ export const Register = (): JSX.Element => {
   });
 
   return (
-    <div className="w-full max-w-xs mx-auto mt-5">
+    <div className="w-11/12 mx-auto max-w-xs mt-5">
+      {" "}
       {user && user.accessToken && <Redirect to="/" />}
       <form
         onSubmit={onSubmit}
-        className="mx-auto flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="mx-auto flex flex-col justify-center items-center bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <div className=" w-auto">
           <Input
@@ -129,10 +131,7 @@ export const Register = (): JSX.Element => {
             })}
           />
           <div className="w-full mx-auto mt-5">
-            <button
-              className=" bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
-              type="submit"
-            >
+            <button className="btn btn-primary" type="submit">
               submit
             </button>
           </div>

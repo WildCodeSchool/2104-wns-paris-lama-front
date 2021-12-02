@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Redirect } from "react-router-dom";
 import { Input } from "../components/Input";
@@ -17,6 +17,10 @@ type FormValues = {
   password_repeat: string;
 };
 
+export type ClassParams = {
+  redirect: string;
+};
+
 export const Login = (): JSX.Element => {
   const { user, updateUser } = useContext(userContext);
 
@@ -29,7 +33,6 @@ export const Login = (): JSX.Element => {
   const [loginUser] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(errors, data);
     try {
       const respondeLogin = await loginUser({
         variables: {
@@ -43,11 +46,12 @@ export const Login = (): JSX.Element => {
         respondeLogin.data?.Login.accessToken as string
       );
 
-      const { name, email } = resUser;
+      const { name, email, _id } = resUser;
       updateUser({
         accessToken: respondeLogin.data?.Login.accessToken as string,
         email,
         name,
+        _id,
       });
       localStorage.setItem(
         "user",
@@ -55,19 +59,21 @@ export const Login = (): JSX.Element => {
           accessToken: respondeLogin.data?.Login.accessToken as string,
           email,
           name,
+          _id,
         })
       );
+      console.log(resUser);
     } catch (error) {
       console.log(error);
     }
   });
 
   return (
-    <div className="w-full max-w-xs mx-auto mt-5">
+    <div className="w-11/12 max-w-xs mx-auto mt-5">
       {user && user.accessToken && <Redirect to="/" />}
       <form
         onSubmit={onSubmit}
-        className="mx-auto flex flex-col justify-center items-center bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="mx-auto flex flex-col justify-center items-center bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <Input
           label="E-mail"
@@ -99,10 +105,7 @@ export const Login = (): JSX.Element => {
             },
           })}
         />
-        <button
-          type="submit"
-          className="bg-red-400 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
-        >
+        <button type="submit" className="btn btn-primary">
           submit
         </button>
       </form>

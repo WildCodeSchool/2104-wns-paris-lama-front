@@ -25,31 +25,31 @@ module.exports = {
     sourceType: "module",
     project: ["./tsconfig.json"],
   },
-  "settings": {
+  settings: {
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
-    }
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
   rules: {
-    'linebreak-style': 'off',
-    'import/prefer-default-export': 'off',
-    '@typescript-eslint/camelcase': 'off',
-    '@typescript-eslint/no-use-before-define': 'off',
-    'react/jsx-props-no-spreading': 'off',
-    'prettier/prettier': [
-      'error',
+    "linebreak-style": "off",
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "react/jsx-props-no-spreading": "off",
+    "prettier/prettier": [
+      "error",
       {
         endOfLine: "auto",
       },
     ],
   },
-  "settings": {
+  settings: {
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
-    }
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
 };

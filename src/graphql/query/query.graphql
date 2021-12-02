@@ -7,55 +7,81 @@ query getUser {
 
 query getCourses {
   getCourses {
-    _id
-    link {
-      title
-      url
-    }
     title
+    steps {
+      title
+      next
+      step
+      prev
+      contentMd
+      contentHtml
+    }
+    classRoom {
+      name
+    }
     createdAt
-    categories
-    description
-    video
+    updatedAt
+    rating
+    localRate
   }
 }
 query getOneCourse($id: String!) {
   getOneCourse(id: $id) {
-    _id
     title
-    categories
-    video
-    description
-    link {
+    steps {
       title
-      url
+      next
+      step
+      prev
+      contentMd
+      contentHtml
     }
+    classRoom {
+      name
+    }
+    createdAt
+    updatedAt
     rating
+    localRate
   }
 }
 
 mutation createCourse($data: CourseInput!) {
   createCourse(data: $data) {
     title
-    video
-    categories
-    description
-    link {
+    steps {
       title
-      url
+      step
     }
+    createdAt
+    updatedAt
+    rating
+    localRate
   }
 }
 
-mutation createComment($data: CommentInput!) {
-  createComment(data: $data) {
-    _id
-    name
-    content
-    rate
-    course
+mutation updateCourse($data: CourseUpdateInput!) {
+  updateCourse(data: $data) {
+    title
+    steps {
+      title
+      step
+    }
+    createdAt
+    updatedAt
+    rating
+    localRate
   }
 }
+# mutation createComment($data: CommentInput!) {
+#   createComment(data: $data) {
+#     _id
+#     name
+#     content
+#     rate
+#     course
+#   }
+# }
 
 mutation register($data: UserInput!) {
   Register(data: $data) {
@@ -70,4 +96,184 @@ mutation login($data: UserLoginInput!) {
     Ok
     message
   }
+}
+mutation createClass($data: ClassRoomInput!) {
+  createClass(data: $data) {
+    _id
+    inviteSecret
+    name
+    state
+  }
+}
+mutation updateClass($data: ClassRoomUpdateInput!) {
+  updateClass(data: $data) {
+    _id
+    name
+    state
+  }
+}
+
+query getFilteredClass($invite: String!) {
+  getFilteredClass(invite: $invite) {
+    _id
+    name
+    owner {
+      _id
+    }
+    rate
+    state
+    course {
+      _id
+      title
+      steps {
+        title
+        step
+      }
+      updatedAt
+      rating
+    }
+    members {
+      _id
+    }
+    createdAt
+    updatedAt
+    tags
+    image
+    desc
+  }
+}
+
+query getClasses {
+  getClasses {
+    _id
+    name
+    inviteSecret
+    inviteSecretTmp
+    owner {
+      _id
+      name
+    }
+    rate
+    state
+    course {
+      _id
+      title
+      updatedAt
+      rating
+    }
+    members {
+      _id
+    }
+    createdAt
+    updatedAt
+    tags
+    image
+    desc
+  }
+}
+
+query getOneClassRoom($id: String!) {
+  getOneClassRoom(id: $id) {
+    _id
+    name
+    tags
+    image
+    desc
+    state
+    owner {
+      _id
+      name
+    }
+    course {
+      _id
+      title
+      rating
+      steps {
+        title
+        step
+      }
+      updatedAt
+      createdAt
+    }
+  }
+}
+mutation deleteClass($id: String!) {
+  deleteClass(id: $id) {
+    ok
+    n
+    deletedCount
+  }
+}
+mutation deleteCourse($id: String!) {
+  deleteCourse(id: $id)
+}
+query getComments($course: String!, $step: String!) {
+  getComments(course: $course, step: $step) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    classRoom
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+query getChildComments($id: String!) {
+  getChildComments(id: $id) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    classRoom
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+mutation createComment($data: CommentInput!) {
+  createComment(data: $data) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+query getOneComment($id: String!) {
+  getOneComment(id: $id) {
+    content
+    _id
+    parent
+    commenter {
+      _id
+      name
+    }
+    course
+    classRoom
+    step
+    updatedAt
+    createdAt
+  }
+}
+
+query isJoined($id: String!) {
+  isJoined(id: $id)
 }

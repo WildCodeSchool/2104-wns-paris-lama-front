@@ -1,4 +1,4 @@
-FROM node:14.16.1
+FROM node:14.18.1
 
 RUN mkdir /client
 WORKDIR /client
@@ -9,7 +9,8 @@ RUN npm i
 
 COPY public public
 COPY tsconfig.json ./
-COPY .cracorc ./
+COPY .env ./
+COPY .cracorc.js ./
 COPY tailwind.config.js ./
 COPY src src
 
